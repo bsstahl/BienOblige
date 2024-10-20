@@ -1,19 +1,18 @@
 # Bien Oblige: Use Cases
 
 * **Create Task** - A client system can add a new task
-* **List Tasks** - A client system can retrieve a list of tasks, subject to specific criteria:
-  * Location
-  * Executor
-  * Status
+* **Assign Task** - A client system can assign a task to a user
 * **Complete Task** - A client system can indicate that a task has been completed
 * **Cancel Task** - A client system can indicate that a task will not be completed
 * **Comment on Task** - Add a comment to a task
   * Execution Notes (pre-completion)
   * Completion Notes (post-completion)
   * Cancellation Notes
-* **Assign Task** - A client system can assign a task to a user
 * **List Tasks** - A client system can retrieve a list of tasks, subject to specific criteria:
-  * Unassigned Tasks
+  * Location
+  * Executor
+  * Status
+  * Unassigned
 
 ## Additional Features/Cases
 
