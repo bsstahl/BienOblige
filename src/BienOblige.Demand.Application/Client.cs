@@ -16,10 +16,10 @@ public class Client
         _actionItemCreator = actionItemCreator;
     }
 
-    public ActionItem FindActionItem(NetworkIdentity id)
-    {
-        throw new NotImplementedException();
-    }
+    //public ActionItem FindActionItem(NetworkIdentity id)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
     public NetworkIdentity CreateActionItem(ActionItem item, NetworkIdentity userId)
     {

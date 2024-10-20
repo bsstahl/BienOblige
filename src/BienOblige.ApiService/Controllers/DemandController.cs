@@ -15,10 +15,10 @@ namespace BienOblige.ApiService.Controllers
             _demandClient = demandClient;
         }
 
-        // GET api/Demand/5
-        [HttpGet("{id}")]
-        public Entities.ActionItem Get(string id) => Entities.ActionItem
-            .From(_demandClient.FindActionItem(NetworkIdentity.From(id)));
+        //// GET api/Demand/5
+        //[HttpGet("{id}")]
+        //public Entities.ActionItem Get(string id) => Entities.ActionItem
+        //    .From(_demandClient.FindActionItem(NetworkIdentity.From(id)));
 
         // POST api/<DemandController>
         [HttpPost]
@@ -32,5 +32,11 @@ namespace BienOblige.ApiService.Controllers
         [HttpPatch("{id}")]
         public void Cancel(string id, string userId)
             => _demandClient.CancelActionItem(id, userId);
+
+        // TODO: Determine if Edit methods are necessary
+        // it will depend on what types of use-cases require modifying
+        // the underlying data that encompasses demand. There will be
+        // separate methods in the Execution space that will be responsible
+        // for making edits that represent activity on the ActionItem.
     }
 }
