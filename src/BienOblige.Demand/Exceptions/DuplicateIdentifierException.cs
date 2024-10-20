@@ -1,4 +1,4 @@
-﻿using BienOblige.Demand.ValueObjects;
+﻿using BienOblige.ValueObjects;
 
 namespace BienOblige.Demand.Exceptions;
 

@@ -1,7 +1,7 @@
-﻿using BienOblige.Demand.Aggregates;
+﻿using BienOblige.ValueObjects;
+using BienOblige.Demand.Aggregates;
 using BienOblige.Demand.Application.Interfaces;
 using BienOblige.Demand.Exceptions;
-using BienOblige.Demand.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace BienOblige.Demand.Application;

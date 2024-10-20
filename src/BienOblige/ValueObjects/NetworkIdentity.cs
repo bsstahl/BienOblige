@@ -1,7 +1,7 @@
-﻿using BienOblige.Demand.Exceptions;
+﻿using BienOblige.Exceptions;
 using ValueOf;
 
-namespace BienOblige.Demand.ValueObjects;
+namespace BienOblige.ValueObjects;
 
 public class NetworkIdentity : ValueOf<Uri, NetworkIdentity>
 {

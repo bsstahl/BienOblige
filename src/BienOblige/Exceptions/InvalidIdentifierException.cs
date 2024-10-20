@@ -1,4 +1,4 @@
-﻿namespace BienOblige.Demand.Exceptions;
+﻿namespace BienOblige.Exceptions;
 
 public class InvalidIdentifierException : Exception
 {

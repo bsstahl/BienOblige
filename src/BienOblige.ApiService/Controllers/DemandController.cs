@@ -1,5 +1,5 @@
-﻿using BienOblige.Demand.Application;
-using BienOblige.Demand.ValueObjects;
+﻿using BienOblige.ValueObjects;
+using BienOblige.Demand.Application;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BienOblige.ApiService.Controllers

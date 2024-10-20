@@ -1,6 +1,6 @@
-﻿using BienOblige.Demand.Aggregates;
+﻿using BienOblige.ValueObjects;
+using BienOblige.Demand.Aggregates;
 using BienOblige.Demand.Application.Interfaces;
-using BienOblige.Demand.ValueObjects;
 
 namespace BienOblige.Demand.Data.Kafka
 {

@@ -12,6 +12,11 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="ValueObjects\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BienOblige\BienOblige.csproj" />
   </ItemGroup>
 
 </Project>

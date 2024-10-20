@@ -1,6 +1,6 @@
 ﻿using BienOblige.ValueObjects;
 
-namespace BienOblige.Demand.Application.Test.Extensions;
+namespace BienOblige.Execution.Application.Test.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal static class NetworkIdentityExtensions

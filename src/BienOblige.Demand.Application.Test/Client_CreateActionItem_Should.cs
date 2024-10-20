@@ -1,3 +1,5 @@
+using BienOblige.ValueObjects;
+using BienOblige.Exceptions;
 using BienOblige.Demand.Aggregates;
 using BienOblige.Demand.Application.Extensions;
 using BienOblige.Demand.Application.Interfaces;
@@ -5,7 +7,6 @@ using BienOblige.Demand.Application.Test.Extensions;
 using BienOblige.Demand.Application.Test.Mocks;
 using BienOblige.Demand.Builders;
 using BienOblige.Demand.Exceptions;
-using BienOblige.Demand.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Xunit.Abstractions;

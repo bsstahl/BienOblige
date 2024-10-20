@@ -12,7 +12,7 @@ public class ActionItem
     public Demand.Aggregates.ActionItem AsAggregate()
     {
         return new Demand.Aggregates.ActionItem(
-            Demand.ValueObjects.NetworkIdentity.From(this.Id));
+            ValueObjects.NetworkIdentity.From(this.Id));
     }
 
     public static ActionItem From(Demand.Aggregates.ActionItem item)

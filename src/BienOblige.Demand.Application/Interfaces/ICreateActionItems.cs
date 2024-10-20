@@ -1,5 +1,5 @@
-﻿using BienOblige.Demand.Aggregates;
-using BienOblige.Demand.ValueObjects;
+﻿using BienOblige.ValueObjects;
+using BienOblige.Demand.Aggregates;
 
 namespace BienOblige.Demand.Application.Interfaces;
 
