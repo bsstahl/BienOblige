@@ -8,12 +8,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BienOblige.Demand.Application\BienOblige.Demand.Application.csproj" />
+    <ProjectReference Include="..\BienOblige.Demand.Data.Kafka\BienOblige.Demand.Data.Kafka.csproj" />
     <ProjectReference Include="..\BienOblige.Demand\BienOblige.Demand.csproj" />
     <ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
   </ItemGroup>
 
 </Project>

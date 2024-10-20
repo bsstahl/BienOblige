@@ -7,31 +7,46 @@ using BienOblige.Demand.Builders;
 using BienOblige.Demand.Exceptions;
 using BienOblige.Demand.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Xunit.Abstractions;
 
 namespace BienOblige.Demand.Application.Test;
 
 [ExcludeFromCodeCoverage]
 public class Client_CreateActionItem_Should
 {
+    public Client_CreateActionItem_Should(ITestOutputHelper outputHelper)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .Enrich.WithProperty("ApplicationName", "BienOblige.Demand.Application.Test")
+            .WriteTo.Xunit(outputHelper)
+            .MinimumLevel.Verbose()
+            .CreateLogger();
+    }
+
     [Fact]
-    public void ThrowIfNoActionItemIsSupplied()
+    public async Task ThrowIfNoActionItemIsSupplied()
     {
         var services = new ServiceCollection()
+            .AddLogging(b => b.AddSerilog())
             .UseDemandClient()
             .UseMockActionItemRepositories()
             .BuildServiceProvider();
 
         ActionItem? item = null;
         var userId = (null as NetworkIdentity).CreateRandom();
+        var correlationId = Guid.NewGuid().ToString();
 
         var target = services.GetRequiredService<Client>();
-        Assert.Throws<ArgumentNullException>(() => target.CreateActionItem(item!, userId));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => target.CreateActionItem(item!, userId, correlationId));
     }
 
     [Fact]
-    public void ThrowIfNoUserIdIsSupplied()
+    public async Task ThrowIfNoUserIdIsSupplied()
     {
         var services = new ServiceCollection()
+            .AddLogging(b => b.AddSerilog())
             .UseDemandClient()
             .UseMockActionItemRepositories()
             .BuildServiceProvider();
@@ -40,15 +55,17 @@ public class Client_CreateActionItem_Should
             .UseRandomValues()
             .Build();
         NetworkIdentity? userId = null;
+        var correlationId = Guid.NewGuid().ToString();
 
         var target = services.GetRequiredService<Client>();
-        Assert.Throws<ArgumentNullException>(() => target.CreateActionItem(item, userId!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => target.CreateActionItem(item, userId!, correlationId));
     }
 
     [Fact]
-    public void ThrowIfTheUserIdIsInvalid()
+    public async Task ThrowIfTheUserIdIsInvalid()
     {
         var services = new ServiceCollection()
+            .AddLogging(b => b.AddSerilog())
             .UseDemandClient()
             .UseMockActionItemRepositories()
             .BuildServiceProvider();
@@ -56,19 +73,21 @@ public class Client_CreateActionItem_Should
         ActionItem? item = new ActionItemBuilder()
             .UseRandomValues()
             .Build();
+        var correlationId = Guid.NewGuid().ToString();
 
         var target = services.GetRequiredService<Client>();
-        Assert.Throws<InvalidIdentifierException>(() => target.CreateActionItem(item, NetworkIdentity.From(string.Empty.GetRandom())));
+        await Assert.ThrowsAsync<InvalidIdentifierException>(() => target.CreateActionItem(item, NetworkIdentity.From(string.Empty.GetRandom()), correlationId));
     }
 
     [Fact]
-    public void ThrowIfActionItemIdentityAlreadyExists()
+    public async Task ThrowIfActionItemIdentityAlreadyExists()
     {
         var existingActionItem = new ActionItemBuilder()
                 .UseRandomValues()
                 .Build();
 
         var services = new ServiceCollection()
+            .AddLogging(b => b.AddSerilog())
             .UseDemandClient()
             .UseMockActionItemRepositories()
             .BuildServiceProvider();
@@ -77,19 +96,21 @@ public class Client_CreateActionItem_Should
         mockRepo!.SetupExistingActionItem(existingActionItem);
 
         var userId = (null as NetworkIdentity).CreateRandom();
+        var correlationId = Guid.NewGuid().ToString();
 
         var target = services.GetRequiredService<Client>();
-        Assert.Throws<DuplicateIdentifierException>(() => target.CreateActionItem(existingActionItem, userId));
+        await Assert.ThrowsAsync<DuplicateIdentifierException>(() => target.CreateActionItem(existingActionItem, userId, correlationId));
     }
 
     [Fact]
-    public void ReturnTheDuplicatedIdInTheException()
+    public async Task ReturnTheDuplicatedIdInTheException()
     {
         var existingActionItem = new ActionItemBuilder()
                 .UseRandomValues()
                 .Build();
 
         var services = new ServiceCollection()
+            .AddLogging(b => b.AddSerilog())
             .UseDemandClient()
             .UseMockActionItemRepositories()
             .BuildServiceProvider();
@@ -98,12 +119,13 @@ public class Client_CreateActionItem_Should
         mockRepo!.SetupExistingActionItem(existingActionItem);
 
         var userId = (null as NetworkIdentity).CreateRandom();
+        var correlationId = Guid.NewGuid().ToString();
 
         var target = services.GetRequiredService<Client>();
         DuplicateIdentifierException? actualException = null;
         try
         {
-            target.CreateActionItem(existingActionItem, userId);
+            await target.CreateActionItem(existingActionItem, userId, correlationId);
         }
         catch (DuplicateIdentifierException ex)
         {
@@ -114,23 +136,25 @@ public class Client_CreateActionItem_Should
     }
 
     [Fact]
-    public void SuccessfullyCreateTheActionItem()
+    public async Task SuccessfullyCreateTheActionItem()
     {
         var userId = (null as NetworkIdentity).CreateRandom();
         var item = new ActionItemBuilder()
             .UseRandomValues()
             .Build();
+        var correlationId = Guid.NewGuid().ToString();
 
         var services = new ServiceCollection()
+            .AddLogging(b => b.AddSerilog())
             .UseDemandClient()
             .UseMockActionItemRepositories()
             .BuildServiceProvider();
 
         var mockRepo = services.GetRequiredService<ICreateActionItems>() as MockActionItemCreator;
-        mockRepo!.SetupCreateActionItem(item, userId);
+        mockRepo!.SetupCreateActionItem(item, userId, correlationId);
 
         var target = services.GetRequiredService<Client>();
-        var id = target.CreateActionItem(item, userId);
+        var id = await target.CreateActionItem(item, userId, correlationId);
 
         mockRepo!.VerifyAll();
     }

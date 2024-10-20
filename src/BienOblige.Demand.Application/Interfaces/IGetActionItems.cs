@@ -5,6 +5,6 @@ namespace BienOblige.Demand.Application.Interfaces;
 
 public interface IGetActionItems
 {
-    bool Exists(NetworkIdentity id);
-    ActionItem Get(NetworkIdentity id);
+    Task<bool> Exists(NetworkIdentity id);
+    Task<ActionItem?> Get(NetworkIdentity id);
 }

@@ -5,5 +5,5 @@ namespace BienOblige.Demand.Application.Interfaces;
 
 public interface ICreateActionItems
 {
-    NetworkIdentity Create(ActionItem item, NetworkIdentity userId);
+    Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity userId, string correlationId);
 }
