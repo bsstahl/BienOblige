@@ -55,4 +55,22 @@ public class Client_AssignExecutor_Should
         var target = services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.AssignExecutor(actionItemId, executorId!, userId, correlationId));
     }
+
+    [Fact]
+    public async Task ThrowIfNoUserIdSupplied()
+    {
+        var services = new ServiceCollection()
+            .AddLogging(b => b.AddSerilog())
+            .UseExecutionClient()
+            .UseMockRepositories()
+            .BuildServiceProvider();
+
+        var actionItemId = (null as NetworkIdentity).CreateRandom();
+        var executorId = (null as NetworkIdentity).CreateRandom();
+        NetworkIdentity? userId = null;
+        var correlationId = Guid.NewGuid().ToString();
+
+        var target = services.GetRequiredService<Client>();
+        await Assert.ThrowsAsync<ArgumentNullException>(() => target.AssignExecutor(actionItemId, executorId, userId!, correlationId));
+    }
 }
