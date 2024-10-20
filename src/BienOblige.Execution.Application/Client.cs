@@ -8,6 +8,7 @@ public class Client
     {
         ArgumentNullException.ThrowIfNull(actionItemId);
         ArgumentNullException.ThrowIfNull(executorId);
+        ArgumentNullException.ThrowIfNull(userId);
 
         throw new NotImplementedException();
     }
