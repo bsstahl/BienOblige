@@ -15,11 +15,6 @@ namespace BienOblige.ApiService.Controllers
             _demandClient = demandClient;
         }
 
-        //// GET api/Demand/5
-        //[HttpGet("{id}")]
-        //public Entities.ActionItem Get(string id) => Entities.ActionItem
-        //    .From(_demandClient.FindActionItem(NetworkIdentity.From(id)));
-
         // POST api/<DemandController>
         [HttpPost]
         public string Create([FromBody] Entities.ActionItem item, string userId) 
