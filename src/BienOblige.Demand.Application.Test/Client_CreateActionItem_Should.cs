@@ -80,6 +80,11 @@ public class Client_CreateActionItem_Should
         await Assert.ThrowsAsync<InvalidIdentifierException>(() => target.CreateActionItem(item, NetworkIdentity.From(string.Empty.GetRandom()), correlationId));
     }
 
+    // TODO: Reconsider these tests, since these processes should probably be eventually-consistent,
+    // surfacing errors through an Exception node
+    // See: https://fosstodon.org/@Bsstahl/109406977184136386
+
+
     [Fact]
     public async Task ThrowIfActionItemIdentityAlreadyExists()
     {
