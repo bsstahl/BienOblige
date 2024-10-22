@@ -1,13 +1,10 @@
 # Bien Oblige: Use Cases
 
-## Demand Subsystem
+## Execution Subsystem
 
 * **Create ActionItem** - A client system can add a new ActionItem
 * **Cancel ActionItem** - A client system can indicate that a ActionItem no longer needs to be completed
   * Should include a required cancellation note
-
-## Execution Subsystem
-
 * **Assign ActionItem** - A client system can assign a ActionItem to a user
 * **Complete ActionItem** - A client system can indicate that a ActionItem has been completed
 * **Comment on ActionItem** - Add a comment to a ActionItem
@@ -20,6 +17,7 @@
   * Should include a required exception note
 * **Resolve Exception** - A client system or subsystem can indicate that an exception has been resolved
   * Should include a required resolution note
+
 * **Automate Exception Creation** - This subsystem should be able to automatically create exceptions based on specific criteria
   * ActionItem not completed within a certain time frame of the due date
 * **Automate Reminders** - This subsystem should be able to automatically trigger reminders based on specific criteria. These reminders would be sent via the Notification Subsystem.
