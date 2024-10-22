@@ -1,9 +1,9 @@
 ﻿using BienOblige.ValueObjects;
-using BienOblige.Demand.Aggregates;
-using BienOblige.Demand.Application.Interfaces;
+using BienOblige.Execution.Aggregates;
+using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace BienOblige.Demand.Application.Test.Mocks;
+namespace BienOblige.Execution.Application.Test.Mocks;
 
 [ExcludeFromCodeCoverage]
 internal class MockActionItemReader : IGetActionItems

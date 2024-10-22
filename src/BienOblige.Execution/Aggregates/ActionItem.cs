@@ -1,6 +1,6 @@
 ﻿using BienOblige.ValueObjects;
 
-namespace BienOblige.Demand.Aggregates;
+namespace BienOblige.Execution.Aggregates;
 
 public class ActionItem
 {

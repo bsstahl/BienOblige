@@ -1,17 +1,17 @@
 using BienOblige.ValueObjects;
 using BienOblige.Exceptions;
-using BienOblige.Demand.Aggregates;
-using BienOblige.Demand.Application.Extensions;
-using BienOblige.Demand.Application.Interfaces;
-using BienOblige.Demand.Application.Test.Extensions;
-using BienOblige.Demand.Application.Test.Mocks;
-using BienOblige.Demand.Builders;
-using BienOblige.Demand.Exceptions;
+using BienOblige.Execution.Aggregates;
+using BienOblige.Execution.Application.Extensions;
+using BienOblige.Execution.Application.Interfaces;
+using BienOblige.Execution.Application.Test.Extensions;
+using BienOblige.Execution.Application.Test.Mocks;
+using BienOblige.Execution.Builders;
+using BienOblige.Execution.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Xunit.Abstractions;
 
-namespace BienOblige.Demand.Application.Test;
+namespace BienOblige.Execution.Application.Test;
 
 [ExcludeFromCodeCoverage]
 public class Client_CreateActionItem_Should
@@ -20,7 +20,7 @@ public class Client_CreateActionItem_Should
     {
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
-            .Enrich.WithProperty("ApplicationName", "BienOblige.Demand.Application.Test")
+            .Enrich.WithProperty("ApplicationName", "BienOblige.Execution.Application.Test")
             .WriteTo.Xunit(outputHelper)
             .MinimumLevel.Verbose()
             .CreateLogger();
@@ -31,8 +31,8 @@ public class Client_CreateActionItem_Should
     {
         var services = new ServiceCollection()
             .AddLogging(b => b.AddSerilog())
-            .UseDemandClient()
-            .UseMockActionItemRepositories()
+            .UseExecutionClient()
+            .UseMockRepositories()
             .BuildServiceProvider();
 
         ActionItem? item = null;
@@ -48,8 +48,8 @@ public class Client_CreateActionItem_Should
     {
         var services = new ServiceCollection()
             .AddLogging(b => b.AddSerilog())
-            .UseDemandClient()
-            .UseMockActionItemRepositories()
+            .UseExecutionClient()
+            .UseMockRepositories()
             .BuildServiceProvider();
 
         ActionItem? item = new ActionItemBuilder()
@@ -67,8 +67,8 @@ public class Client_CreateActionItem_Should
     {
         var services = new ServiceCollection()
             .AddLogging(b => b.AddSerilog())
-            .UseDemandClient()
-            .UseMockActionItemRepositories()
+            .UseExecutionClient()
+            .UseMockRepositories()
             .BuildServiceProvider();
 
         ActionItem? item = new ActionItemBuilder()
@@ -94,8 +94,8 @@ public class Client_CreateActionItem_Should
 
         var services = new ServiceCollection()
             .AddLogging(b => b.AddSerilog())
-            .UseDemandClient()
-            .UseMockActionItemRepositories()
+            .UseExecutionClient()
+            .UseMockRepositories()
             .BuildServiceProvider();
 
         var mockRepo = services.GetRequiredService<IGetActionItems>() as MockActionItemReader;
@@ -117,8 +117,8 @@ public class Client_CreateActionItem_Should
 
         var services = new ServiceCollection()
             .AddLogging(b => b.AddSerilog())
-            .UseDemandClient()
-            .UseMockActionItemRepositories()
+            .UseExecutionClient()
+            .UseMockRepositories()
             .BuildServiceProvider();
 
         var mockRepo = services.GetRequiredService<IGetActionItems>() as MockActionItemReader;
@@ -152,8 +152,8 @@ public class Client_CreateActionItem_Should
 
         var services = new ServiceCollection()
             .AddLogging(b => b.AddSerilog())
-            .UseDemandClient()
-            .UseMockActionItemRepositories()
+            .UseExecutionClient()
+            .UseMockRepositories()
             .BuildServiceProvider();
 
         var mockRepo = services.GetRequiredService<ICreateActionItems>() as MockActionItemCreator;

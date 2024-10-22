@@ -1,7 +1,7 @@
 ﻿using BienOblige.ValueObjects;
-using BienOblige.Demand.Aggregates;
+using BienOblige.Execution.Aggregates;
 
-namespace BienOblige.Demand.Builders;
+namespace BienOblige.Execution.Builders;
 
 public class ActionItemBuilder
 {

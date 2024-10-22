@@ -1,6 +1,6 @@
 ﻿using BienOblige.ValueObjects;
 
-namespace BienOblige.Demand.Exceptions;
+namespace BienOblige.Execution.Exceptions;
 
 public class DuplicateIdentifierException : Exception
 {

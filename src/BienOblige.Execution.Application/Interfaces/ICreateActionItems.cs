@@ -1,7 +1,7 @@
 ﻿using BienOblige.ValueObjects;
-using BienOblige.Demand.Aggregates;
+using BienOblige.Execution.Aggregates;
 
-namespace BienOblige.Demand.Application.Interfaces;
+namespace BienOblige.Execution.Application.Interfaces;
 
 public interface ICreateActionItems
 {

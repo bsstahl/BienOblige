@@ -1,7 +1,7 @@
-﻿using BienOblige.Demand.Application.Interfaces;
+﻿using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BienOblige.Demand.Data.Kafka.Extensions;
+namespace BienOblige.Execution.Data.Kafka.Extensions;
 
 public static class ServiceCollectionExtensions
 {

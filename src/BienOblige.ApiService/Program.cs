@@ -1,6 +1,6 @@
 using BienOblige.ApiService.Extensions;
-using BienOblige.Demand.Application.Extensions;
-using BienOblige.Demand.Data.Kafka.Extensions;
+using BienOblige.Execution.Application.Extensions;
+using BienOblige.Execution.Data.Kafka.Extensions;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 // Add Application services to the container.
-builder.Services.UseDemandClient();
+builder.Services.UseExecutionClient();
 builder.Services.UseKafkaActionItemRepositories();
 
 // Add Generic services to the container.

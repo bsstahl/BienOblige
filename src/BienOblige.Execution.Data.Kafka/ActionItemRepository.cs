@@ -1,8 +1,8 @@
 ﻿using BienOblige.ValueObjects;
-using BienOblige.Demand.Aggregates;
-using BienOblige.Demand.Application.Interfaces;
+using BienOblige.Execution.Aggregates;
+using BienOblige.Execution.Application.Interfaces;
 
-namespace BienOblige.Demand.Data.Kafka
+namespace BienOblige.Execution.Data.Kafka
 {
     public class ActionItemRepository : ICreateActionItems, IGetActionItems
     {

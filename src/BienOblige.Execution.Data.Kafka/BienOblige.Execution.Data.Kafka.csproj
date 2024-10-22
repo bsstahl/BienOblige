@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\BienOblige.Execution.Application\BienOblige.Execution.Application.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
 		<ProjectReference Include="..\BienOblige\BienOblige.csproj" />
 	</ItemGroup>

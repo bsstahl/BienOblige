@@ -9,13 +9,13 @@ public class ActionItem
         this.Id = id;
     }
 
-    public Demand.Aggregates.ActionItem AsAggregate()
+    public Execution.Aggregates.ActionItem AsAggregate()
     {
-        return new Demand.Aggregates.ActionItem(
+        return new Execution.Aggregates.ActionItem(
             ValueObjects.NetworkIdentity.From(this.Id));
     }
 
-    public static ActionItem From(Demand.Aggregates.ActionItem item)
+    public static ActionItem From(Execution.Aggregates.ActionItem item)
     {
         return new ActionItem(item.Id.Value.ToString());
     }

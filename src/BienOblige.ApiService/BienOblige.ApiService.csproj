@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BienOblige.Demand.Application\BienOblige.Demand.Application.csproj" />
-    <ProjectReference Include="..\BienOblige.Demand.Data.Kafka\BienOblige.Demand.Data.Kafka.csproj" />
-    <ProjectReference Include="..\BienOblige.Demand\BienOblige.Demand.csproj" />
+    <ProjectReference Include="..\BienOblige.Execution.Application\BienOblige.Execution.Application.csproj" />
+    <ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />
+    <ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
     <ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
   </ItemGroup>
 

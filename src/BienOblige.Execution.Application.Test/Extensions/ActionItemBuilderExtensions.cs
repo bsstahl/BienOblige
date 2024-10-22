@@ -1,6 +1,6 @@
-﻿using BienOblige.Demand.Builders;
+﻿using BienOblige.Execution.Builders;
 
-namespace BienOblige.Demand.Application.Test.Extensions;
+namespace BienOblige.Execution.Application.Test.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal static class ActionItemBuilderExtensions
