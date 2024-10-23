@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="TngTech.ArchUnitNET.xUnit" Version="0.11.0" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
+    <ProjectReference Include="..\BienOblige.AppHost\BienOblige.AppHost.csproj" />
+    <ProjectReference Include="..\BienOblige.Execution.Application\BienOblige.Execution.Application.csproj" />
+    <ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />
+    <ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
+    <ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BienOblige\BienOblige.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
