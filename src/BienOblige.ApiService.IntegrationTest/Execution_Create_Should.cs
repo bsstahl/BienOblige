@@ -1,6 +1,7 @@
 using BienOblige.ApiService.IntegrationTest.Builders;
 using BienOblige.ApiService.IntegrationTest.Extensions;
 using BienOblige.Execution.Builders;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using Xunit.Abstractions;
 
@@ -40,6 +41,7 @@ public class Execution_Create_Should : IDisposable
     [Fact]
     public async Task ProduceAMessageOnTheActionItemStream()
     {
+        var logger = _app.Services.GetRequiredService<ILogger<Execution_Create_Should>>();
         var httpClient = _app.GetApiClient();
 
         httpClient.DefaultRequestHeaders.Add("x-user-id", "https://example.org/4719a2cc-1d81-43b9-a91b-bfdadc0c8765");
@@ -52,6 +54,7 @@ public class Execution_Create_Should : IDisposable
         var content = JsonContent.Create(actionItem);
 
         var response = await httpClient.PostAsync("/api/Execution/", content);
+        logger.LogDebug("HTTP Response: {Response}", response);
 
         response.EnsureSuccessStatusCode();
     }

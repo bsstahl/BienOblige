@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire components.
 builder.AddServiceDefaults();
+builder.AddKafkaProducer<string, string>("kafka");
 
 // Add Application services to the container.
 builder.Services.UseExecutionClient();

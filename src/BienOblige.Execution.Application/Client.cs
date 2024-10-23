@@ -9,13 +9,13 @@ namespace BienOblige.Execution.Application;
 public class Client
 {
     private readonly ILogger _logger;
-    private readonly IGetActionItems _actionItemReader;
+    // private readonly IGetActionItems _actionItemReader;
     private readonly ICreateActionItems _actionItemCreator;
 
-    public Client(ILogger<Client> logger, IGetActionItems actionItemReader, ICreateActionItems actionItemCreator)
+    public Client(ILogger<Client> logger, ICreateActionItems actionItemCreator)
     {
         _logger = logger;
-        _actionItemReader = actionItemReader;
+        // _actionItemReader = actionItemReader;
         _actionItemCreator = actionItemCreator;
     }
 
@@ -24,13 +24,13 @@ public class Client
         ArgumentNullException.ThrowIfNull(item);
         ArgumentNullException.ThrowIfNull(userId);
 
-        if (await _actionItemReader.Exists(item.Id))
-        {
-            _logger.LogError("ActionItem with ID {ActionItemId} already exists", item.Id);
-            throw new DuplicateIdentifierException(item.Id);
-        }
-        else
-            return await _actionItemCreator.Create(item, userId, correlationId);
+        //if (await _actionItemReader.Exists(item.Id))
+        //{
+        //    _logger.LogError("ActionItem with ID {ActionItemId} already exists", item.Id);
+        //    throw new DuplicateIdentifierException(item.Id);
+        //}
+        //else
+        return await _actionItemCreator.Create(item, userId, correlationId);
     }
 
     public Task CancelActionItem(string id, string userId, string correlationId)

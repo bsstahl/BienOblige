@@ -1,4 +1,6 @@
-﻿namespace BienOblige.ApiService.IntegrationTest.Extensions;
+﻿using Google.Protobuf.WellKnownTypes;
+
+namespace BienOblige.ApiService.IntegrationTest.Extensions;
 
 internal static class ObjectExtensions
 {
@@ -17,26 +19,22 @@ internal static class ObjectExtensions
         var buildTask = appHost.BuildAsync();
         buildTask.Wait();
 
-        return buildTask.Result;
-    }
-    
-    internal static HttpClient GetApiClient(this DistributedApplication app)
-    {
+        var app = buildTask.Result;
+
         var resourceNotificationService = app.Services
             .GetRequiredService<ResourceNotificationService>();
 
         var startTask = app.StartAsync();
         startTask.Wait();
 
-        var httpClient = app.CreateHttpClient("api");
-
-        var waitTask = resourceNotificationService.WaitForResourceAsync(
-                "api", KnownResourceStates.Running)
+        var waitTask = resourceNotificationService.WaitForResourceAsync("api", KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromSeconds(30));
         waitTask.Wait();
 
-        return httpClient;
+        return app;
     }
-
+    
+    internal static HttpClient GetApiClient(this DistributedApplication app)
+        => app.CreateHttpClient("api");
 
 }
