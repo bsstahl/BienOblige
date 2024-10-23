@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05 - Hosting", "05 - Hostin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BienOblige.Execution.Data.Kafka.Test", "BienOblige.Execution.Data.Kafka.Test\BienOblige.Execution.Data.Kafka.Test.csproj", "{C8443D14-5D71-42FA-901B-B754D4E31EA5}"
 EndProject
+Project("{7b14d2b4-f924-43fa-8748-267eef09dc58}") = "BienOblige.Architecture.Test", "BienOblige.Architecture.Test\BienOblige.Architecture.Test.csproj", "{723FB83C-AAD2-4FDB-A3F3-93EDD9F831D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,10 +78,6 @@ Global
 		{18447915-53CD-4675-8139-91F0369CBD02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18447915-53CD-4675-8139-91F0369CBD02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18447915-53CD-4675-8139-91F0369CBD02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8443D14-5D71-42FA-901B-B754D4E31EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8443D14-5D71-42FA-901B-B754D4E31EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8443D14-5D71-42FA-901B-B754D4E31EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8443D14-5D71-42FA-901B-B754D4E31EA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,7 +92,6 @@ Global
 		{9C884E2D-841E-4FC4-B1FB-30A212D2E0BB} = {7B082690-2EA6-439E-986F-A0C68B5CB968}
 		{BA30D8DF-4A0A-4638-ACEE-0AEDAEDBEAE5} = {5F8D7236-A488-43D6-97E1-7BCD2ED89773}
 		{18447915-53CD-4675-8139-91F0369CBD02} = {7881CA14-4432-418D-A6C9-1579518D5542}
-		{C8443D14-5D71-42FA-901B-B754D4E31EA5} = {7881CA14-4432-418D-A6C9-1579518D5542}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F93FA578-CDB9-4E04-991F-36B56AB2DAB7}
