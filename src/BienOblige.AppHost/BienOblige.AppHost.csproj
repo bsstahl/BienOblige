@@ -11,17 +11,14 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
+		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" IsAspireProjectResource="false" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.1" />
-		<PackageReference Include="Aspire.Hosting.Kafka" Version="8.2.1" />
 		<PackageReference Include="System.Text.Json" Version="8.0.5" />
+		<PackageReference Include="Aspire.Hosting.Kafka" Version="8.2.1" />
 		<PackageReference Include="Confluent.Kafka" Version="2.3.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Extensions\" />
 	</ItemGroup>
 
 </Project>

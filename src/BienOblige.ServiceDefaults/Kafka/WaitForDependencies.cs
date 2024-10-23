@@ -3,15 +3,10 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Polly.Retry;
 using Polly;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BienOblige.AppHost.Kafka;
+namespace BienOblige.ServiceDefaults.Kafka;
 
 internal class WaitForDependenciesRunningHook(
        DistributedApplicationExecutionContext executionContext,

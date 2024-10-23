@@ -1,26 +1,26 @@
-using BienOblige.AppHost.Kafka;
+using BienOblige.ServiceDefaults.Kafka;
 
-var builder = DistributedApplication.CreateBuilder(args);
+namespace BienOblige.AppHost;
 
-var kafka = builder
-    .AddKafka("kafka")
-    .WithKafkaUI()
-    .WithHealthCheck(new[]
+internal class Program
+{
+    private static void Main(string[] args)
     {
-        "execution_command_private",
-        "execution_actionitems_public",
-        "execution_compliance_public"
-    });
+        var builder = DistributedApplication.CreateBuilder(args);
 
-// To connect to an existing Kafka server,
-// call AddConnectionString instead of WithReference
-var apiService = builder
-    .AddProject<Projects.BienOblige_ApiService>("api")
-    .WithReference(kafka)
-    .WaitFor(kafka);
+        var kafka = builder.UseBienObligeKafka();
 
-//builder.AddProject<Projects.BienOblige_Web>("webfrontend")
-//    .WithExternalHttpEndpoints()
-//    .WithReference(apiService);
+        // To connect to an existing Kafka server,
+        // call AddConnectionString instead of WithReference
+        var apiService = builder
+            .AddProject<Projects.BienOblige_ApiService>("api")
+            .WithReference(kafka)
+            .WaitFor(kafka);
 
-builder.Build().Run();
+        //builder.AddProject<Projects.BienOblige_Web>("webfrontend")
+        //    .WithExternalHttpEndpoints()
+        //    .WithReference(apiService);
+
+        builder.Build().Run();
+    }
+}

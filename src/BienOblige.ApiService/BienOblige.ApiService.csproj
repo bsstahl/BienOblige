@@ -11,6 +11,7 @@
     <ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />
     <ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
     <ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BienOblige\BienOblige.csproj" />
   </ItemGroup>
 
   <ItemGroup>

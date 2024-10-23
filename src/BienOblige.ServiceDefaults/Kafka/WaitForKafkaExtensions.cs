@@ -1,6 +1,6 @@
 ﻿using Aspire.Hosting.Lifecycle;
 
-namespace BienOblige.AppHost.Kafka;
+namespace BienOblige.ServiceDefaults.Kafka;
 
 public static class WaitForKafkaExtensions
 {

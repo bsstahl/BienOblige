@@ -2,7 +2,7 @@
 using Confluent.Kafka;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace BienOblige.AppHost.Kafka;
+namespace BienOblige.ServiceDefaults.Kafka;
 
 public class KafkaHealthCheck(IEnumerable<string> topics, string bootStrapServer) : IHealthCheck
 {

@@ -1,6 +1,6 @@
-﻿namespace BienOblige.AppHost.Kafka;
+﻿namespace BienOblige.ServiceDefaults.Kafka;
 
-public static class DistributedApplicationBuilderExtensions
+public static class ResourceBuilderExtensions
 {
 
     public static IResourceBuilder<KafkaServerResource> WithHealthCheck(this IResourceBuilder<KafkaServerResource> builder, IEnumerable<string> topics)

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace BienOblige.AppHost.Kafka;
+namespace BienOblige.ServiceDefaults.Kafka;
 
 public class HealthCheckAnnotation(Func<IResource, CancellationToken, Task<IHealthCheck?>> healthCheckFactory) : IResourceAnnotation
 {
@@ -19,7 +19,7 @@ public class HealthCheckAnnotation(Func<IResource, CancellationToken, Task<IHeal
     }
 }
 
-internal class WaitOnAnnotation(IResource resource) : IResourceAnnotation
+public class WaitOnAnnotation(IResource resource) : IResourceAnnotation
 {
     public IResource Resource { get; } = resource;
     public string[]? States { get; set; }
