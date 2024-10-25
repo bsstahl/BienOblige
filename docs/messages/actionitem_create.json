@@ -28,7 +28,9 @@
       "summary": "We need to make certain that the vehicle with VIN 1C6RD6KT4CS332867 is fueled to at or near capacity in preparation for sale to a customer.",
       "tag": [],
       "updated": "2024-09-20T10:00:00Z",
-      "bienoblige:status": "NotStarted",
+      "bienoblige:completionMethod": "https://bienoblige.com/ns/completionmethod#Manual",
+
+      "bienoblige:status": "Incomplete",
       "bienoblige:priority": "Medium",
       "bienoblige:target": {
         "type": "bienoblige:Vehicle",

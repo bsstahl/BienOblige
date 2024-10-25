@@ -22,18 +22,23 @@ The entities involved in *ActionItem* management are:
       * *name* - A short description of the work to be performed that can be used as a title
       * *published* - The date and time of the creation of the **ActionItem**
       * *summary* - A complete summary of the **ActionItem** including all relevant details
-      * *tag* - a collection of category Ids representing common characteristics of the work
+      * *tag* - a collection of category Ids representing common characteristics of the work used for searching and sorting
       * *type* - An array holding both the custom object type ("bienoblige:ActionItem") and the standard fallback AS2 type ("Object")
       * *updated* - The date and time of the last update to the **ActionItem**.
     * Custom *ActionItem* fields
-      * *bienoblige:status* - the current state of completion of the work
+      * *bienoblige:completionMethod* - a URI indicating the method by which the work is to be completed
+      * *bienoblige:status* - the current state within the lifecycle of the *ActionItem*
+      * *bienoblige:effort* - a value indicating the expected workload for the work
+      * *bienoblige:parent* - the parent ActionItem to which this ActionItem is a child. Allows a hierarchy of work to be created
       * *bienoblige:priority* - a value indicating the importance of the work
       * *bienoblige:target* - the entity against which the work is to be performed
-      * *bienoblige:effort* - a value indicating the expected workload for the work
-
 
 * **Executor** - a person that is responsible for performing activities.
   * Represented by AS2 objects of type "Person"
+* **Exception** - an additional status on an *ActionItem* that indicates a significant problem that likely needs user attention. The following exceptions are known, but there may be many others down the road.
+  * Invalid Request - A request was made to place this *ActionItem* in an invalid state. Also occurs when an attempt to create a new *ActionItem* with the same Id as the existing one is made. The exception would be placed on the existing *ActionItem* and no additional *ActionItem* would be created.
+  * Timeframe Exceeded - The *ActionItem* was not completed within a certain time frame of the due date and the *ActionItem* was not marked as complete or with a completion method that includes closing when *Expired*.
+  * Asset Unavailable - The *ActionItem* requires an asset that is not available. This could be because the asset is not at the location where the work is to be performed, or the asset is broken and is not available for the work.
 * **Location** - a place where ActionItems are performed
   * Represented by AS2 objects of type "Place".
   * Standard
@@ -43,15 +48,20 @@ The entities involved in *ActionItem* management are:
     * https://example.com/ns/location/12345
 * **ActionItem Type** - an optional collection of category Ids representing common characteristics of the *ActionItems* they are associated with.
   * These categories are defined by the consuming applications and are identified by URI
-  * The URI may be used as a filter/sort criteria when listing ActionItems
+  * The URI may be used as a filter/sort criteria when listing *ActionItems*
+* **CompletionMethod** - an indication of the method by which the *ActionItem* is to be completed
+  * "bienoblige:Manual" - the default method where the *ActionItem* is considered complete when specifically identified as such by a client system, usually as a result of user interaction.
+  * "bienoblige:AllChildrenCompleted" - the *ActionItem* is considered complete when all of its child *ActionItems* are complete. There must be at least 1 child *ActionItem*. If there are no children, the *ActionItem* can only be closed manually. This method is used for work that is broken down into smaller tasks that must all be completed to consider the work done.
+  * "bienoblige:Expired" - the *ActionItem* is considered complete when the *endTime* has passed. This method is used when the work needs to be completed by a specific date and time or it no longer has value.
+  * "bienoblige:ExpiredOrAllChildrenCompleted" - the *ActionItem* is considered complete when all if its child *ActionItems* are complete or the *endTime* has passed. This method is used when the work is broken down into smaller tasks that all must be completed to consider the work done, but it all needs to be completed by a specific date and time or it no longer has value.
 * **Status** - the current state of completion of an ActionItem.
   * Standard
-    * https://bienoblige.com/ns/status#notdone
-    * https://bienoblige.com/ns/status#inprogress
-    * https://bienoblige.com/ns/status#done
-    * https://bienoblige.com/ns/status#cancelled
+    * https://bienoblige.com/ns/status#Incomplete - Work is not done
+    * https://bienoblige.com/ns/status#InProgress - Work is being done
+    * https://bienoblige.com/ns/status#Complete - Work is done
+    * https://bienoblige.com/ns/status#Cancelled - Work will not be done
   * Custom
-    * https://example.com/ns/status#awaitingapproval
+    * https://example.com/ns/status#AwaitingApproval
 * **Effort** - Quantifies the expected workload for an ActionItem
   * Includes a type URI to define its nature, allowing for adaptable representation across different systems.
     * Standard
