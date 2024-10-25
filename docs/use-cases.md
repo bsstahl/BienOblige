@@ -1,5 +1,7 @@
 # Bien Oblige: Use Cases
 
+> Note: A client system is any service that interacts with the ActionItem Management System. Thus, for the purposes of this document, a User Interface client such as a Web UI or mobile app is considered a type of client system.
+
 ## Execution Subsystem
 
 * **Create ActionItem** - A client system can add a new ActionItem
@@ -15,6 +17,10 @@
 
 * **Add Exception** - A client system or subsystem can indicate that a ActionItem has an exception
   * Should include a required exception note
+  * Examples:
+    * ActionItem not completed within a certain time frame of the due date
+    * A request was made to modify an ActionItem in an invalid way
+      * This type of exception is a result of the eventually-consistent nature of the system. See [Eventual Consistency](https://fosstodon.org/@Bsstahl/109406977184136386).
 * **Resolve Exception** - A client system or subsystem can indicate that an exception has been resolved
   * Should include a required resolution note
 
@@ -42,8 +48,11 @@
 
 ### Notification Methods
 
-* Web-Hooks for integrations
-* eMail/Slack/etc for awareness
+* Primary
+  * ActivityPub 2.0 Interfaces
+* Secondary
+  * Web-Hooks for integrations
+  * eMail/Slack/etc for awareness
 
 ## Additional Features/Cases
 
@@ -51,20 +60,23 @@
   * Must start by
   * Hide until
 * Tags
-  * Search/filter criteria
+  * Useable as search/filter criteria
 * Recurrance
 * ActionItem Hierarchies
   * Parent/Child relationships
 * Flag/Report
   * Inappropriate or illegal content
-  
-## Extensibility Options
-
-* Additional ActionItem statuses?
-* Skills required (labor type)
-  * Search/filter criteria
-* Relationship types
-  * Other than parent/child
+* Notes
+  * Attach a collection of notes that can be added individually to an *ActionItem*.
+* Follow
+  * Users can subscribe to updates for a *Person*, *Group* or *ActionItem*.
+* Accept/Reject
+  * Users can accept or reject the assignment of an *ActionItem*.
+* Skills Required
+  * *ActionItem* creators can define a set of skills needed to perform it.
+  * Also used as filter/sort critera
+* Custom Relationship types
+  * Other than just parent/child
 
 ## Notes
 

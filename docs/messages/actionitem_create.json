@@ -1,0 +1,41 @@
+{
+    "@context": [
+        "https://www.w3.org/ns/activitystreams",
+        { "bienoblige": "https://bienoblige.com/ns" }
+    ],
+    "type": "Create",
+    "id": "urn:uid:E22CA55E-5F20-4899-A0DF-DACAE99F00B8",
+    "object": {
+      "type": ["bienoblige:ActionItem", "Object"],
+      "attributedTo": {
+        "type": "Person",
+        "id": "https://example.com/users/1234567"
+      },
+      "content": "Ensure the vehicle with VIN: <i>1C6RD6KT4CS332867</i> is fueled to at or near capacity.",
+      "context": "https://example.com/CustomerSale/25a4b838-ff12-42e4-b518-89d6ef7eafb4",
+      "endTime": "2024-10-02T17:45:00Z",
+      "generator":  {
+        "type": "Application",
+        "id": "https://example.com/applications/321321"
+      },
+      "id": "https://bienoblige.com/actionitems/5e4ea9cb-07f5-4259-bd8b-56dcc5a31d11",
+      "location": {
+        "type": "Place",
+        "id": "https://example.com/places/33433"
+      },
+      "name": "Top off fuel tank",
+      "published": "2024-09-20T10:00:00Z",
+      "summary": "We need to make certain that the vehicle with VIN 1C6RD6KT4CS332867 is fueled to at or near capacity in preparation for sale to a customer.",
+      "tag": [],
+      "updated": "2024-09-20T10:00:00Z",
+      "bienoblige:status": "NotStarted",
+      "bienoblige:priority": "Medium",
+      "bienoblige:target": {
+        "type": "bienoblige:Vehicle",
+        "id": "https://example.com/vehicles/1C6RD6KT4CS332867",
+        "name": "2022 Ram 1500",
+        "vin": "1C6RD6KT4CS332867"
+      }
+    },
+    "published": "2024-09-20T10:00:00Z"
+  }
