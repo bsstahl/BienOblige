@@ -10,7 +10,28 @@ The entities involved in *ActionItem* management are:
   * Events describe modifications to the item including the process of performing the item
     * i.e. Created, Assigned, Completed, Cancelled, etc
   * Represented by an extension to the AS2 "Object" type called "ActionItem"
-  * TODO: Describe each field in the ActionItem object and its intended usage
+  * Fields
+    * Standard AS2 *Object* fields
+      * *attributedTo* - The **Executor** of the ActionItem
+      * *content* - A detailed description of the work to be performed
+      * *context* - The reason the work needs to be performed
+      * *endTime* - The date and time by which the work needs to be completed
+      * *generator* - The **Actor** (Person, Application or Service) that created the ActionItem
+      * *id* - The unique identifier for the ActionItem
+      * *location* - The **Location** where the work is to be performed
+      * *name* - A short description of the work to be performed that can be used as a title
+      * *published* - The date and time of the creation of the **ActionItem**
+      * *summary* - A complete summary of the **ActionItem** including all relevant details
+      * *tag* - a collection of category Ids representing common characteristics of the work
+      * *type* - An array holding both the custom object type ("bienoblige:ActionItem") and the standard fallback AS2 type ("Object")
+      * *updated* - The date and time of the last update to the **ActionItem**.
+    * Custom *ActionItem* fields
+      * *bienoblige:status* - the current state of completion of the work
+      * *bienoblige:priority* - a value indicating the importance of the work
+      * *bienoblige:target* - the entity against which the work is to be performed
+      * *bienoblige:effort* - a value indicating the expected workload for the work
+
+
 * **Executor** - a person that is responsible for performing activities.
   * Represented by AS2 objects of type "Person"
 * **Location** - a place where ActionItems are performed
