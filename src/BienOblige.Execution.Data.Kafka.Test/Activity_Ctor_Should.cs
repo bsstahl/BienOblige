@@ -1,11 +1,12 @@
-using BienOblige.Execution.Builders;
 using BienOblige.Execution.Enumerations;
 using Serilog;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace BienOblige.Execution.Data.Kafka.Test;
 
+[ExcludeFromCodeCoverage]
 public class Activity_Ctor_Should
 {
     public Activity_Ctor_Should(ITestOutputHelper output)

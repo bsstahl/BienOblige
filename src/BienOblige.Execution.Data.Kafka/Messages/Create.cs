@@ -17,7 +17,7 @@ public class Create
         string actorId, string actorType)
     {
         _context.Add(new ValueObjects.Context("https://www.w3.org/ns/activitystreams"));
-        _context.Add(new ValueObjects.Context("https://bienoblige.com/ns/", "bienoblige"));
+        _context.Add(new ValueObjects.Context("https://bienoblige.com/ns", "bienoblige"));
         _context.Add(new ValueObjects.Context("https://schema.org", "schema"));
 
         this.CorrelationId = correlationId;

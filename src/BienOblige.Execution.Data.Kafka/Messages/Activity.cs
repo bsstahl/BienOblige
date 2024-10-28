@@ -32,11 +32,12 @@ public class Activity
     public DateTimeOffset Published { get; set; }
 
     override public string ToString() => _jsonMessage;
+
     public Activity(string jsonMessage, string correlationId)
     {
-        _jsonMessage = jsonMessage;
         ArgumentNullException.ThrowIfNullOrWhiteSpace(jsonMessage, nameof(jsonMessage));
 
+        _jsonMessage = jsonMessage;
         this.CorrelationId = correlationId;
 
         using (JsonDocument doc = JsonDocument.Parse(jsonMessage))

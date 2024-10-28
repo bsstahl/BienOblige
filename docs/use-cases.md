@@ -73,8 +73,10 @@
 * Custom Relationship types
   * Other than just parent/child
 
-### Notes
+### Cases that will NOT be handled by this system
 
 * RBAC for individual users is the responsibility of the client application. For example, this system will not prevent someone who is not a Supervisor from assigning an ActionItem, it will merely record that the client system requested the assignment to be made per that user.
-
-* This system will validate that the client system making the call has the appropriate permissions to perform the requested action.
+  * This system *WILL* validate that the client system making the call has the appropriate permissions to perform the requested action.
+* Workflow will not be managed by this system. If a client system needs to enforce a specific workflow, it will be responsible for doing so.
+  * Example: The completion of ActionItem "A" triggers the creation of ActionItem "B"
+  * The client system would need to create "B" when it is notified that "A" has been completed.

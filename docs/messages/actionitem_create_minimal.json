@@ -8,7 +8,7 @@
     "@id": "urn:uid:E22CA55E-5F20-4899-A0DF-DACAE99F00B8",
     "object": {
       "@type": ["bienoblige:ActionItem", "Object"],
-      "@id": "https://bienoblige.com/actionitems/5e4ea9cb-07f5-4259-bd8b-56dcc5a31d11",
+      "id": "https://bienoblige.com/actionitems/5e4ea9cb-07f5-4259-bd8b-56dcc5a31d11",
       "content": "Ensure the vehicle with VIN: <i>1C6RD6KT4CS332867</i> is fueled to at or near capacity.",
       "name": "Top off fuel tank of 1C6RD6KT4CS332867",
       "summary": "We need to make certain that the vehicle with VIN 1C6RD6KT4CS332867 is fueled to at or near capacity in preparation for sale to a customer."
