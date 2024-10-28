@@ -7,7 +7,9 @@ internal static class ActionItemBuilderExtensions
 {
     internal static ActionItemBuilder UseRandomValues(this ActionItemBuilder builder)
     {
+        var idValue = string.Empty.GetRandom();
         return builder
-            .Id($"https://example.org/actionitems/{string.Empty.GetRandom()}");
+            .Id($"https://example.org/actionitems/{idValue}")
+            .Title($"Title of ActionItem {idValue}");
     }
 }

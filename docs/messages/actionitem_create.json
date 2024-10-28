@@ -2,7 +2,7 @@
     "@context": [
         "https://www.w3.org/ns/activitystreams",
         { "bienoblige": "https://bienoblige.com/ns" },
-        { "schema": "http://schema.org/" }
+        { "schema": "https://schema.org" }
     ],
     "@type": "Create",
     "@id": "urn:uid:E22CA55E-5F20-4899-A0DF-DACAE99F00B8",
@@ -63,5 +63,9 @@
       "bienoblige:priority": "https://bienoblige.com/ns/priority#Medium",
       "bienoblige:status": "https://bienoblige.com/ns/status#Incomplete"
     },
-    "published": "2024-09-20T10:00:00Z"
+    "published": "2024-09-20T10:00:00Z",
+    "actor": {
+      "@type": "Person",
+      "@id": "https://example.com/users/1234567"
+    }
   }

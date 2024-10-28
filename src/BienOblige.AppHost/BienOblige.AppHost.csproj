@@ -19,6 +19,7 @@
 		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 		<PackageReference Include="Aspire.Hosting.Kafka" Version="8.2.1" />
 		<PackageReference Include="Confluent.Kafka" Version="2.3.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
 	</ItemGroup>
 
 </Project>

@@ -1,77 +1,108 @@
+using BienOblige.ApiService.Entities;
+using BienOblige.ApiService.Extensions;
 using BienOblige.ApiService.IntegrationTest.Builders;
 using BienOblige.ApiService.IntegrationTest.Extensions;
 using BienOblige.Execution.Builders;
 using Microsoft.Extensions.Logging;
-using System.Net.Http.Json;
-using Xunit.Abstractions;
+using System.Text.Json;
 
 namespace BienOblige.ApiService.IntegrationTest;
 
-public class Execution_Create_Should : IDisposable
+public class Execution_Create_Should : IAsyncLifetime
 {
-    private bool _disposedValue;
-
-    private readonly DistributedApplication _app;
-    private readonly ITestOutputHelper _output;
-
-    public Execution_Create_Should(ITestOutputHelper output)
-    {
-        _output = output;
-        _app = this.GetApp();
-    }
+    private DistributedApplication? _app;
 
     [Fact]
     public async Task RespondWithAnAcceptedResult()
     {
-        var httpClient = _app.GetApiClient();
+        var (logger, httpClient) = _app.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid());
 
-        httpClient.DefaultRequestHeaders.Add("x-user-id", "https://example.org/4719a2cc-1d81-43b9-a91b-bfdadc0c8765");
-        httpClient.DefaultRequestHeaders.Add("x-correlation-id", "1285a46a-1b8d-490c-9dee-bc88fd1494a4");
+        var content = new ActionItemBuilder()
+            .UseRandomValues()
+            .BuildJsonContent();
+        var response = await httpClient.PostAsync("/api/Execution/", content);
+
+        var body = await response.Content.ReadAsStringAsync();
+        logger.LogInformation("HTTP Response Body: {@Response}", body);
+
+        Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task RespondWithTheSpecifiedCorrelationIdHeader()
+    {
+        var expectedCorrelationId = Guid.NewGuid();
+        var (logger, httpClient) = _app.GetRequiredServices(expectedCorrelationId, Guid.NewGuid());
+
+        var content = new ActionItemBuilder()
+            .UseRandomValues()
+            .BuildJsonContent();
+        var response = await httpClient.PostAsync("/api/Execution/", content);
+
+        var body = await response.Content.ReadAsStringAsync();
+        logger.LogInformation("HTTP Response: {@Response}", response);
+
+        var actual = response.Headers.GetValues("X-Correlation-ID").Single();
+        Assert.Equal(expectedCorrelationId.ToString(), actual);
+    }
+
+    [Fact]
+    public async Task RespondWithTheSpecifiedActionItemId()
+    {
+        var (logger, httpClient) = _app.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid());
 
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
             .Build();
-        var content = JsonContent.Create(actionItem);
+        var content = actionItem.AsJsonContent();
 
         var response = await httpClient.PostAsync("/api/Execution/", content);
-        
-        Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+
+        var body = await response.Content.ReadAsStringAsync();
+        logger.LogInformation("HTTP Response: {@Response}", response);
+
+        var actual = JsonSerializer.Deserialize<CreateResponse>(body);
+        Assert.Equal(actionItem.Id.Value.ToString(), actual!.Id);
     }
 
     [Fact]
     public async Task ProduceAMessageOnTheActionItemStream()
     {
-        var logger = _app.Services.GetRequiredService<ILogger<Execution_Create_Should>>();
-        var httpClient = _app.GetApiClient();
+        var (logger, httpClient) = _app.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid());
 
-        httpClient.DefaultRequestHeaders.Add("x-user-id", "https://example.org/4719a2cc-1d81-43b9-a91b-bfdadc0c8765");
-        httpClient.DefaultRequestHeaders.Add("x-correlation-id", "1285a46a-1b8d-490c-9dee-bc88fd1494a4");
-
-        var actionItem = new ActionItemBuilder()
+        var content = new ActionItemBuilder()
             .UseRandomValues()
-            .Build();
-
-        var content = JsonContent.Create(actionItem);
+            .BuildJsonContent();
 
         var response = await httpClient.PostAsync("/api/Execution/", content);
-        logger.LogDebug("HTTP Response: {Response}", response);
+
+        var body = await response.Content.ReadAsStringAsync();
+        logger.LogInformation("HTTP Response: {@Response}", response);
 
         response.EnsureSuccessStatusCode();
     }
 
-    protected virtual void Dispose(bool disposing)
+    #region Setup & Teardown
+
+    public async Task InitializeAsync()
     {
-        if (!_disposedValue)
+        var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.BienOblige_AppHost>();
+        appHost.Services.ConfigureHttpClientDefaults(clientBuilder =>
         {
-            if (disposing) _app.Dispose();
-            _disposedValue = true;
-        }
+            clientBuilder.AddStandardResilienceHandler();
+        });
+        
+        _app = await appHost.BuildAsync();
+
+        var resourceNotificationService = _app.Services
+            .GetRequiredService<ResourceNotificationService>();
+        await _app.StartAsync();
+
+        await resourceNotificationService.WaitForResourceAsync("api", KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromSeconds(30));
     }
 
-    public void Dispose()
-    {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
+    public async Task DisposeAsync() => await _app!.DisposeAsync();
+
+    #endregion
 }

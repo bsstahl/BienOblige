@@ -80,67 +80,6 @@ public class Client_CreateActionItem_Should
         await Assert.ThrowsAsync<InvalidIdentifierException>(() => target.CreateActionItem(item, NetworkIdentity.From(string.Empty.GetRandom()), correlationId));
     }
 
-    // TODO: Reconsider these tests, since these processes should probably be eventually-consistent,
-    // surfacing errors through an Exception node
-    // See: https://fosstodon.org/@Bsstahl/109406977184136386
-
-
-    [Fact]
-    public async Task ThrowIfActionItemIdentityAlreadyExists()
-    {
-        var existingActionItem = new ActionItemBuilder()
-                .UseRandomValues()
-                .Build();
-
-        var services = new ServiceCollection()
-            .AddLogging(b => b.AddSerilog())
-            .UseExecutionClient()
-            .UseMockRepositories()
-            .BuildServiceProvider();
-
-        var mockRepo = services.GetRequiredService<IGetActionItems>() as MockActionItemReader;
-        mockRepo!.SetupExistingActionItem(existingActionItem);
-
-        var userId = (null as NetworkIdentity).CreateRandom();
-        var correlationId = Guid.NewGuid().ToString();
-
-        var target = services.GetRequiredService<Client>();
-        await Assert.ThrowsAsync<DuplicateIdentifierException>(() => target.CreateActionItem(existingActionItem, userId, correlationId));
-    }
-
-    [Fact]
-    public async Task ReturnTheDuplicatedIdInTheException()
-    {
-        var existingActionItem = new ActionItemBuilder()
-                .UseRandomValues()
-                .Build();
-
-        var services = new ServiceCollection()
-            .AddLogging(b => b.AddSerilog())
-            .UseExecutionClient()
-            .UseMockRepositories()
-            .BuildServiceProvider();
-
-        var mockRepo = services.GetRequiredService<IGetActionItems>() as MockActionItemReader;
-        mockRepo!.SetupExistingActionItem(existingActionItem);
-
-        var userId = (null as NetworkIdentity).CreateRandom();
-        var correlationId = Guid.NewGuid().ToString();
-
-        var target = services.GetRequiredService<Client>();
-        DuplicateIdentifierException? actualException = null;
-        try
-        {
-            await target.CreateActionItem(existingActionItem, userId, correlationId);
-        }
-        catch (DuplicateIdentifierException ex)
-        {
-            actualException = ex;
-        }    
-
-        Assert.Equal(existingActionItem.Id, actualException?.Id);
-    }
-
     [Fact]
     public async Task SuccessfullyCreateTheActionItem()
     {

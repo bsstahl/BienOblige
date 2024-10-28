@@ -1,12 +1,45 @@
-﻿using Confluent.Kafka;
+﻿using BienOblige.Execution.Data.Kafka.Aggregates;
+using BienOblige.Execution.Data.Kafka.Extensions;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace BienOblige.Execution.Data.Kafka.Messages;
 
 public class Create
 {
+    private List<ValueObjects.Context> _context = new ();
+
+    // TODO: Make the following properties optional
+    // string targetType, string targetId, string targetName, string targetDescription
+
+    public Create(string correlationId, DateTimeOffset published,
+        string actionItemId, string actionItemName,
+        string actorId, string actorType)
+    {
+        _context.Add(new ValueObjects.Context("https://www.w3.org/ns/activitystreams"));
+        _context.Add(new ValueObjects.Context("https://bienoblige.com/ns/", "bienoblige"));
+        _context.Add(new ValueObjects.Context("https://schema.org", "schema"));
+
+        this.CorrelationId = correlationId;
+        this.Published = published;
+        this.Actor = new Actor(actorId, actorType);
+
+        this.ActionItem = new ActionItem(actionItemId, actionItemName);
+    }
+
+    [JsonConverter(typeof(ContextCollectionConverter))]
     [JsonPropertyName("@context")]
-    public string Context { get; private set; } = "https://www.w3.org/ns/activitystreams";
+    public IEnumerable<ValueObjects.Context> Context
+    {
+        get
+        {
+            return _context;
+        }
+        set
+        {
+            _context = value.ToList();
+        }
+    }
 
     [JsonPropertyName("type")]
     public string ActivityType { get; private set; } = "Create";
@@ -23,51 +56,10 @@ public class Create
     [JsonPropertyName("published")]
     public DateTimeOffset Published { get; set; }
 
-    public Create(string correlationId, DateTimeOffset published, string actionItemId, string actionItemName, 
-        string actionItemContent, string targetType, string targetId, string targetName, string targetDescription, string actorId)
+    override public string ToString()
     {
-        this.CorrelationId = correlationId;
-        this.Published = published;
-        this.Actor = new Actor(actorId);
-        this.ActionItem = new ActionItem(actionItemId, actionItemName, actionItemContent);
+        return JsonSerializer
+            .Serialize(this, JsonSerializerOptions.Default.BienObligeDefaults());
     }
 }
 
-public class ActionItem(string id, string name, string content)
-{
-    [JsonPropertyName("type")]
-    public string ObjectType { get; private set; } = "ActionItem";
-
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = id;
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = name;
-
-    [JsonPropertyName("content")]
-    public string Content { get; set; } = content;
-}
-
-public class Target(string objectType, string id, string name, string description)
-{
-    [JsonPropertyName("type")]
-    public string ObjectType { get; set; } = objectType;
-
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = id;
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = name;
-
-    [JsonPropertyName("description")]
-    public string Description { get; set; } = description;
-}
-
-public class Actor(string id)
-{
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "Person";
-
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = id;
-}

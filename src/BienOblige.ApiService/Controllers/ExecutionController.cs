@@ -1,14 +1,19 @@
-﻿using BienOblige.Execution.Application;
+﻿using BienOblige.ApiService.Entities;
+using BienOblige.Execution.Application;
 using BienOblige.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace BienOblige.ApiService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExecutionController : Controller
+    public class ExecutionController : ControllerBase
     {
+        private const string correlationIdKey = "X-Correlation-ID";
+        private const string userIdKey = "X-User-ID";
+
         private readonly Client _executionClient;
         private readonly ILogger _logger;
 
@@ -20,22 +25,24 @@ namespace BienOblige.ApiService.Controllers
 
         // POST api/<ExecutionController>
         [HttpPost()]
-        public async Task<string> Create([FromBody] Entities.ActionItem item,
-            [FromHeader(Name = "X-User-ID")] string userId,
-            [FromHeader(Name = "X-Correlation-ID")] string correlationId)
+        public async Task<IActionResult> Create([FromBody] Entities.ActionItem item,
+            [FromHeader(Name = userIdKey)] string userId,
+            [FromHeader(Name = correlationIdKey)] string correlationId)
         {
             // TODO: Figure out how to manage the correlation Id ideally so that it doesn't have
             // to get passed-in to the model layers since it is not needed for the
-            // Application proper (just the API)
+            // Application proper (just the wire formats)
 
-            _logger.LogInformation("Creating ActionItem with correlation ID {CorrelationId}", correlationId);
-
+            _logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
             var resultId = await _executionClient.CreateActionItem(item.AsAggregate(), NetworkIdentity.From(userId), correlationId);
-            var result = resultId.Value.ToString();
+            _logger.LogInformation("Created ActionItem for request with correlation ID {CorrelationId}. Result: {Result}", correlationId, resultId);
 
-            _logger.LogInformation("Created ActionItem with correlation ID {CorrelationId}. Result: {Result}", correlationId, result);
+            Response.Headers.Append(correlationIdKey, correlationId);
+            return new JsonResult(new CreateResponse(resultId.Value.ToString()))
+            {
+                StatusCode = (int)HttpStatusCode.Accepted
+            };
 
-            return result;
         }
 
         // PATCH api/<ExecutionController>/5

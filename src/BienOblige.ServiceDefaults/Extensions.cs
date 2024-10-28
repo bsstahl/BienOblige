@@ -1,3 +1,4 @@
+using BienOblige.ServiceDefaults.Serilog;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,8 @@ public static class Extensions
 {
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
+        builder.ConfigureSerilog();
+
         builder.ConfigureOpenTelemetry();
 
         builder.AddDefaultHealthChecks();

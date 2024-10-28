@@ -75,25 +75,4 @@ public class Client_AssignExecutor_Should
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.AssignExecutor(actionItemId, executorId, userId!, correlationId));
     }
 
-    [Fact]
-    public async Task ThrowIfActionItemDoesNotExist()
-    {
-        // TODO: Reconsider this, since these processes should probably be eventually-consistent,
-        // surfacing errors through an Exception node
-        // See: https://fosstodon.org/@Bsstahl/109406977184136386
-
-        var services = new ServiceCollection()
-            .AddLogging(b => b.AddSerilog())
-            .UseExecutionClient()
-            .UseMockRepositories()
-            .BuildServiceProvider();
-
-        var actionItemId = (null as NetworkIdentity).CreateRandom();
-        var executorId = (null as NetworkIdentity).CreateRandom();
-        var userId = (null as NetworkIdentity).CreateRandom();
-        var correlationId = Guid.NewGuid().ToString();
-
-        var target = services.GetRequiredService<Client>();
-        await Assert.ThrowsAsync<ActionItemNotFoundException>(() => target.AssignExecutor(actionItemId, executorId, userId, correlationId));
-    }
 }

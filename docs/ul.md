@@ -49,10 +49,10 @@ The entities involved in *ActionItem* management are:
 * **Location** - a place where ActionItems are performed
   * Represented by AS2 objects of type "Place".
   * Standard
-    * https://bienoblige.com/ns/location/office
-    * https://bienoblige.com/ns/location/home
+    * https://bienoblige.com/ns/location#office
+    * https://bienoblige.com/ns/location#home
   * Custom
-    * https://example.com/ns/location/12345
+    * https://example.com/ns/location#12345
 * **ActionItem Type** - an optional collection of category Ids representing common characteristics of the *ActionItems* they are associated with.
   * These categories are defined by the consuming applications and are identified by URI
   * The URI may be used as a filter/sort criteria when listing *ActionItems*

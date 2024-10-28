@@ -20,9 +20,12 @@ namespace BienOblige.Execution.Data.Kafka
 
         public async Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity userId, string correlationId)
         {
-            var value = new Messages.Create(correlationId, DateTimeOffset.UtcNow, item.Id.Value.ToString(), "ActionItem Name",
-                "ActionItem Content", "Vehicle", "https://example.com/vehicles/1C6RD6KT4CS332867",
-                "2022 Dodge Ram 1500", "2022 Dodge Ram pickup with vin 1C6RD6KT4CS332867", "https://example.com/users/12341234");
+            // "Vehicle", "https://example.com/vehicles/1C6RD6KT4CS332867",
+            // "2022 Dodge Ram 1500", "2022 Dodge Ram pickup with vin 1C6RD6KT4CS332867",
+
+            var value = new Messages.Create(correlationId, DateTimeOffset.UtcNow, 
+                item.Id.Value.ToString(), "ActionItem Name",
+                "https://example.com/users/12341234", "Group");
 
             var message = new Message<string, string>()
             {
