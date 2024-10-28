@@ -41,7 +41,7 @@ public class Create
         }
     }
 
-    [JsonPropertyName("type")]
+    [JsonPropertyName("@type")]
     public string ActivityType { get; private set; } = "Create";
 
     [JsonPropertyName("id")]

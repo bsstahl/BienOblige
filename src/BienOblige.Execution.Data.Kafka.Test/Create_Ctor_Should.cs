@@ -1,7 +1,6 @@
 ﻿using BienOblige.Execution.Builders;
 using BienOblige.Execution.Enumerations;
 using Serilog;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Xunit.Abstractions;
 
@@ -62,7 +61,7 @@ public class Create_Ctor_Should
 
         var actualActor = root.GetProperty("actor");
         Assert.Equal(message.Actor.Id, actualActor.GetProperty("id").GetString());
-        Assert.Equal(message.Actor.Type, actualActor.GetProperty("type").GetString());
+        Assert.Equal(message.Actor.Type, actualActor.GetProperty("@type").GetString());
 
         var actualObject = root.GetProperty("object");
         Assert.Equal(message.ActionItem.Id, actualObject.GetProperty("id").GetString());

@@ -18,9 +18,12 @@ public class ActionItem
 
     public ActionItem(JsonElement element)
     {
-        this.Id = element.GetStringProperty("@id");
+        this.Id = element.GetStringProperty("id");
         this.Name = element.GetStringProperty(nameof(this.Name).ToLower());
-        this.Content = element.GetStringProperty(nameof(this.Content).ToLower());
+
+        if (element.TryGetProperty(nameof(this.Content).ToLower(), out var contentElement))
+            this.Content = contentElement.GetString();
+
         if (element.TryGetProperty(nameof(this.Target).ToLower(), out var targetElement))
             this.Target = new Target(targetElement);
     }

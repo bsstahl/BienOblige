@@ -13,10 +13,10 @@ public class Actor
     }
 
     internal Actor(JsonElement actorNode)
-        : this(actorNode.GetStringProperty("@id"), actorNode.GetStringProperty("@type"))
+        : this(actorNode.GetStringProperty("id"), actorNode.GetStringProperty("@type"))
     { }
 
-    [JsonPropertyName("type")]
+    [JsonPropertyName("@type")]
     public string @Type { get; set; }
 
     [JsonPropertyName("id")]

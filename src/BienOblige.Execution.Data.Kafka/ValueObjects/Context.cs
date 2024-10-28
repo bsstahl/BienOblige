@@ -37,6 +37,20 @@ public class Context
         }
     }
 
+    public override bool Equals(object obj)
+    {
+        return obj is Context other
+            ? HasKey == other.HasKey &&
+                   Key == other.Key &&
+                   Name == other.Name
+            : false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(HasKey, Key, Name);
+    }
+
     //public override string ToString()
     //{
     //    return this.Key is null

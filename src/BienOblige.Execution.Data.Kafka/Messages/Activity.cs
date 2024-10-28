@@ -1,5 +1,6 @@
 ﻿using BienOblige.Execution.Data.Kafka.Aggregates;
 using BienOblige.Execution.Data.Kafka.Extensions;
+using System.Linq;
 using System.Text.Json;
 
 namespace BienOblige.Execution.Data.Kafka.Messages;
@@ -43,10 +44,7 @@ public class Activity
         using (JsonDocument doc = JsonDocument.Parse(jsonMessage))
         {
             var root = doc.RootElement;
-
-            this.Context = root.GetProperty("@context")
-                .EnumerateArray()
-                .Select(x => new ValueObjects.Context(x));
+            this.Context = root.GetProperty("@context").ParseContext();
 
             this.Published = DateTimeOffset.Parse(root.GetStringProperty(nameof(this.Published).ToLower()));
             this.Actor = new Actor(root.GetProperty(nameof(this.Actor).ToLower()));

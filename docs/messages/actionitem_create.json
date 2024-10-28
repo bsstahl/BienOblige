@@ -5,24 +5,24 @@
         { "schema": "https://schema.org" }
     ],
     "@type": "Create",
-    "@id": "urn:uid:E22CA55E-5F20-4899-A0DF-DACAE99F00B8",
+    "id": "urn:uid:E22CA55E-5F20-4899-A0DF-DACAE99F00B8",
     "object": {
       "@type": ["bienoblige:ActionItem", "Object"],
       "attributedTo": {
         "@type": "Person",
-        "@id": "https://example.com/users/1234567"
+        "id": "https://example.com/users/1234567"
       },
       "content": "Ensure the vehicle with VIN: <i>1C6RD6KT4CS332867</i> is fueled to at or near capacity.",
       "@context": "https://example.com/CustomerSale/25a4b838-ff12-42e4-b518-89d6ef7eafb4",
       "endTime": "2024-10-02T20:45:00Z",
       "generator":  {
         "@type": "Application",
-        "@id": "https://example.com/applications/321321"
+        "id": "https://example.com/applications/321321"
       },
-      "@id": "https://bienoblige.com/actionitems/5e4ea9cb-07f5-4259-bd8b-56dcc5a31d11",
+      "id": "https://bienoblige.com/actionitems/5e4ea9cb-07f5-4259-bd8b-56dcc5a31d11",
       "location": {
         "@type": "Place",
-        "@id": "https://example.com/places/33433"
+        "id": "https://example.com/places/33433"
       },
       "name": "Top off fuel tank",
       "origin": "https://bienoblige.com/actionitems/e5fd78c1-10c7-4a01-a932-42855bce5525",
@@ -40,7 +40,7 @@
       ],
       "target": {
         "@type": "schema:Car",
-        "@id": "https://example.com/vehicles/1C6RD6KT4CS332867",
+        "id": "https://example.com/vehicles/1C6RD6KT4CS332867",
         "name": "2022 Ram 1500",
         "vehicleIdentificationNumber": "1C6RD6KT4CS332867"
       },
@@ -52,13 +52,13 @@
         "unitCode": "PTS"
       },
       "bienoblige:executorRequirements": [
-        { "@id": "https://example.com/requirements/localDl" },
-        { "@id": "https://example.com/requirements#cdl" }
+        { "id": "https://example.com/requirements/localDl" },
+        { "id": "https://example.com/requirements#cdl" }
       ],
       "bienoblige:exceptions": [],
       "bienoblige:parent": "https://bienoblige.com/actionitems/85b6a2cd-31e5-4d95-9291-225ce51b6d15",
       "bienoblige:prerequisites": [
-        { "@id": "https://bienoblige.com/actionitems/854dc0a9-adeb-4b6e-9699-5a2c5a0dab3a" }
+        { "id": "https://bienoblige.com/actionitems/854dc0a9-adeb-4b6e-9699-5a2c5a0dab3a" }
       ],
       "bienoblige:priority": "https://bienoblige.com/ns/priority#Medium",
       "bienoblige:status": "https://bienoblige.com/ns/status#Incomplete"
@@ -66,6 +66,6 @@
     "published": "2024-09-20T10:00:00Z",
     "actor": {
       "@type": "Person",
-      "@id": "https://example.com/users/1234567"
+      "id": "https://example.com/users/1234567"
     }
   }
