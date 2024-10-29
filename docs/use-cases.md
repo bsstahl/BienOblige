@@ -33,11 +33,14 @@
 
 ### Search Subsystem
 
-* **List ActionItem** - A client system can retrieve a list of ActionItem, subject to specific criteria:
+* **List ActionItems** - A client system can retrieve a list of ActionItems, subject to specific criteria:
   * Location
   * Executor
   * Status
   * Unassigned
+* **Full ActionItem Details** - A client system can request a list of all ActionItems related to a particular ActionItem.
+  * The system will find the top-level item associated with that ActionItem, and then return that parent, and all of its decendants.
+  * If there were ActionItems created from any of these items, those would be included as well.
 
 ### Notification Subsystem
 

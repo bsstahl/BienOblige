@@ -45,9 +45,12 @@
         "vehicleIdentificationNumber": "1C6RD6KT4CS332867"
       },
       "updated": "2024-09-20T10:00:00Z",
-      "bienoblige:completionMethod": "https://bienoblige.com/ns/completionmethod#Manual",
+      "bienoblige:completionMethod": [
+        "bienoblige:completionmethod#Manual",
+        "bienoblige:completionmethod#ParentCompleted"
+      ],
       "bienoblige:effort": {
-        "@type": "bienoblige:StoryPoints",
+        "@type": "https://bienoblige.com/effort#StoryPoints",
         "value": 3,
         "unitCode": "PTS"
       },
