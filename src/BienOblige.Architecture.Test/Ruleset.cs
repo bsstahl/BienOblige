@@ -7,6 +7,7 @@ using System.Collections;
 
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 using ArchUnitNET.xUnit;
+using System.Reflection;
 
 namespace BienOblige.Architecture.Test;
 
@@ -24,12 +25,15 @@ internal class Ruleset : IEnumerable<IArchRule>
             new ("BienOblige.Execution.Data.Kafka", Layer.Infrastructure),
             new ("BienOblige.ApiService", Layer.Interface),
             new ("BienOblige.AppHost", Layer.Hosting),
-            new ("BienOblige.ServiceDefaults", Layer.Hosting)
+            new ("BienOblige.ServiceDefaults", Layer.Hosting),
+
+            new ("BienOblige.FakeDomain.Application", Layer.Application)
         };
 
     public static readonly ArchUnitNET.Domain.Architecture Architecture =
         new ArchLoader().LoadAssemblies(
-            (Ruleset.Assemblies.Select(n => System.Reflection.Assembly.Load(n.Key))).ToArray())
+            (Ruleset.Assemblies
+                .Select(n => Assembly.Load(n.Key))).ToArray())
         .Build();
 
     public IArchRule AllRules
@@ -45,6 +49,8 @@ internal class Ruleset : IEnumerable<IArchRule>
 
     public Ruleset()
     {
+        var architecture = Ruleset.Architecture;
+
         var layers = System.Enum.GetValues(typeof(Layer));
         var layerConjunctions = new List<GivenTypesConjunctionWithDescription>();
 

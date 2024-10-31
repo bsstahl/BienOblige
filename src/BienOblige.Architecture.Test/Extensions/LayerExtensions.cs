@@ -7,5 +7,14 @@ namespace BienOblige.Architecture.Test.Extensions;
 internal static class LayerExtensions
 {
     internal static IArchRule ShouldNotDependUpon(this Layer layer, Layer otherLayer) =>
-        Types().That().Are(layer.ToString()).Should().NotDependOnAny(otherLayer.ToString());
+        Types().That().HaveFullNameContaining(layer.ToString()).Should().NotDependOnAnyTypesThat().HaveFullNameContaining(otherLayer.ToString());
+
+    //internal static IArchRule ShouldNotDependUpon(this Layer layer, Layer otherLayer) =>
+    //    Types().That().ResideInNamespace(layer.ToString()).Should().NotDependOnAnyTypesThat()
+    //        .ResideInNamespace(otherLayer.ToString());
+
+    //internal static IArchRule ShouldNotDependUpon(this Layer layer, Layer otherLayer) =>
+    //    Types().That().ResideInNamespace($"*.{layer}.*").Should().NotDependOnAnyTypesThat()
+    //        .ResideInNamespace($"*.{otherLayer}.*");
+
 }
