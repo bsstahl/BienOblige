@@ -13,6 +13,8 @@ This project is currently in the exploratory phase. In this stage, we are active
 * Requirement Analysis: We are identifying and evaluating different requirements that align with our project goals.
 * Implementation Exploration: Various implementation methods are being considered and assessed for feasibility and effectiveness.
 
+Our [Internal Press Release](docs/press/Internal%20Press%20Release.md) provides a high-level overview of the project's vision and objectives.
+
 ### Next Steps
 
 1. Gather feedback from interested parties.
