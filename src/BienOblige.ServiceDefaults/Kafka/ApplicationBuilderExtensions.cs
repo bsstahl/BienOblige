@@ -2,10 +2,12 @@
 
 public static class ApplicationBuilderExtensions
 {
-    public static IResourceBuilder<KafkaServerResource> UseBienObligeKafka(this IDistributedApplicationBuilder builder)
+    public static IResourceBuilder<KafkaServerResource> UseBienObligeKafka(
+        this IDistributedApplicationBuilder builder, 
+        string kafkaServiceName)
     {
         return builder
-            .AddKafka("kafka")
+            .AddKafka(kafkaServiceName)
             .WithHealthCheck([
                 "execution_command_private",
                 "execution_actionitems_public",

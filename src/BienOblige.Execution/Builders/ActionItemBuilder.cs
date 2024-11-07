@@ -8,6 +8,7 @@ public class ActionItemBuilder
 {
     private NetworkIdentity? _id;
     private Title? _title;
+    private Content? _content;
 
     private ActorBuilder? _actorBuilder;
 
@@ -15,8 +16,9 @@ public class ActionItemBuilder
     {
         ArgumentNullException.ThrowIfNull(_id, nameof(_id));
         ArgumentNullException.ThrowIfNull(_title, nameof(_title));
+        ArgumentNullException.ThrowIfNull(_content, nameof(_content));
 
-        var result = new ActionItem(_id, _title);
+        var result = new ActionItem(_id, _title, _content);
         if (_actorBuilder is not null)
             result.Actor = _actorBuilder.Build();
         return result;
@@ -46,6 +48,17 @@ public class ActionItemBuilder
     public ActionItemBuilder Title(Title value)
     {
         _title = value;
+        return this;
+    }
+
+    public ActionItemBuilder Content(string value)
+    {
+        return this.Content(ValueObjects.Content.From(value));
+    }
+
+    public ActionItemBuilder Content(Content value)
+    {
+        _content = value;
         return this;
     }
 

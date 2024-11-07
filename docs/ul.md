@@ -1,4 +1,4 @@
-# Bien Oblige: Ubiquitious Language
+# Bien Oblige: Ubiquitous Language
 
 ## ActionItem Management Nouns
 
@@ -17,7 +17,7 @@ The entities involved in *ActionItem* management are:
 * **Exception** - an additional status on an *ActionItem* that indicates a significant problem that likely needs user attention. The following exceptions are known, but there may be many others down the road.
   * Invalid Request - A request was made to place this *ActionItem* in an invalid state. Also occurs when an attempt to create a new *ActionItem* with the same Id as the existing one is made. The exception would be placed on the existing *ActionItem* and no additional *ActionItem* would be created.
   * Timeframe Exceeded - The *ActionItem* was not completed within a certain time frame of the due date and the *ActionItem* was not marked as complete or with a completion method that includes closing when *Expired*.
-  * Asset Unavailable - The *ActionItem* requires an asset that is not available. This could be because the asset is not at the location where the work is to be performed, or the asset is broken and is not available for the work.
+  * Asset Unavailable - The *ActionItem* requires an asset that is not available. This could be because the asset is not at the location where the work is to be performed, or the asset is broken or otherwise not available for the work.
 * **Location** - a place where ActionItems are performed
   * Represented by AS2 objects of type "Place".
   * Standard
@@ -30,7 +30,7 @@ The entities involved in *ActionItem* management are:
   * The URI may be used as a filter/sort criteria when listing *ActionItems*
 * **CompletionMethod** - an array indicating the methods by which the *ActionItem* is to be completed. Currently, any combinations of the statuses below are allowed. This may not always be the case when additional methods are added.
   * "bienoblige:completionMethod#Manual" - the default method where the *ActionItem* is considered complete when specifically identified as such by a client system, usually as a result of user interaction.
-  * "bienoblige:completionMethod#AllChildrenCompleted" - the *ActionItem* is considered complete when all of its child *ActionItems* are complete. There must be at least 1 child *ActionItem*. If there are no children, the *ActionItem* can only be closed manually. This method is used for work that is broken down into smaller tasks that must all be completed to consider the work done.
+  * "bienoblige:completionMethod#AllChildrenCompleted" - the *ActionItem* is considered complete when all of its child *ActionItems* are complete. There must be at least 1 child *ActionItem*. If there are no children, the *ActionItem* can only be completed manually. This method is used for work that is broken down into smaller tasks that must all be completed to consider the work done.
   * "bienoblige:completionMethod#Expired" - the *ActionItem* is considered complete when the *endTime* has passed. This method is used when the work needs to be completed by a specific date and time or it no longer has value.
   * "bienoblige:completionMethod#ParentCompleted" - the *ActionItem* is considered complete when its parent *ActionItem* is marked complete.
 * **Status** - the current state of completion of an ActionItem.
@@ -64,6 +64,9 @@ The entities involved in *ActionItem* management are:
 
 ## ActionItem Management Verbs
 
+* **Cancel** - The act of marking an *ActionItem* as *cancelled* to indicate that the work will not be done.
+* **Close** - The act of marking an *ActionItem* as either *complete* or *cancelled*. This is a convenience term to indicate that the work is no longer active but does not necessarily mean that the work has been done.
+* **Complete** - The act of marking an *ActionItem* as *done* to indicate that the work has been successfully completed.
 * **Create** - The act of defining a new *ActionItem* that needs to be performed.
   * Represented by the AS2 "Activity" type
     * [Sample ActionItem Create Message](./messages/actionitem_create.json)

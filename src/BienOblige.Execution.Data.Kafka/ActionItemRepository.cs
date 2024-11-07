@@ -7,8 +7,10 @@ using System.Text.Json;
 
 namespace BienOblige.Execution.Data.Kafka
 {
-    public class ActionItemRepository : ICreateActionItems
+    public class ActionItemRepository : ICreateActionItems, IUpdateActionItems
     {
+        const string topicName = "execution_command_private";
+
         ILogger _logger;
         IProducer<string, string> _producer;
 
@@ -20,11 +22,12 @@ namespace BienOblige.Execution.Data.Kafka
 
         public async Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity userId, string correlationId)
         {
-            // "Vehicle", "https://example.com/vehicles/1C6RD6KT4CS332867",
-            // "2022 Dodge Ram 1500", "2022 Dodge Ram pickup with vin 1C6RD6KT4CS332867",
+            ArgumentNullException.ThrowIfNull(item);
+            ArgumentNullException.ThrowIfNull(userId);
+            ArgumentNullException.ThrowIfNull(correlationId);
 
             var value = new Messages.Create(correlationId, DateTimeOffset.UtcNow, 
-                item.Id.Value.ToString(), "ActionItem Name",
+                item,
                 "https://example.com/users/12341234", "Group");
 
             var message = new Message<string, string>()
@@ -33,10 +36,29 @@ namespace BienOblige.Execution.Data.Kafka
                 Value = JsonSerializer.Serialize(value)
             };
 
-            var result = await _producer.ProduceAsync("execution_command_private", message);
+            var result = await _producer.ProduceAsync(topicName, message);
             _logger.LogInformation("ActionItemRepository.Create: {0}", result);
 
             return item.Id;
+        }
+
+        public async Task<NetworkIdentity> Update(ActionItem changes, NetworkIdentity userId, string correlationId)
+        {
+            ArgumentNullException.ThrowIfNull(changes);
+            ArgumentNullException.ThrowIfNull(userId);
+            ArgumentNullException.ThrowIfNull(correlationId);
+            ArgumentNullException.ThrowIfNull(changes.Id);
+
+            var message = new Message<string, string>()
+            {
+                Key = changes.Id.Value.ToString(),
+                Value = JsonSerializer.Serialize(changes)
+            };
+
+            var result = await _producer.ProduceAsync(topicName, message);
+            _logger.LogInformation("ActionItemRepository.Create: {0}", result);
+
+            return changes.Id;
         }
     }
 }

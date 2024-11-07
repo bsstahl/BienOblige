@@ -4,11 +4,13 @@ namespace BienOblige.AppHost;
 
 internal class Program
 {
+    const string kafkaServiceName = "kafka";
+
     private static void Main(string[] args)
     {
         var builder = DistributedApplication.CreateBuilder(args);
 
-        var kafka = builder.UseBienObligeKafka();
+        var kafka = builder.UseBienObligeKafka(kafkaServiceName);
 
         // To connect to an existing Kafka server,
         // call AddConnectionString instead of WithReference

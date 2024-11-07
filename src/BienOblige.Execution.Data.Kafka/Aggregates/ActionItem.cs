@@ -10,19 +10,18 @@ public class ActionItem
     // actionItemContent
     // targetType, targetId, targetName, targetDescription
 
-    public ActionItem(string id, string name)
+    public ActionItem(string id, string name, string content)
     {
         this.Id = id;
         this.Name = name;
+        this.Content = content;
     }
 
     public ActionItem(JsonElement element)
     {
         this.Id = element.GetStringProperty("id");
         this.Name = element.GetStringProperty(nameof(this.Name).ToLower());
-
-        if (element.TryGetProperty(nameof(this.Content).ToLower(), out var contentElement))
-            this.Content = contentElement.GetString();
+        this.Content = element.GetStringProperty(nameof(this.Content).ToLower());
 
         if (element.TryGetProperty(nameof(this.Target).ToLower(), out var targetElement))
             this.Target = new Target(targetElement);
@@ -38,9 +37,15 @@ public class ActionItem
     public string Name { get; set; }
 
     [JsonPropertyName("content")]
-    public string? Content { get; set; }
+    public string Content { get; set; }
 
     [JsonPropertyName("target")]
     public Target? Target { get; set; }
+
+    public static ActionItem From(Execution.Aggregates.ActionItem item)
+    {
+        return new ActionItem(item.Id.Value.ToString(), item.Title.Value, item.Content.Value)
+        { };
+    }
 }
 

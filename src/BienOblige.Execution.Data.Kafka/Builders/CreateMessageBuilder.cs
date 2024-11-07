@@ -39,6 +39,7 @@ public class CreateMessageBuilder
             published: _published.Value,
             actionItemId: actionItem.Id.Value.ToString(),
             actionItemName: actionItem.Title.Value,
+            actionItemContent: actionItem.Content.Value,
             actorId: actor.Id.Value.ToString(),
             actorType: actor.Type.ToString());
 

@@ -2,27 +2,32 @@
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.Logging;
-using BienOblige.Execution.Exceptions;
 
 namespace BienOblige.Execution.Application;
 
 public class Client
 {
     private readonly ILogger _logger;
-    // private readonly IGetActionItems _actionItemReader;
     private readonly ICreateActionItems _actionItemCreator;
+    private readonly IUpdateActionItems _actionItemUpdater;
 
-    public Client(ILogger<Client> logger, ICreateActionItems actionItemCreator)
+    public Client(ILogger<Client> logger, 
+        ICreateActionItems actionItemCreator,
+        IUpdateActionItems actionItemUpdater)
     {
         _logger = logger;
-        // _actionItemReader = actionItemReader;
         _actionItemCreator = actionItemCreator;
+        _actionItemUpdater = actionItemUpdater;
     }
 
     public async Task<NetworkIdentity> CreateActionItem(ActionItem item, NetworkIdentity userId, string correlationId)
     {
         ArgumentNullException.ThrowIfNull(item);
         ArgumentNullException.ThrowIfNull(userId);
+
+        // TODO: Figure out how to manage the correlation Id ideally so that it doesn't have
+        // to get passed-in to the model layers since it is not needed for the
+        // Application proper (just the wire formats)
 
         //if (await _actionItemReader.Exists(item.Id))
         //{
@@ -33,9 +38,13 @@ public class Client
         return await _actionItemCreator.Create(item, userId, correlationId);
     }
 
-    public Task CancelActionItem(string id, string userId, string correlationId)
+    public async Task<NetworkIdentity> UpdateActionItem(ActionItem changes, NetworkIdentity userId, string correlationId)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(changes);
+        ArgumentNullException.ThrowIfNull(userId);
+        ArgumentNullException.ThrowIfNull(changes.Id);
+
+        return await _actionItemUpdater.Update(changes, userId, correlationId);
     }
 
     public Task AssignExecutor(NetworkIdentity actionItemId, NetworkIdentity executorId, NetworkIdentity userId, string correlationId)

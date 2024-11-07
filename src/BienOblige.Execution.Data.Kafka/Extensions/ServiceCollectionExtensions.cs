@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection UseKafkaActionItemRepositories(this IServiceCollection services)
     {
         return services
-            .AddSingleton<ICreateActionItems, ActionItemRepository>();
+            .AddSingleton<ICreateActionItems, ActionItemRepository>()
+            .AddSingleton<IUpdateActionItems, ActionItemRepository>();
     }
 }

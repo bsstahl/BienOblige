@@ -9,7 +9,8 @@ public static class ActionItemExtensions
         return JsonContent.Create(new
         {
             Id = actionItem.Id.Value,
-            Title = actionItem.Title.Value
+            Title = actionItem.Title.Value,
+            Content = actionItem.Content.Value
         });
     }
 }

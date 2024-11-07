@@ -27,15 +27,16 @@ public class Create_Ctor_Should
                 .ActorType(ActorType.Person))
             .ActionItem(new ActionItemBuilder()
                 .Id(Guid.NewGuid())
-                .Title(string.Empty.GetRandom()))
+                .Title(string.Empty.GetRandom())
+                .Content(string.Empty.GetRandom()))
             .Build();
 
-        // In prod we could use either the Builer above or
+        // In prod we could use either the Builder above or
         // parameters to the ctor as below. This is a test
         // of the ctor so we use that method.
-        var actualMessage = new Messages.Create(message.CorrelationId, message.Published, 
-            message.ActionItem.Id, message.ActionItem.Name, 
-            message.Actor.Id, message.Actor.Type);
+        var actualMessage = new Messages.Create(message.CorrelationId, 
+            message.Published, message.ActionItem.Id, message.ActionItem.Name, 
+            message.ActionItem.Content, message.Actor.Id, message.Actor.Type);
 
         var actual = message.ToString();
         Log.Logger.Verbose(actual);
