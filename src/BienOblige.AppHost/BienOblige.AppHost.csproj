@@ -10,16 +10,27 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="appsettings.Development.json" />
+	  <None Remove="appsettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="appsettings.Development.json" />
+	  <Content Include="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" IsAspireProjectResource="false" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.1" />
+		<PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
 		<PackageReference Include="System.Text.Json" Version="8.0.5" />
-		<PackageReference Include="Aspire.Hosting.Kafka" Version="8.2.1" />
-		<PackageReference Include="Confluent.Kafka" Version="2.3.0" />
-		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+		<PackageReference Include="Aspire.Hosting.Kafka" Version="8.2.2" />
+		<PackageReference Include="Confluent.Kafka" Version="2.6.0" />
 	</ItemGroup>
 
 </Project>

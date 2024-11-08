@@ -5,5 +5,6 @@ namespace BienOblige.Execution.Application.Interfaces;
 
 public interface ICreateActionItems
 {
-    Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity userId, string correlationId);
+    // Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity creatorId, string creatorType, string correlationId);
+    Task<IEnumerable<NetworkIdentity>> Create(IEnumerable<ActionItem> items, NetworkIdentity creatorId, string creatorType, string correlationId);
 }

@@ -1,4 +1,5 @@
 ﻿using BienOblige.ApiService.Entities;
+using BienOblige.ApiService.Extensions;
 using BienOblige.Execution.Application;
 using BienOblige.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -16,46 +17,74 @@ namespace BienOblige.ApiService.Controllers
         private readonly Client _executionClient;
         private readonly ILogger _logger;
 
-        public ExecutionController(ILogger<ExecutionController> logger, Client demandClient)
+        public ExecutionController(ILogger<ExecutionController> logger, Client executionClient)
         {
             _logger = logger;
-            _executionClient = demandClient;
+            _executionClient = executionClient;
         }
 
+        //// POST api/<ExecutionController>
+        //[HttpPost()]
+        //public async Task<IActionResult> Create([FromBody] Entities.ActionItem item,
+        //    [FromHeader(Name = userIdKey)] string userId,
+        //    [FromHeader(Name = correlationIdKey)] string correlationId)
+        //{
+        //    _logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
+        //    NetworkIdentity resultId = await CreateActionItem(item, userId, correlationId);
+        //    _logger.LogInformation("Created ActionItem for request with correlation ID {CorrelationId}. Result: {Result}", correlationId, resultId);
+
+        //    Response.Headers.Append(correlationIdKey, correlationId);
+        //    return new JsonResult(new CreateResponse(resultId.Value.ToString()))
+        //    {
+        //        StatusCode = (int)HttpStatusCode.Accepted
+        //    };
+        //}
+
         // POST api/<ExecutionController>
+        // Note: Middleware converts all singular ActionItem requests to IEnumerable<ActionItem> requests
         [HttpPost()]
-        public async Task<IActionResult> Create([FromBody] Entities.ActionItem item,
+        public async Task<IActionResult> Create([FromBody] IEnumerable<Entities.ActionItem> items,
             [FromHeader(Name = userIdKey)] string userId,
             [FromHeader(Name = correlationIdKey)] string correlationId)
         {
-            _logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
-            item.Id ??= NetworkIdentity.New().Value.ToString();
-            var resultId = await _executionClient.CreateActionItem(
-                item.AsAggregate(),
+            //_logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
+
+            // Add Ids to any ActionItem that doesn't have one
+            items.Select(item => item.Id ??= NetworkIdentity.New().Value.ToString());
+
+            var resultIds = await _executionClient.CreateActionItem(
+                items.AsAggregates(),
                 NetworkIdentity.From(userId),
                 correlationId);
-            _logger.LogInformation("Created ActionItem for request with correlation ID {CorrelationId}. Result: {Result}", correlationId, resultId);
+
+            var resultIdValues = resultIds.Select(t => t.Value.ToString());
+            var result = new
+            { 
+                Ids = resultIdValues
+            };
+
+            // _logger.LogInformation("Created {Count} ActionItem(s) for request with correlation ID {@CorrelationId}. Result: {@Result}", resultIds.Count(), correlationId, result);
 
             Response.Headers.Append(correlationIdKey, correlationId);
-            return new JsonResult(new CreateResponse(resultId.Value.ToString()))
+            return new JsonResult(result)
             {
                 StatusCode = (int)HttpStatusCode.Accepted
             };
         }
 
-        // POST api/<ExecutionController>/5
+        // PATCH api/<ExecutionController>/5
         [HttpPatch()]
         public async Task<IActionResult> Update(
             [FromBody] Entities.ActionItem item,
             [FromHeader(Name = userIdKey)] string userId,
             [FromHeader(Name = correlationIdKey)] string correlationId)
         {
-            _logger.LogInformation("Updating ActionItem for with CorrelationId {CorrelationId}", correlationId);
+            //_logger.LogInformation("Updating ActionItem for with CorrelationId {CorrelationId}", correlationId);
             var resultId = await _executionClient.UpdateActionItem(
                 item.AsAggregate(),
                 NetworkIdentity.From(userId),
                 correlationId);
-            _logger.LogInformation("Updating ActionItem for request with CorrelationId {CorrelationId}. Result: {Result}", correlationId, resultId);
+            //_logger.LogInformation("Updating ActionItem for request with CorrelationId {CorrelationId}. Result: {Result}", correlationId, resultId);
 
             Response.Headers.Append(correlationIdKey, correlationId);
             return new JsonResult(new CreateResponse(resultId.Value.ToString()))
@@ -64,6 +93,15 @@ namespace BienOblige.ApiService.Controllers
             };
 
         }
+
+        //private async Task<NetworkIdentity> CreateActionItem(Entities.ActionItem item, string userId, string correlationId)
+        //{
+        //    item.Id ??= NetworkIdentity.New().Value.ToString();
+        //    return await _executionClient.CreateActionItem(
+        //        new[] { item.AsAggregate() },
+        //        NetworkIdentity.From(userId),
+        //        correlationId);
+        //}
 
         //public ActionResult Index()
         //{

@@ -20,32 +20,47 @@ namespace BienOblige.Execution.Data.Kafka
             _producer = producer;
         }
 
-        public async Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity userId, string correlationId)
+        //public async Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity creatorId, string creatorType, string correlationId)
+        //{
+        //    return (await Create(new ActionItem[] { item }, creatorId, creatorType, correlationId)).Single();
+        //}
+
+        public async Task<IEnumerable<NetworkIdentity>> Create(IEnumerable<ActionItem> items, NetworkIdentity creatorId, string creatorType, string correlationId)
         {
-            ArgumentNullException.ThrowIfNull(item);
-            ArgumentNullException.ThrowIfNull(userId);
+            ArgumentNullException.ThrowIfNull(items);
+            ArgumentNullException.ThrowIfNull(creatorId);
             ArgumentNullException.ThrowIfNull(correlationId);
 
-            var value = new Messages.Create(correlationId, DateTimeOffset.UtcNow, 
-                item,
-                "https://example.com/users/12341234", "Group");
+            if (items.Count() == 0)
+                throw new ArgumentException("No ActionItems to create");
 
-            var message = new Message<string, string>()
+            var results = new List<NetworkIdentity>();
+            foreach (var item in items)
             {
-                Key = item.Id.Value.ToString(),
-                Value = JsonSerializer.Serialize(value)
-            };
+                var value = new Messages.Create(correlationId, DateTimeOffset.UtcNow,
+                    item, creatorId.Value.ToString(), creatorType);
 
-            var result = await _producer.ProduceAsync(topicName, message);
-            _logger.LogInformation("ActionItemRepository.Create: {0}", result);
+                var message = new Message<string, string>()
+                {
+                    Key = item.Id.Value.ToString(),
+                    Value = JsonSerializer.Serialize(value)
+                };
 
-            return item.Id;
+                var result = await _producer.ProduceAsync(topicName, message);
+
+                // TODO: Validate that the result is a successful publication
+
+                results.Add(item.Id);
+            }
+
+            return results;
         }
 
-        public async Task<NetworkIdentity> Update(ActionItem changes, NetworkIdentity userId, string correlationId)
+        public async Task<NetworkIdentity> Update(ActionItem changes, NetworkIdentity updaterId, string updaterType, string correlationId)
         {
             ArgumentNullException.ThrowIfNull(changes);
-            ArgumentNullException.ThrowIfNull(userId);
+            ArgumentNullException.ThrowIfNull(updaterId);
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(updaterType);
             ArgumentNullException.ThrowIfNull(correlationId);
             ArgumentNullException.ThrowIfNull(changes.Id);
 

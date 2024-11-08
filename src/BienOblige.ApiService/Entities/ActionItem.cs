@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
-
-namespace BienOblige.ApiService.Entities;
+﻿namespace BienOblige.ApiService.Entities;
 
 public class ActionItem(string id, string title, string content)
 {
@@ -23,4 +21,8 @@ public class ActionItem(string id, string title, string content)
         return new ActionItem(item.Id.Value.ToString(), item.Title.Value, item.Content.Value);
     }
 
+    //public static (bool Success, ActionItem? item) TryDeserialize(string json)
+    //{
+    //    return (false, null);
+    //}
 }

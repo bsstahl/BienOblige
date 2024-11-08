@@ -4,8 +4,7 @@ namespace BienOblige.ApiService.BackgroundServices;
 
 public class ExecutionService : BackgroundService
 {
-    //const string consumptionTopicName =         
-       const string topicName = "execution_command_private";
+    const string topicName = "execution_command_private";
 
     private readonly ILogger<ExecutionService> _logger;
     private readonly IConsumer<string, string> _consumer;
@@ -28,9 +27,7 @@ public class ExecutionService : BackgroundService
                 {
                     var consumeResult = _consumer.Consume(stoppingToken);
 
-
                     _logger.LogInformation($"Consumed message '{consumeResult.Message.Value}' at: '{consumeResult.TopicPartitionOffset}'.");
-
 
                     // Process the message here
 

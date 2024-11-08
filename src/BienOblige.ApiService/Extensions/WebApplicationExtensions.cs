@@ -6,4 +6,9 @@ public static class WebApplicationExtensions
     {
         app.Use(Middleware.Correlation.ValidateId);
     }
+
+    public static void ConvertActionItemToCollection(this IApplicationBuilder app)
+    {
+        app.Use(Middleware.ActionItem.ConvertSingularToCollection);
+    }
 }

@@ -20,10 +20,13 @@ public class Client
         _actionItemUpdater = actionItemUpdater;
     }
 
-    public async Task<NetworkIdentity> CreateActionItem(ActionItem item, NetworkIdentity userId, string correlationId)
+    public async Task<IEnumerable<NetworkIdentity>> CreateActionItem(IEnumerable<ActionItem> items, NetworkIdentity userId, string correlationId)
     {
-        ArgumentNullException.ThrowIfNull(item);
+        ArgumentNullException.ThrowIfNull(items);
         ArgumentNullException.ThrowIfNull(userId);
+
+        if (items.Count() == 0)
+            throw new ArgumentException("No ActionItems to create");
 
         // TODO: Figure out how to manage the correlation Id ideally so that it doesn't have
         // to get passed-in to the model layers since it is not needed for the
@@ -35,7 +38,8 @@ public class Client
         //    throw new DuplicateIdentifierException(item.Id);
         //}
         //else
-        return await _actionItemCreator.Create(item, userId, correlationId);
+
+        return await _actionItemCreator.Create(items, userId, "Person", correlationId);
     }
 
     public async Task<NetworkIdentity> UpdateActionItem(ActionItem changes, NetworkIdentity userId, string correlationId)
@@ -44,14 +48,16 @@ public class Client
         ArgumentNullException.ThrowIfNull(userId);
         ArgumentNullException.ThrowIfNull(changes.Id);
 
-        return await _actionItemUpdater.Update(changes, userId, correlationId);
+        return await _actionItemUpdater.Update(changes, userId, "Person", correlationId);
     }
 
-    public Task AssignExecutor(NetworkIdentity actionItemId, NetworkIdentity executorId, NetworkIdentity userId, string correlationId)
+    public Task AssignExecutor(NetworkIdentity actionItemId, NetworkIdentity executorId, NetworkIdentity assignerId, string assignerType, string correlationId)
     {
         ArgumentNullException.ThrowIfNull(actionItemId);
         ArgumentNullException.ThrowIfNull(executorId);
-        ArgumentNullException.ThrowIfNull(userId);
+        ArgumentNullException.ThrowIfNull(assignerId);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(assignerType);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(correlationId);
 
         throw new NotImplementedException();
     }

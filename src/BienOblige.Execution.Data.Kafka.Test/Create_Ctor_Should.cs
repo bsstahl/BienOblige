@@ -1,6 +1,5 @@
 ﻿using BienOblige.Execution.Builders;
 using BienOblige.Execution.Enumerations;
-using Serilog;
 using System.Text.Json;
 using Xunit.Abstractions;
 
@@ -11,9 +10,11 @@ public class Create_Ctor_Should
 {
     public Create_Ctor_Should(ITestOutputHelper output)
     {
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Xunit(output).MinimumLevel.Verbose()
-            .CreateLogger();
+        // TODO: Restore logging using the Microsoft logger
+
+        //Log.Logger = new LoggerConfiguration()
+        //    .WriteTo.Xunit(output).MinimumLevel.Verbose()
+        //    .CreateLogger();
     }
 
     [Fact]
@@ -39,7 +40,7 @@ public class Create_Ctor_Should
             message.ActionItem.Content, message.Actor.Id, message.Actor.Type);
 
         var actual = message.ToString();
-        Log.Logger.Verbose(actual);
+        // Log.Logger.Verbose(actual);
 
         var doc = JsonDocument.Parse(actual);
         var root = doc.RootElement;

@@ -4,6 +4,7 @@ using BienOblige.ApiService.IntegrationTest.Builders;
 using BienOblige.ApiService.IntegrationTest.Extensions;
 using BienOblige.Execution.Builders;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace BienOblige.ApiService.IntegrationTest;
@@ -82,11 +83,35 @@ public class Execution_Create_Should : IAsyncLifetime
         response.EnsureSuccessStatusCode();
     }
 
+    [Fact]
+    public async Task ProduceOneMessageOnTheActionItemStreamPerActionItem()
+    {
+        var correlationId = Guid.NewGuid();
+        var (logger, httpClient) = _app.GetRequiredServices(correlationId, Guid.NewGuid());
+
+        var itemCount = 10.GetRandom(3);
+        var actionItems = new List<Execution.Aggregates.ActionItem>();
+        for (var i = 0; i < itemCount; i++)
+            actionItems.Add(new ActionItemBuilder().UseRandomValues().Build());
+        var contents = JsonContent.Create(actionItems);
+
+        var response = await httpClient.PostAsync("/api/Execution/", contents);
+
+        var body = await response.Content.ReadAsStringAsync();
+        logger.LogInformation("HTTP Response: {@Response}", response);
+
+        // TODO: Assert that the stream contains the expected number of messages for that CorrelationId
+
+
+    }
+
+
     #region Setup & Teardown
 
     public async Task InitializeAsync()
     {
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.BienOblige_AppHost>();
+        
         appHost.Services.ConfigureHttpClientDefaults(clientBuilder =>
         {
             clientBuilder.AddStandardResilienceHandler();

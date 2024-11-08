@@ -1,9 +1,12 @@
-﻿using BienOblige.Execution.ValueObjects;
-
-namespace BienOblige.ApiService.Extensions;
+﻿namespace BienOblige.ApiService.Extensions;
 
 public static class ActionItemExtensions
 {
+    internal static IEnumerable<Execution.Aggregates.ActionItem> AsAggregates(this IEnumerable<Entities.ActionItem> actionItems)
+    {
+        return actionItems.Select(actionItem => actionItem.AsAggregate());
+    }
+
     public static JsonContent AsJsonContent(this Execution.Aggregates.ActionItem actionItem)
     {
         return JsonContent.Create(new
