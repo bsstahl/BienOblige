@@ -44,14 +44,11 @@ namespace BienOblige.ApiService.Controllers
                 correlationId);
 
             var resultIdValues = resultIds.Select(t => t.Value.ToString());
-            var result = new
-            { 
-                Ids = resultIdValues
-            };
+            var result = new CreateResponse(resultIdValues);
 
             // _logger.LogInformation("Created {Count} ActionItem(s) for request with correlation ID {@CorrelationId}. Result: {@Result}", resultIds.Count(), correlationId, result);
 
-            Response.Headers.Append(Metadata.CorrelationIdKey, correlationId);
+            Response.Headers[Metadata.CorrelationIdKey] = correlationId;
             return new JsonResult(result)
             {
                 StatusCode = (int)HttpStatusCode.Accepted
@@ -59,6 +56,8 @@ namespace BienOblige.ApiService.Controllers
         }
 
         // PATCH api/<ExecutionController>
+        // Middleware validates that the supplied ActionItem includes its Id
+        // Middleware also validates that metadata headers are present as needed
         [HttpPatch()]
         public async Task<IActionResult> Update(
             [FromBody] Entities.ActionItem item,
@@ -74,14 +73,15 @@ namespace BienOblige.ApiService.Controllers
                 item.AsAggregate(),
                 updatingActor, correlationId);
 
+            var result = new UpdateResponse(resultId.Value.ToString());
+
             //_logger.LogInformation("Updating ActionItem for request with CorrelationId {CorrelationId}. Result: {Result}", correlationId, resultId);
 
-            Response.Headers.Append(Metadata.CorrelationIdKey, correlationId);
-            return new JsonResult(new CreateResponse(resultId.Value.ToString()))
+            Response.Headers[Metadata.CorrelationIdKey] = correlationId;
+            return new JsonResult(result)
             {
                 StatusCode = (int)HttpStatusCode.Accepted
             };
-
         }
 
         //private async Task<NetworkIdentity> CreateActionItem(Entities.ActionItem item, string userId, string correlationId)

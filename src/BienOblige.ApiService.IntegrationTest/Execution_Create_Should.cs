@@ -2,21 +2,32 @@ using BienOblige.ApiService.Entities;
 using BienOblige.ApiService.Extensions;
 using BienOblige.ApiService.IntegrationTest.Builders;
 using BienOblige.ApiService.IntegrationTest.Extensions;
+using BienOblige.ApiService.IntegrationTest.Fixtures;
 using BienOblige.Execution.Builders;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Xunit.Abstractions;
 
 namespace BienOblige.ApiService.IntegrationTest;
 
-public class Execution_Create_Should : IAsyncLifetime
+[Collection("DistributedApplication")]
+public class Execution_Create_Should
 {
-    private DistributedApplication? _app;
+    private readonly DistributedApplicationFixture _appFixture;
+
+    public DistributedApplication App => _appFixture.App;
+
+    public Execution_Create_Should(ITestOutputHelper output, DistributedApplicationFixture appFixture)
+    { 
+        _appFixture = appFixture;
+        _appFixture.Configure(output);
+    }
 
     [Fact]
     public async Task RespondWithAnAcceptedResult()
     {
-        var (logger, httpClient) = _app.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid());
+        var (logger, httpClient) = this.App.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid(), "Service");
 
         var content = new ActionItemBuilder()
             .UseRandomValues()
@@ -33,7 +44,7 @@ public class Execution_Create_Should : IAsyncLifetime
     public async Task RespondWithTheSpecifiedCorrelationIdHeader()
     {
         var expectedCorrelationId = Guid.NewGuid();
-        var (logger, httpClient) = _app.GetRequiredServices(expectedCorrelationId, Guid.NewGuid());
+        var (logger, httpClient) = this.App.GetRequiredServices(expectedCorrelationId, Guid.NewGuid(), "Person");
 
         var content = new ActionItemBuilder()
             .UseRandomValues()
@@ -50,7 +61,7 @@ public class Execution_Create_Should : IAsyncLifetime
     [Fact]
     public async Task RespondWithTheSpecifiedActionItemId()
     {
-        var (logger, httpClient) = _app.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid());
+        var (logger, httpClient) = this.App.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid(), "Organization");
 
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
@@ -63,13 +74,15 @@ public class Execution_Create_Should : IAsyncLifetime
         logger.LogInformation("HTTP Response: {@Response}", response);
 
         var actual = JsonSerializer.Deserialize<CreateResponse>(body);
-        Assert.Equal(actionItem.Id.Value.ToString(), actual!.Id);
+        var actualId = actual!.Ids.Single();
+        
+        Assert.Equal(actionItem.Id.Value.ToString(), actualId);
     }
 
     [Fact]
     public async Task ProduceAMessageOnTheActionItemStream()
     {
-        var (logger, httpClient) = _app.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid());
+        var (logger, httpClient) = this.App.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid(), "Group");
 
         var content = new ActionItemBuilder()
             .UseRandomValues()
@@ -87,7 +100,7 @@ public class Execution_Create_Should : IAsyncLifetime
     public async Task ProduceOneMessageOnTheActionItemStreamPerActionItem()
     {
         var correlationId = Guid.NewGuid();
-        var (logger, httpClient) = _app.GetRequiredServices(correlationId, Guid.NewGuid());
+        var (logger, httpClient) = this.App.GetRequiredServices(correlationId, Guid.NewGuid(), "Application");
 
         var itemCount = 10.GetRandom(3);
         var actionItems = new List<Execution.Aggregates.ActionItem>();
@@ -102,32 +115,6 @@ public class Execution_Create_Should : IAsyncLifetime
 
         // TODO: Assert that the stream contains the expected number of messages for that CorrelationId
 
-
     }
 
-
-    #region Setup & Teardown
-
-    public async Task InitializeAsync()
-    {
-        var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.BienOblige_AppHost>();
-        
-        appHost.Services.ConfigureHttpClientDefaults(clientBuilder =>
-        {
-            clientBuilder.AddStandardResilienceHandler();
-        });
-        
-        _app = await appHost.BuildAsync();
-
-        var resourceNotificationService = _app.Services
-            .GetRequiredService<ResourceNotificationService>();
-        await _app.StartAsync();
-
-        await resourceNotificationService.WaitForResourceAsync("api", KnownResourceStates.Running)
-            .WaitAsync(TimeSpan.FromSeconds(30));
-    }
-
-    public async Task DisposeAsync() => await _app!.DisposeAsync();
-
-    #endregion
 }

@@ -2,8 +2,8 @@
 
 namespace BienOblige.ApiService.Entities;
 
-public class CreateResponse(string id)
+public class CreateResponse(IEnumerable<string> ids)
 {
-    [JsonPropertyName("Id")]
-    public string Id { get; set; } = id;
+    [JsonPropertyName("Ids")]
+    public IEnumerable<string> Ids { get; set; } = ids;
 }

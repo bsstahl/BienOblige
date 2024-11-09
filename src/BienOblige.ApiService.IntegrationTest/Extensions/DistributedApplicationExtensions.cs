@@ -1,6 +1,4 @@
-﻿using Confluent.Kafka;
-using Microsoft.Extensions.Logging;
-using static Confluent.Kafka.ConfigPropertyNames;
+﻿using Microsoft.Extensions.Logging;
 
 namespace BienOblige.ApiService.IntegrationTest.Extensions;
 
@@ -9,7 +7,7 @@ internal static class DistributedApplicationExtensions
     internal static (ILogger, HttpClient) GetRequiredServices(
         this DistributedApplication? app, 
         Guid correlationId, 
-        Guid userId)
+        Guid actorId, string actorType)
     {
         ArgumentNullException.ThrowIfNull(app, nameof(app));
 
@@ -21,7 +19,8 @@ internal static class DistributedApplicationExtensions
         var httpClient = app.CreateHttpClient("api");
         ArgumentNullException.ThrowIfNull(httpClient, nameof(httpClient));
 
-        httpClient.DefaultRequestHeaders.Add("x-user-id", $"https://example.org/{userId}");
+        httpClient.DefaultRequestHeaders.Add("x-updatedby-id", $"https://example.org/{actorId}");
+        httpClient.DefaultRequestHeaders.Add("x-updatedby-type", actorType);
         httpClient.DefaultRequestHeaders.Add("x-correlation-id", correlationId.ToString());
 
         var logger = app.Services.GetRequiredService<ILogger<Execution_Create_Should>>();
