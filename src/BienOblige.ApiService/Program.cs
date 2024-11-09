@@ -22,8 +22,11 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
+
+// Custom HTTP request pipeline components.
 app.UseCorrelation();
-app.ConvertActionItemToCollection();
+app.ValidateMetadata();
+app.ValidateActionItem();
 
 // Enable attribute based routing
 app.UseRouting();

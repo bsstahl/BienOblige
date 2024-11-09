@@ -7,7 +7,7 @@ namespace BienOblige.Execution.Application.Test.Mocks;
 [ExcludeFromCodeCoverage]
 internal class MockActionItemUpdater : IUpdateActionItems
 {
-    public Task<NetworkIdentity> Update(ActionItem changes, NetworkIdentity updaterId, string updaterType, string correlationId)
+    public Task<NetworkIdentity> Update(ActionItem changes, Actor updatingActor, string correlationId)
     {
         throw new NotImplementedException();
     }

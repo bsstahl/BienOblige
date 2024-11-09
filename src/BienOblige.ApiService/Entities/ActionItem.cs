@@ -8,7 +8,8 @@ public class ActionItem(string id, string title, string content)
 
     public Execution.Aggregates.ActionItem AsAggregate()
     {
-        ArgumentNullException.ThrowIfNull(this.Id);
+        ArgumentNullException.ThrowIfNull(this.Id, nameof(this.Id));
+
         return new Execution.Aggregates.ActionItem(
             ValueObjects.NetworkIdentity.From(this.Id),
             Execution.ValueObjects.Title.From(this.Title),

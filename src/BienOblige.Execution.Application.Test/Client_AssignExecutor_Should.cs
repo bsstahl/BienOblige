@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 using BienOblige.Execution.Application.Extensions;
 using Microsoft.Extensions.Logging;
+using BienOblige.Execution.Aggregates;
 
 namespace BienOblige.Execution.Application.Test;
 
@@ -26,38 +27,40 @@ public class Client_AssignExecutor_Should
     {
         NetworkIdentity? actionItemId = null;
         NetworkIdentity? executorId = (null as NetworkIdentity).CreateRandom();
-        var userId = (null as NetworkIdentity).CreateRandom();
+        var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
         var correlationId = Guid.NewGuid().ToString();
+        var updatingActor = Actor.From(updatingActorId, "Person");
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(() 
-            => target.AssignExecutor(actionItemId!, executorId, userId, "Person", correlationId));
+            => target.AssignExecutor(actionItemId!, executorId, updatingActor, correlationId));
     }
 
     [Fact]
-    public async Task ThrowIfNoExecutorIdSupplied()
+    public async Task ThrowIfNoExecutorIdIsSupplied()
     {
         var actionItemId = (null as NetworkIdentity).CreateRandom();
         NetworkIdentity? executorId = null;
-        var userId = (null as NetworkIdentity).CreateRandom();
+        var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
+        var updatingActor = Actor.From(updatingActorId, "Person");
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(() 
-            => target.AssignExecutor(actionItemId, executorId!, userId, "Person", correlationId));
+            => target.AssignExecutor(actionItemId, executorId!, updatingActor, correlationId));
     }
 
     [Fact]
-    public async Task ThrowIfNoUserIdSupplied()
+    public async Task ThrowIfNoUpdatingActorIsSupplied()
     {
         var actionItemId = (null as NetworkIdentity).CreateRandom();
         var executorId = (null as NetworkIdentity).CreateRandom();
-        NetworkIdentity? userId = null;
+        Actor? updatingActor = null;
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(() 
-            => target.AssignExecutor(actionItemId, executorId, userId!, "Person", correlationId));
+            => target.AssignExecutor(actionItemId, executorId, updatingActor!, correlationId));
     }
 
 }

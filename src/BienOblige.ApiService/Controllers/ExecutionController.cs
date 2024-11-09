@@ -1,7 +1,9 @@
 ﻿using BienOblige.ApiService.Entities;
 using BienOblige.ApiService.Extensions;
+using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application;
 using BienOblige.ValueObjects;
+using BienOblige.ApiService.Constants;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -11,9 +13,6 @@ namespace BienOblige.ApiService.Controllers
     [ApiController]
     public class ExecutionController : ControllerBase
     {
-        private const string correlationIdKey = "X-Correlation-ID";
-        private const string userIdKey = "X-User-ID";
-
         private readonly Client _executionClient;
         private readonly ILogger _logger;
 
@@ -23,38 +22,25 @@ namespace BienOblige.ApiService.Controllers
             _executionClient = executionClient;
         }
 
-        //// POST api/<ExecutionController>
-        //[HttpPost()]
-        //public async Task<IActionResult> Create([FromBody] Entities.ActionItem item,
-        //    [FromHeader(Name = userIdKey)] string userId,
-        //    [FromHeader(Name = correlationIdKey)] string correlationId)
-        //{
-        //    _logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
-        //    NetworkIdentity resultId = await CreateActionItem(item, userId, correlationId);
-        //    _logger.LogInformation("Created ActionItem for request with correlation ID {CorrelationId}. Result: {Result}", correlationId, resultId);
-
-        //    Response.Headers.Append(correlationIdKey, correlationId);
-        //    return new JsonResult(new CreateResponse(resultId.Value.ToString()))
-        //    {
-        //        StatusCode = (int)HttpStatusCode.Accepted
-        //    };
-        //}
-
         // POST api/<ExecutionController>
-        // Note: Middleware converts all singular ActionItem requests to IEnumerable<ActionItem> requests
+        // Middleware converts all singular ActionItem requests to IEnumerable<ActionItem> requests
+        // Middleware also validates that metadata headers are present as needed
         [HttpPost()]
         public async Task<IActionResult> Create([FromBody] IEnumerable<Entities.ActionItem> items,
-            [FromHeader(Name = userIdKey)] string userId,
-            [FromHeader(Name = correlationIdKey)] string correlationId)
+            [FromHeader(Name = Metadata.UpdatedByIdKey)] string updatedById,
+            [FromHeader(Name = Metadata.UpdatedByTypeKey)] string updatedByType,
+            [FromHeader(Name = Metadata.CorrelationIdKey)] string correlationId)
         {
             //_logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
-
+            
             // Add Ids to any ActionItem that doesn't have one
-            items.Select(item => item.Id ??= NetworkIdentity.New().Value.ToString());
+            items.ToList().ForEach(item => item.Id ??= NetworkIdentity.New().Value.ToString());
+
+            var updatingActor = Actor.From(updatedById, updatedByType);
 
             var resultIds = await _executionClient.CreateActionItem(
                 items.AsAggregates(),
-                NetworkIdentity.From(userId),
+                updatingActor,
                 correlationId);
 
             var resultIdValues = resultIds.Select(t => t.Value.ToString());
@@ -65,28 +51,32 @@ namespace BienOblige.ApiService.Controllers
 
             // _logger.LogInformation("Created {Count} ActionItem(s) for request with correlation ID {@CorrelationId}. Result: {@Result}", resultIds.Count(), correlationId, result);
 
-            Response.Headers.Append(correlationIdKey, correlationId);
+            Response.Headers.Append(Metadata.CorrelationIdKey, correlationId);
             return new JsonResult(result)
             {
                 StatusCode = (int)HttpStatusCode.Accepted
             };
         }
 
-        // PATCH api/<ExecutionController>/5
+        // PATCH api/<ExecutionController>
         [HttpPatch()]
         public async Task<IActionResult> Update(
             [FromBody] Entities.ActionItem item,
-            [FromHeader(Name = userIdKey)] string userId,
-            [FromHeader(Name = correlationIdKey)] string correlationId)
+            [FromHeader(Name = Metadata.UpdatedByIdKey)] string updatedById,
+            [FromHeader(Name = Metadata.UpdatedByTypeKey)] string updatedByType,
+            [FromHeader(Name = Metadata.CorrelationIdKey)] string correlationId)
         {
             //_logger.LogInformation("Updating ActionItem for with CorrelationId {CorrelationId}", correlationId);
+
+            var updatingActor = Actor.From(updatedById, updatedByType);
+
             var resultId = await _executionClient.UpdateActionItem(
                 item.AsAggregate(),
-                NetworkIdentity.From(userId),
-                correlationId);
+                updatingActor, correlationId);
+
             //_logger.LogInformation("Updating ActionItem for request with CorrelationId {CorrelationId}. Result: {Result}", correlationId, resultId);
 
-            Response.Headers.Append(correlationIdKey, correlationId);
+            Response.Headers.Append(Metadata.CorrelationIdKey, correlationId);
             return new JsonResult(new CreateResponse(resultId.Value.ToString()))
             {
                 StatusCode = (int)HttpStatusCode.Accepted

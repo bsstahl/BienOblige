@@ -30,43 +30,45 @@ public class Client_CreateActionItem_Should
     public async Task ThrowIfNoActionItemIsSupplied()
     {
         List<ActionItem> items = new();
-        var userId = (null as NetworkIdentity).CreateRandom();
+        var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
+        var updatingActor = Actor.From(updatingActorId, "Person");
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentException>(() 
-            => target.CreateActionItem(items, userId, correlationId));
+            => target.CreateActionItem(items, updatingActor, correlationId));
     }
 
     [Fact]
     public async Task ThrowIfNoActionItemListIsSupplied()
     {
         List<ActionItem>? items = null;
-        var userId = (null as NetworkIdentity).CreateRandom();
+        var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
+        var updatingActor = Actor.From(updatingActorId, "Person");
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(()
-            => target.CreateActionItem(items!, userId, correlationId));
+            => target.CreateActionItem(items!, updatingActor, correlationId));
     }
 
 
     [Fact]
-    public async Task ThrowIfNoUserIdIsSupplied()
+    public async Task ThrowIfNoUpdatingActorIsSupplied()
     {
         ActionItem? item = new ActionItemBuilder()
             .UseRandomValues()
             .Build();
-        NetworkIdentity? userId = null;
+        Actor? updatingUser = null;
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(() 
-            => target.CreateActionItem(new[] { item }, userId!, correlationId));
+            => target.CreateActionItem(new[] { item }, updatingUser!, correlationId));
     }
 
     [Fact]
-    public async Task ThrowIfTheUserIdIsInvalid()
+    public async Task ThrowIfTheUpdatingActorIdIsInvalid()
     {
         ActionItem? item = new ActionItemBuilder()
             .UseRandomValues()
@@ -74,24 +76,27 @@ public class Client_CreateActionItem_Should
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
-        await Assert.ThrowsAsync<InvalidIdentifierException>(() 
-            => target.CreateActionItem(new[] { item }, NetworkIdentity.From(string.Empty.GetRandom()), correlationId));
+        await Assert.ThrowsAsync<InvalidIdentifierException>(()
+            => target.CreateActionItem(new[] { item },
+                Actor.From(string.Empty.GetRandom(), "Person"),
+                correlationId));
     }
 
     [Fact]
     public async Task SuccessfullyCreateTheActionItem()
     {
-        var userId = (null as NetworkIdentity).CreateRandom();
+        var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
+        var updatingActor = Actor.From(updatingActorId, "Person");
         var item = new ActionItemBuilder()
             .UseRandomValues()
             .Build();
         var correlationId = Guid.NewGuid().ToString();
 
         var mockRepo = _services.GetRequiredService<ICreateActionItems>() as MockActionItemCreator;
-        mockRepo!.SetupCreateActionItem(new[] { item }, userId, correlationId);
+        mockRepo!.SetupCreateActionItem(new[] { item }, updatingActor, correlationId);
 
         var target = _services.GetRequiredService<Client>();
-        var id = await target.CreateActionItem(new[] { item }, userId, correlationId);
+        var id = await target.CreateActionItem(new[] { item }, updatingActor, correlationId);
 
         mockRepo!.VerifyAll();
     }

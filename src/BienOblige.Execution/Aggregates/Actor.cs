@@ -16,4 +16,9 @@ public class Actor
         this.Type = type;
         this.Name = name;
     }
+
+    public static Actor From(string actorId, string actorType)
+    {
+        return new Actor(NetworkIdentity.From(actorId), Enum.Parse<ActorType>(actorType));
+    }
 }

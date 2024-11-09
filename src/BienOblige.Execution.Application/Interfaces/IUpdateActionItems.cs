@@ -5,5 +5,5 @@ namespace BienOblige.Execution.Application.Interfaces;
 
 public interface IUpdateActionItems
 {
-    Task<NetworkIdentity> Update(ActionItem changes, NetworkIdentity creatorId, string creatorType, string correlationId);
+    Task<NetworkIdentity> Update(ActionItem changes, Actor actor, string correlationId);
 }

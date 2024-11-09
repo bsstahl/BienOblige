@@ -20,15 +20,11 @@ namespace BienOblige.Execution.Data.Kafka
             _producer = producer;
         }
 
-        //public async Task<NetworkIdentity> Create(ActionItem item, NetworkIdentity creatorId, string creatorType, string correlationId)
-        //{
-        //    return (await Create(new ActionItem[] { item }, creatorId, creatorType, correlationId)).Single();
-        //}
-
-        public async Task<IEnumerable<NetworkIdentity>> Create(IEnumerable<ActionItem> items, NetworkIdentity creatorId, string creatorType, string correlationId)
+        public async Task<IEnumerable<NetworkIdentity>> Create(IEnumerable<ActionItem> items, 
+            Actor actor, string correlationId)
         {
             ArgumentNullException.ThrowIfNull(items);
-            ArgumentNullException.ThrowIfNull(creatorId);
+            ArgumentNullException.ThrowIfNull(actor);
             ArgumentNullException.ThrowIfNull(correlationId);
 
             if (items.Count() == 0)
@@ -38,7 +34,7 @@ namespace BienOblige.Execution.Data.Kafka
             foreach (var item in items)
             {
                 var value = new Messages.Create(correlationId, DateTimeOffset.UtcNow,
-                    item, creatorId.Value.ToString(), creatorType);
+                    item, actor.Id.Value.ToString(), actor.Type.ToString());
 
                 var message = new Message<string, string>()
                 {
@@ -56,11 +52,11 @@ namespace BienOblige.Execution.Data.Kafka
             return results;
         }
 
-        public async Task<NetworkIdentity> Update(ActionItem changes, NetworkIdentity updaterId, string updaterType, string correlationId)
+        public async Task<NetworkIdentity> Update(ActionItem changes, 
+            Actor actor, string correlationId)
         {
             ArgumentNullException.ThrowIfNull(changes);
-            ArgumentNullException.ThrowIfNull(updaterId);
-            ArgumentNullException.ThrowIfNullOrWhiteSpace(updaterType);
+            ArgumentNullException.ThrowIfNull(actor);
             ArgumentNullException.ThrowIfNull(correlationId);
             ArgumentNullException.ThrowIfNull(changes.Id);
 
