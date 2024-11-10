@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using BienOblige.Execution.Data.Kafka.Constants;
-namespace BienOblige.ApiService.BackgroundServices;
+
+namespace BienOblige.Execution.Worker;
 
 public class ExecutionService : BackgroundService
 {

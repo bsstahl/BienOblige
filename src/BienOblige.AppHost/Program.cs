@@ -13,17 +13,20 @@ internal class Program
         var kafka = builder.UseBienObligeKafka(Constants.ServiceNames.KafkaService);
         var search = builder.UseBienObligeElasticSearch(Constants.ServiceNames.SearchService);
 
-        // To connect to an existing Kafka server,
-        // call AddConnectionString instead of WithReference
+        // To connect to an existing server, call AddConnectionString instead of WithReference below
+
+        // Custom service registration
         var apiService = builder
             .AddProject<Projects.BienOblige_ApiService>(Constants.ServiceNames.ApiService)
             .WithReference(kafka)
             .WaitFor(kafka);
 
-        var workerService = builder
-            .AddProject<Projects.BienOblige_WorkerService>(Constants.ServiceNames.WorkerService)
+        var executionService = builder
+            .AddProject<Projects.BienOblige_Execution_Worker>(Constants.ServiceNames.ExecutionService)
             .WithReference(kafka)
-            .WaitFor(kafka);
+            .WithReference(search)
+            .WaitFor(kafka)
+            .WaitFor(search);
 
         builder.Build().Run();
     }

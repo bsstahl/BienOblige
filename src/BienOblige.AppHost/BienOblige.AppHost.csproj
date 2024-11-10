@@ -24,8 +24,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
+		<ProjectReference Include="..\BienOblige.Execution.Worker\BienOblige.Execution.Worker.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" IsAspireProjectResource="false" />
-		<ProjectReference Include="..\BienOblige.WorkerService\BienOblige.WorkerService.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
