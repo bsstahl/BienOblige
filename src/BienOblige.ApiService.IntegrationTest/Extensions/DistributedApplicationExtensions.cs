@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Aspire.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace BienOblige.ApiService.IntegrationTest.Extensions;
 

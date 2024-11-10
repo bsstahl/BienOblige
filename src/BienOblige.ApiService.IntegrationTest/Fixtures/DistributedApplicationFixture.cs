@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Aspire.Hosting;
+using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
 namespace BienOblige.ApiService.IntegrationTest.Fixtures;

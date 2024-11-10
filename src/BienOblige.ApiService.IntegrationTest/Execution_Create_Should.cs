@@ -1,3 +1,4 @@
+using Aspire.Hosting;
 using BienOblige.ApiService.Entities;
 using BienOblige.ApiService.Extensions;
 using BienOblige.ApiService.IntegrationTest.Builders;

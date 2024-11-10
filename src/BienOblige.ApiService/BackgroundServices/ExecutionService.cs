@@ -43,6 +43,8 @@ public class ExecutionService : BackgroundService
         {
             _consumer.Close(); // Ensure the consumer leaves the group cleanly and final offsets are committed.
         }
+
+        await Task.Delay(1); // TODO: Remove me
     }
 
 

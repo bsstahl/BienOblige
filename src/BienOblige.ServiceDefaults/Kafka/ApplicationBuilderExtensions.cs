@@ -5,11 +5,11 @@ namespace BienOblige.ServiceDefaults.Kafka;
 public static class ApplicationBuilderExtensions
 {
     public static IResourceBuilder<KafkaServerResource> UseBienObligeKafka(
-        this IDistributedApplicationBuilder builder, 
-        string kafkaServiceName)
+        this IDistributedApplicationBuilder builder,
+        string serviceName)
     {
         return builder
-            .AddKafka(kafkaServiceName)
+            .AddKafka(serviceName)
             .WithHealthCheck([
                 Topics.CommandChannelName,
                 Topics.ActionItemsPublicChannelName,
@@ -17,5 +17,4 @@ public static class ApplicationBuilderExtensions
             ])
             .WithKafkaUI();
     }
-
 }

@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0-rc.1.24511.1" />
+	
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsAspireHost>true</IsAspireHost>
@@ -10,26 +11,28 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="appsettings.Development.json" />
-	  <None Remove="appsettings.json" />
+		<None Remove="appsettings.Development.json" />
+		<None Remove="appsettings.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="appsettings.Development.json" />
-	  <Content Include="appsettings.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+		<Content Include="appsettings.Development.json" />
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" IsAspireProjectResource="false" />
+		<ProjectReference Include="..\BienOblige.WorkerService\BienOblige.WorkerService.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
-		<PackageReference Include="System.Text.Json" Version="8.0.5" />
-		<PackageReference Include="Aspire.Hosting.Kafka" Version="8.2.2" />
+		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0-rc.1.24511.1" />
+		<PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.4.24511.1" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0-rc.2.24473.5" />
+		<PackageReference Include="Aspire.Hosting.Kafka" Version="9.0.0-rc.1.24511.1" />
 		<PackageReference Include="Confluent.Kafka" Version="2.6.0" />
 	</ItemGroup>
 
