@@ -1,10 +1,16 @@
-﻿namespace BienOblige.ApiService.Entities;
+﻿using BienOblige.ValueObjects;
+using System.Text.Json.Serialization;
+
+namespace BienOblige.ApiService.Entities;
 
 public class ActionItem(string id, string title, string content)
 {
     public string? Id { get; set; } = id;
     public string Title { get; set; } = title;
     public string Content { get; set; } = content;
+
+    [JsonPropertyName("bienoblige:parent")]
+    public string? ParentId { get; set; }
 
     public Execution.Aggregates.ActionItem AsAggregate()
     {
@@ -14,7 +20,11 @@ public class ActionItem(string id, string title, string content)
             ValueObjects.NetworkIdentity.From(this.Id),
             Execution.ValueObjects.Title.From(this.Title),
             Execution.ValueObjects.Content.From(this.Content))
-        {  };
+        {
+            ParentId = this.ParentId is null 
+                ? (null as NetworkIdentity)
+                : NetworkIdentity.From(this.Id)
+        };
     }
 
     public static ActionItem From(Execution.Aggregates.ActionItem item)

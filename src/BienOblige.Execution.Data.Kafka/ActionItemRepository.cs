@@ -1,16 +1,15 @@
 ﻿using BienOblige.ValueObjects;
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
+using BienOblige.Execution.Data.Kafka.Constants;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace BienOblige.Execution.Data.Kafka
 {
-    public class ActionItemRepository : ICreateActionItems, IUpdateActionItems
+    public class ActionItemRepository : ICreateActionItems, IUpdateActionItems, IGetActionItems
     {
-        const string topicName = "execution_command_private";
-
         ILogger _logger;
         IProducer<string, string> _producer;
 
@@ -42,7 +41,7 @@ namespace BienOblige.Execution.Data.Kafka
                     Value = JsonSerializer.Serialize(value)
                 };
 
-                var result = await _producer.ProduceAsync(topicName, message);
+                var result = await _producer.ProduceAsync(Topics.CommandChannelName, message);
 
                 // TODO: Validate that the result is a successful publication
 
@@ -50,6 +49,21 @@ namespace BienOblige.Execution.Data.Kafka
             }
 
             return results;
+        }
+
+        public Task<bool> Exists(NetworkIdentity id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActionItem?> Get(NetworkIdentity id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<ActionItem>> GetAll()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<NetworkIdentity> Update(ActionItem changes, 
@@ -66,7 +80,7 @@ namespace BienOblige.Execution.Data.Kafka
                 Value = JsonSerializer.Serialize(changes)
             };
 
-            var result = await _producer.ProduceAsync(topicName, message);
+            var result = await _producer.ProduceAsync(Topics.CommandChannelName, message);
             _logger.LogInformation("ActionItemRepository.Create: {0}", result);
 
             return changes.Id;

@@ -13,8 +13,8 @@
 		<PackageReference Include="Aspire.Hosting.Testing" Version="8.2.2" />
 		<PackageReference Include="Confluent.Kafka" Version="2.6.0" />
 		<PackageReference Include="coverlet.collector" Version="6.0.2">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="MartinCostello.Logging.XUnit" Version="0.4.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
@@ -23,18 +23,18 @@
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 		<PackageReference Include="xunit" Version="2.9.2" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="TestHelperExtensions" Version="2.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
-	  <ProjectReference Include="..\BienOblige.AppHost\BienOblige.AppHost.csproj" />
-	  <ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
-	  <ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
-	  <ProjectReference Include="..\BienOblige\BienOblige.csproj" />
+		<ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
+		<ProjectReference Include="..\BienOblige.AppHost\BienOblige.AppHost.csproj" />
+		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
+		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\BienOblige\BienOblige.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

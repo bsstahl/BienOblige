@@ -114,7 +114,7 @@ public class Execution_Create_Should
         logger.LogInformation("HTTP Response: {@Response}", response);
 
         // TODO: Assert that the stream contains the expected number of messages for that CorrelationId
-
+        // This should probably be done at the DB when the message is consumed by the Execution service
     }
 
 }

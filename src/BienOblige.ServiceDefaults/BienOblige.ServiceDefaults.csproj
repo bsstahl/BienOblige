@@ -25,4 +25,8 @@
 		<PackageReference Include="Confluent.Kafka" Version="2.6.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />
+	</ItemGroup>
+
 </Project>

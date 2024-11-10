@@ -1,11 +1,9 @@
 ﻿using Confluent.Kafka;
-
+using BienOblige.Execution.Data.Kafka.Constants;
 namespace BienOblige.ApiService.BackgroundServices;
 
 public class ExecutionService : BackgroundService
 {
-    const string topicName = "execution_command_private";
-
     private readonly ILogger<ExecutionService> _logger;
     private readonly IConsumer<string, string> _consumer;
 
@@ -17,7 +15,7 @@ public class ExecutionService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _consumer.Subscribe(topicName);
+        _consumer.Subscribe(Topics.CommandChannelName);
 
         try
         {

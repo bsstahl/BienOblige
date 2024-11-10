@@ -1,31 +1,25 @@
 using BienOblige.Execution.Data.Kafka.Builders;
 using BienOblige.Execution.Data.Kafka.Test.Extensions;
 using BienOblige.Execution.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Xunit.Abstractions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BienOblige.Execution.Data.Kafka.Test;
 
-[ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage, Collection("UnitTests")]
 public class Activity_Ctor_Should
 {
-
     private readonly Microsoft.Extensions.Logging.ILogger _logger;
 
     public Activity_Ctor_Should(ITestOutputHelper output)
     {
-        // TODO: Restore logging using the Microsoft Logger
+        var services = new ServiceCollection()
+            .AddLogging(b => b.AddXUnit(output).SetMinimumLevel(LogLevel.Trace))
+            .BuildServiceProvider();
 
-        //Log.Logger = new Serilog.LoggerConfiguration()
-        //    .WriteTo.Xunit(output).MinimumLevel.Verbose()
-        //    .CreateLogger();
-
-        //var services = new ServiceCollection()
-        //    .BuildServiceProvider();
-
-        //_logger = services.GetRequiredService<ILogger<Activity_Ctor_Should>>();
+        _logger = services.GetRequiredService<ILogger<Activity_Ctor_Should>>();
     }
 
     [Fact]
@@ -50,8 +44,8 @@ public class Activity_Ctor_Should
         Assert.Equal(ActorType.Person.ToString(), actual.Actor.Type);
         Assert.Equal(DateTimeOffset.Parse("2024-09-20T10:00:00Z"), actual.Published);
 
-        //Log.Logger.Verbose("{@Actual}", actual);
-        //Log.Logger.Verbose("{@Serialized}", JsonSerializer.Serialize(actual));
+        _logger.LogDebug("{@Actual}", actual);
+        _logger.LogDebug("{@Serialized}", JsonSerializer.Serialize(actual));
     }
 
     [Fact]
@@ -76,8 +70,8 @@ public class Activity_Ctor_Should
         Assert.Equal(ActorType.Person.ToString(), actual.Actor.Type);
         Assert.Equal(DateTimeOffset.Parse("2024-09-20T10:00:00Z"), actual.Published);
 
-        //Log.Logger.Verbose("{@Actual}", actual);
-        //Log.Logger.Verbose("{@Serialized}", JsonSerializer.Serialize(actual));
+        _logger.LogDebug("{@Actual}", actual);
+        _logger.LogDebug("{@Serialized}", JsonSerializer.Serialize(actual));
     }
 
     [Fact]
@@ -88,7 +82,7 @@ public class Activity_Ctor_Should
             .Build();
         var expectedMessage = expected.ToString();
 
-        // _logger.LogDebug("expectedMessage: {@ExpectedMessage}", expectedMessage);
+        _logger.LogDebug("expectedMessage: {@ExpectedMessage}", expectedMessage);
 
         var actual = new Messages.Activity(expectedMessage, expected.CorrelationId);
 

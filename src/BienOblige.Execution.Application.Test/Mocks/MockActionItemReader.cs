@@ -30,6 +30,11 @@ internal class MockActionItemReader : IGetActionItems
         return result;
     }
 
+    public Task<IEnumerable<ActionItem>> GetAll()
+    {
+        throw new NotImplementedException();
+    }
+
     internal MockActionItemReader SetupExistingActionItem(ActionItem item)
     {
         _actionItemsReader

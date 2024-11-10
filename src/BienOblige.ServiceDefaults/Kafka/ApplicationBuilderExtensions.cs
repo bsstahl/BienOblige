@@ -1,4 +1,6 @@
-﻿namespace BienOblige.ServiceDefaults.Kafka;
+﻿using BienOblige.Execution.Data.Kafka.Constants;
+
+namespace BienOblige.ServiceDefaults.Kafka;
 
 public static class ApplicationBuilderExtensions
 {
@@ -9,9 +11,9 @@ public static class ApplicationBuilderExtensions
         return builder
             .AddKafka(kafkaServiceName)
             .WithHealthCheck([
-                "execution_command_private",
-                "execution_actionitems_public",
-                "execution_compliance_public"
+                Topics.CommandChannelName,
+                Topics.ActionItemsPublicChannelName,
+                Topics.CompliancePublicChannelName
             ])
             .WithKafkaUI();
     }

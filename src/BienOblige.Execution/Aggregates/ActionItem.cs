@@ -9,6 +9,8 @@ public class ActionItem
     public Title Title { get; set; }
     public Content Content { get; set; }
 
+    public NetworkIdentity? ParentId { get; set; }
+
     public Actor? Actor { get; set; }
 
     public ActionItem(Title title, Content content)

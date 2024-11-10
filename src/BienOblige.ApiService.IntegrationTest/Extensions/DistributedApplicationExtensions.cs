@@ -30,44 +30,4 @@ internal static class DistributedApplicationExtensions
         return (logger, httpClient);
     }
 
-    //internal static IConsumer<string, string> GetKafkaConsumer(this DistributedApplication? app)
-    //{
-    //    ArgumentNullException.ThrowIfNull(app, nameof(app));
-    //    return app.Services.GetRequiredService<IConsumer<string, string>>();
-    //}
-
-    //internal static IEnumerable<Object> GetAllMessages(this DistributedApplication? app, string topicName)
-    //{
-    //    var consumer = app.GetKafkaConsumer();
-    //    consumer.Subscribe(topicName);
-
-    //    var messages = new List<ConsumeResult<string, string>>();
-    //    try
-    //    {
-    //        while (true)
-    //        {
-    //            try
-    //            {
-    //                // Poll for new messages
-    //                var consumeResult = consumer.Consume(TimeSpan.FromMilliseconds(10));
-    //                if (consumeResult is not null)
-    //                {
-    //                    messages.Add(consumeResult);
-    //                    Console.WriteLine($"Consumed message '{consumeResult.Message.Value}' at: '{consumeResult.TopicPartitionOffset}'.");
-    //                }
-    //            }
-    //            catch (ConsumeException e)
-    //            {
-    //                Console.WriteLine($"Consume error: {e.Error.Reason}");
-    //            }
-    //        }
-    //    }
-    //    catch (OperationCanceledException)
-    //    {
-    //        // Ensure the consumer leaves the group cleanly
-    //        consumer.Close();
-    //    }
-
-    //    return messages;
-    //}
 }

@@ -1,5 +1,7 @@
 ﻿using BienOblige.Execution.Builders;
 using BienOblige.Execution.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Xunit.Abstractions;
 
@@ -8,13 +10,15 @@ namespace BienOblige.Execution.Data.Kafka.Test;
 [ExcludeFromCodeCoverage]
 public class Create_Ctor_Should
 {
+    private readonly ILogger _logger;
+
     public Create_Ctor_Should(ITestOutputHelper output)
     {
-        // TODO: Restore logging using the Microsoft logger
+        var services = new ServiceCollection()
+            .AddLogging(b => b.AddXUnit(output).SetMinimumLevel(LogLevel.Trace))
+            .BuildServiceProvider();
 
-        //Log.Logger = new LoggerConfiguration()
-        //    .WriteTo.Xunit(output).MinimumLevel.Verbose()
-        //    .CreateLogger();
+        _logger = services.GetRequiredService<ILogger<Activity_Ctor_Should>>();
     }
 
     [Fact]
@@ -40,7 +44,7 @@ public class Create_Ctor_Should
             message.ActionItem.Content, message.Actor.Id, message.Actor.Type);
 
         var actual = message.ToString();
-        // Log.Logger.Verbose(actual);
+        _logger.LogTrace(actual);
 
         var doc = JsonDocument.Parse(actual);
         var root = doc.RootElement;
