@@ -30,7 +30,7 @@ public class DistributedApplicationFixture : IAsyncLifetime
 
                 var resourcesTask = resourceNotificationService
                     .WaitForResourceAsync("api", KnownResourceStates.Running)
-                    .WaitAsync(TimeSpan.FromSeconds(30));
+                    .WaitAsync(TimeSpan.FromSeconds(60));
                 resourcesTask.Wait();
             }
 

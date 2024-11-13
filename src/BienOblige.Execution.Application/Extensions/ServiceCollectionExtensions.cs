@@ -6,6 +6,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection UseExecutionClient(this IServiceCollection services)
     {
-        return services.AddScoped<Client>();
+        return services
+            .AddScoped<Client>();
     }
 }

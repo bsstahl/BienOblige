@@ -1,57 +1,44 @@
-﻿using Confluent.Kafka;
-using BienOblige.Execution.Data.Kafka.Constants;
+﻿using BienOblige.Execution.Application.Interfaces;
 
 namespace BienOblige.Execution.Worker;
 
 public class ExecutionService : BackgroundService
 {
     private readonly ILogger<ExecutionService> _logger;
-    private readonly IConsumer<string, string> _consumer;
+    private readonly IGetActivities _consumer;
+    private readonly IGetActionItems _readRepo;
+    private readonly IUpdateActionItems _writeRepo;
 
-    public ExecutionService(ILogger<ExecutionService> logger, IConsumer<string, string> consumer)
+    public ExecutionService(
+        ILogger<ExecutionService> logger, IGetActivities consumer,
+        IGetActionItems readRepo, IUpdateActionItems writeRepo)
     {
         _logger = logger;
         _consumer = consumer;
+        _readRepo = readRepo;
+        _writeRepo = writeRepo;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _consumer.Subscribe(Topics.CommandChannelName);
-
-        try
+        while (!stoppingToken.IsCancellationRequested)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            var activityManager = await _consumer.GetActivity(stoppingToken);
+            if (activityManager is not null)
             {
+                _logger.LogInformation("Received message {Id} from {Timestamp}", activityManager.Content.Id.Value, activityManager.MessageTimestamp.ToString("o"));
                 try
                 {
-                    var consumeResult = _consumer.Consume(stoppingToken);
-
-                    _logger.LogInformation($"Consumed message '{consumeResult.Message.Value}' at: '{consumeResult.TopicPartitionOffset}'.");
-
-                    // Process the message here
-
-
-                    // Commit the offset if required
-                    _consumer.Commit(consumeResult);
+                    await activityManager.Process(_logger, _readRepo, _writeRepo);
+                    await activityManager.Commit();
+                    _logger.LogInformation("Processed message {Id}", activityManager.Content.Id.Value);
                 }
-                catch (ConsumeException ex)
+                catch (Exception ex)
                 {
-                    _logger.LogError($"Error occurred: {ex.Error.Reason}");
-                }
+                    _logger.LogWarning("Failed to process message {Id}. Rolled-back to be tried again. Error: {Error}", activityManager.Content.Id.Value, ex.Message);
+                    await Task.Delay(1000); // TODO: Make the retry delay length configurable
+                }   
             }
         }
-        finally
-        {
-            _consumer.Close(); // Ensure the consumer leaves the group cleanly and final offsets are committed.
-        }
-
-        await Task.Delay(1); // TODO: Remove me
-    }
-
-
-    public override void Dispose()
-    {
-        _consumer.Dispose();
-        base.Dispose();
     }
 }

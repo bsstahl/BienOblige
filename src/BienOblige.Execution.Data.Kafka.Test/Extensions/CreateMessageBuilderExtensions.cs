@@ -6,9 +6,10 @@ namespace BienOblige.Execution.Data.Kafka.Test.Extensions;
 [ExcludeFromCodeCoverage]
 public static class CreateMessageBuilderExtensions
 {
-    public static CreateMessageBuilder UseRandomValues(this CreateMessageBuilder builder)
+    public static ActivityMessageBuilder UseRandomValues(this ActivityMessageBuilder builder)
     {
         return builder
+            .ActivityType(Enum.GetNames<Application.Enumerations.ActivityType>().GetRandom())
             .CorrelationId($"urn:uid:{Guid.NewGuid()}")
             .PublishedNow()
             .Actor(new ActorBuilder().UseRandomValues())

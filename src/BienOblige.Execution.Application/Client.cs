@@ -2,22 +2,19 @@
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.Logging;
+using BienOblige.Execution.Application.Enumerations;
 
 namespace BienOblige.Execution.Application;
 
 public class Client
 {
     private readonly ILogger _logger;
-    private readonly ICreateActionItems _actionItemCreator;
-    private readonly IUpdateActionItems _actionItemUpdater;
+    private readonly ICreateActivities _activityCreator;
 
-    public Client(ILogger<Client> logger, 
-        ICreateActionItems actionItemCreator,
-        IUpdateActionItems actionItemUpdater)
+    public Client(ILogger<Client> logger, ICreateActivities activityCreator)
     {
         _logger = logger;
-        _actionItemCreator = actionItemCreator;
-        _actionItemUpdater = actionItemUpdater;
+        _activityCreator = activityCreator;
     }
 
     public async Task<IEnumerable<NetworkIdentity>> CreateActionItem(IEnumerable<ActionItem> items, 
@@ -30,9 +27,8 @@ public class Client
         if (items.Count() == 0)
             throw new ArgumentException("No ActionItems to create");
 
-        // TODO: Figure out how to manage the correlation Id ideally so that it doesn't have
-        // to get passed-in to the model layers since it is not needed for the
-        // Application proper (just the wire formats)
+        // TODO: Figure out how to manage the correlation Id so that it doesn't have to get passed-in to the model layers
+        // since it is not needed for the Application proper (just the wire formats)
 
         //if (await _actionItemReader.Exists(item.Id))
         //{
@@ -41,16 +37,17 @@ public class Client
         //}
         //else
 
-        return await _actionItemCreator.Create(items, updatingActor, correlationId);
+        return await _activityCreator.Create(ActivityType.Create, items, updatingActor, correlationId);
     }
 
-    public async Task<NetworkIdentity> UpdateActionItem(ActionItem changes, Actor actor, string correlationId)
+    public async Task<NetworkIdentity> UpdateActionItem(ActionItem changes, Actor updatingActor, string correlationId)
     {
         ArgumentNullException.ThrowIfNull(changes);
-        ArgumentNullException.ThrowIfNull(actor);
+        ArgumentNullException.ThrowIfNull(updatingActor);
         ArgumentNullException.ThrowIfNull(changes.Id);
 
-        return await _actionItemUpdater.Update(changes, actor, correlationId);
+        var result = await _activityCreator.Create(ActivityType.Update, [ changes ], updatingActor, correlationId);
+        return result.Single();
     }
 
     public Task AssignExecutor(NetworkIdentity actionItemId, NetworkIdentity executorId, Actor assigningActor, string correlationId)

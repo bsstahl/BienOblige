@@ -2,14 +2,14 @@
 using System.Text.Json;
 using BienOblige.Execution.Data.Kafka.Extensions;
 
-namespace BienOblige.Execution.Data.Kafka.Aggregates;
+namespace BienOblige.Execution.Data.Kafka.Messages;
 
 public class Actor
 {
     public Actor(string id, string @type)
     {
-        this.Id = id;
-        this.Type = @type;
+        Id = id;
+        Type = @type;
     }
 
     internal Actor(JsonElement actorNode)
@@ -21,4 +21,16 @@ public class Actor
 
     [JsonPropertyName("id")]
     public string Id { get; set; }
+
+
+    public Aggregates.Actor AsAggregate()
+    {
+        return Aggregates.Actor.From(this.Id, this.Type);
+    }
+
+    public static Actor From(Aggregates.Actor actor)
+    {
+        return new Actor(actor.Id.Value.ToString(), actor.Type.ToString());
+    }
+
 }

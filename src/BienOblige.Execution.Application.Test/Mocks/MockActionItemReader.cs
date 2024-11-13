@@ -35,6 +35,11 @@ internal class MockActionItemReader : IGetActionItems
         throw new NotImplementedException();
     }
 
+    public Task<IEnumerable<ActionItem>> GetGraph(NetworkIdentity parentId)
+    {
+        throw new NotImplementedException();
+    }
+
     internal MockActionItemReader SetupExistingActionItem(ActionItem item)
     {
         _actionItemsReader

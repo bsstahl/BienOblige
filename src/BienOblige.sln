@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BienOblige.Execution.Data.K
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BienOblige.Execution.Worker", "BienOblige.Execution.Worker\BienOblige.Execution.Worker.csproj", "{B18FAEC8-191E-49C2-A123-FF8F98351D08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BienOblige.Execution.Data.Elastic", "BienOblige.Execution.Data.Elastic\BienOblige.Execution.Data.Elastic.csproj", "{5178AB4F-38FA-4DED-96C0-E5493A43BD51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,10 @@ Global
 		{B18FAEC8-191E-49C2-A123-FF8F98351D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B18FAEC8-191E-49C2-A123-FF8F98351D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B18FAEC8-191E-49C2-A123-FF8F98351D08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5178AB4F-38FA-4DED-96C0-E5493A43BD51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5178AB4F-38FA-4DED-96C0-E5493A43BD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5178AB4F-38FA-4DED-96C0-E5493A43BD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5178AB4F-38FA-4DED-96C0-E5493A43BD51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{18447915-53CD-4675-8139-91F0369CBD02} = {7881CA14-4432-418D-A6C9-1579518D5542}
 		{C8443D14-5D71-42FA-901B-B754D4E31EA5} = {7881CA14-4432-418D-A6C9-1579518D5542}
 		{B18FAEC8-191E-49C2-A123-FF8F98351D08} = {D6C45C03-7AEE-4F95-8B32-E0106977326D}
+		{5178AB4F-38FA-4DED-96C0-E5493A43BD51} = {5F8D7236-A488-43D6-97E1-7BCD2ED89773}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F93FA578-CDB9-4E04-991F-36B56AB2DAB7}

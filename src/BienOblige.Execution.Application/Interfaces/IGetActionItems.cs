@@ -7,5 +7,7 @@ public interface IGetActionItems
 {
     Task<bool> Exists(NetworkIdentity id);
     Task<ActionItem?> Get(NetworkIdentity id);
+
+    Task<IEnumerable<ActionItem>> GetGraph(NetworkIdentity parentId);
     Task<IEnumerable<ActionItem>> GetAll();
 }

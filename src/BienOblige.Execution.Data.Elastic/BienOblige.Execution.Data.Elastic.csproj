@@ -8,6 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.4.24511.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\BienOblige.Execution.Application\BienOblige.Execution.Application.csproj" />
+		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
 		<ProjectReference Include="..\BienOblige\BienOblige.csproj" />
 	</ItemGroup>
 

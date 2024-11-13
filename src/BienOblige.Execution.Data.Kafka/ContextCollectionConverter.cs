@@ -1,12 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.Json;
-using BienOblige.Execution.Data.Kafka.ValueObjects;
+using BienOblige.Execution.Data.Kafka.Messages;
 
 namespace BienOblige.Execution.Data.Kafka;
 
-public class ContextCollectionConverter : JsonConverter<IEnumerable<ValueObjects.Context>>
+public class ContextCollectionConverter : JsonConverter<IEnumerable<Context>>
 {
-    public override IEnumerable<ValueObjects.Context>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IEnumerable<Context>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
 
