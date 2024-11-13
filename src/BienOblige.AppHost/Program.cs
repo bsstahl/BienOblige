@@ -7,7 +7,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var builder = DistributedApplication.CreateBuilder(args);
+        var builder = DistributedApplication
+            .CreateBuilder(args);
 
         // Generic service registration
         var kafka = builder.UseBienObligeKafka(Constants.ServiceNames.KafkaService);

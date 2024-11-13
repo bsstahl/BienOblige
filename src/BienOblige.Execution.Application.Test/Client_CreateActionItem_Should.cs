@@ -9,6 +9,7 @@ using BienOblige.Execution.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 using Microsoft.Extensions.Logging;
+using BienOblige.Execution.Application.Enumerations;
 
 namespace BienOblige.Execution.Application.Test;
 
@@ -83,7 +84,7 @@ public class Client_CreateActionItem_Should
     }
 
     [Fact]
-    public async Task SuccessfullyCreateTheActionItem()
+    public async Task SuccessfullyCreateTheActivity()
     {
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
         var updatingActor = Actor.From(updatingActorId, "Person");
@@ -92,8 +93,8 @@ public class Client_CreateActionItem_Should
             .Build();
         var correlationId = Guid.NewGuid().ToString();
 
-        var mockRepo = _services.GetRequiredService<ICreateActionItems>() as MockActionItemCreator;
-        mockRepo!.SetupCreateActionItem(new[] { item }, updatingActor, correlationId);
+        var mockRepo = _services.GetRequiredService<ICreateActivities>() as MockActivityCreator;
+        mockRepo!.SetupCreateActivities(ActivityType.Create, new[] { item }, updatingActor, correlationId);
 
         var target = _services.GetRequiredService<Client>();
         var id = await target.CreateActionItem(new[] { item }, updatingActor, correlationId);

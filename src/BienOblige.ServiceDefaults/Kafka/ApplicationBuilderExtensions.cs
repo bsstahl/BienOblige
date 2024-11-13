@@ -1,4 +1,5 @@
 ﻿using BienOblige.Execution.Data.Kafka.Constants;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BienOblige.ServiceDefaults.Kafka;
 
@@ -8,13 +9,10 @@ public static class ApplicationBuilderExtensions
         this IDistributedApplicationBuilder builder,
         string serviceName)
     {
+        // builder.Services.AddHealthChecks().AddCheck<KafkaHealthCheck>(serviceName);
+
         return builder
             .AddKafka(serviceName)
-            .WithHealthCheck([
-                Topics.CommandChannelName,
-                Topics.ActionItemsPublicChannelName,
-                Topics.CompliancePublicChannelName
-            ])
             .WithKafkaUI();
     }
 }

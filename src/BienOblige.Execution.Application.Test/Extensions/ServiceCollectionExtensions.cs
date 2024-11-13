@@ -12,6 +12,6 @@ internal static class ServiceCollectionExtensions
         return services
             .AddSingleton<IGetActionItems, MockActionItemReader>()
             .AddSingleton<IUpdateActionItems, MockActionItemUpdater>()
-            .AddSingleton<ICreateActionItems, MockActionItemCreator>();
+            .AddSingleton<ICreateActivities, MockActivityCreator>();
     }
 }
