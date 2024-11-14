@@ -18,6 +18,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.CreateTopicIfNotExist(BienOblige.Execution.Data.Kafka.Constants.Topics.CommandChannelName);
+
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 

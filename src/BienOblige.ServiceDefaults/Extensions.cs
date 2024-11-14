@@ -1,3 +1,4 @@
+using Confluent.Kafka.Admin;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,9 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Microsoft.Extensions.Configuration;
+using BienOblige.Constants;
+using Confluent.Kafka;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -106,6 +110,24 @@ public static class Extensions
             {
                 Predicate = r => r.Tags.Contains("live")
             });
+        }
+
+        return app;
+    }
+
+    public static WebApplication CreateTopicIfNotExist(this WebApplication app, string topicName)
+    {
+        var bootstrapServers = app.Configuration.GetConnectionString(ServiceNames.KafkaService);
+        using var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = bootstrapServers }).Build();
+        try
+        {
+            var metadata = adminClient.GetMetadata(TimeSpan.FromSeconds(5));
+            if (metadata.Topics.Any(x => x.Topic != topicName))
+                adminClient.CreateTopicsAsync(new[] { new TopicSpecification { Name = topicName, ReplicationFactor = 1, NumPartitions = 1 } }).Wait();
+        }
+        catch (CreateTopicsException e)
+        {
+            Console.WriteLine($"An error occured creating topic {e.Results[0].Topic}: {e.Results[0].Error.Reason}");
         }
 
         return app;
