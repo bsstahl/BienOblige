@@ -1,6 +1,6 @@
 ﻿using ValueOf;
 
-namespace BienOblige.Execution.ValueObjects;
+namespace BienOblige.ActivityStream.ValueObjects;
 
 public class ActorName : ValueOf<string, ActorName>
 {

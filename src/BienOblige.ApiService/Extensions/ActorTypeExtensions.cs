@@ -1,4 +1,4 @@
-﻿using BienOblige.Execution.Enumerations;
+﻿using BienOblige.ActivityStream.Enumerations;
 
 namespace BienOblige.ApiService.Extensions;
 

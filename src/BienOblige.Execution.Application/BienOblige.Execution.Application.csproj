@@ -14,7 +14,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
-		<ProjectReference Include="..\BienOblige\BienOblige.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -11,12 +11,13 @@
 		<ProjectReference Include="..\BienOblige.Execution.Application\BienOblige.Execution.Application.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
+		<ProjectReference Include="..\BienOblige.Search.Application\BienOblige.Search.Application.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
-		<ProjectReference Include="..\BienOblige\BienOblige.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Confluent.Kafka" Version="9.0.0" />
+		<PackageReference Include="Aspire.Elastic.Clients.Elasticsearch" Version="9.0.0-preview.5.24551.3" />
 	</ItemGroup>
 
 </Project>

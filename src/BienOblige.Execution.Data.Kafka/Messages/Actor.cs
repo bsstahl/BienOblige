@@ -23,12 +23,14 @@ public class Actor
     public string Id { get; set; }
 
 
-    public Aggregates.Actor AsAggregate()
+    public ActivityStream.Aggregates.Actor AsAggregate()
     {
-        return Aggregates.Actor.From(this.Id, this.Type);
+        return new ActivityStream.Aggregates.Actor(
+            ActivityStream.ValueObjects.NetworkIdentity.From(this.Id), 
+            this.Type.AsActorType());
     }
 
-    public static Actor From(Aggregates.Actor actor)
+    public static Actor From(ActivityStream.Aggregates.Actor actor)
     {
         return new Actor(actor.Id.Value.ToString(), actor.Type.ToString());
     }

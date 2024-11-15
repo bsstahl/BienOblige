@@ -1,12 +1,13 @@
 ﻿using BienOblige.Execution.Builders;
-using BienOblige.Execution.Enumerations;
 using BienOblige.Execution.Application.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Xunit.Abstractions;
-using BienOblige.ValueObjects;
+using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Execution.ValueObjects;
+using BienOblige.ActivityStream.Enumerations;
+using BienOblige.ActivityStream.Builders;
 
 namespace BienOblige.Execution.Data.Kafka.Test;
 
@@ -42,7 +43,7 @@ public class Create_Ctor_Should
                 .Content(string.Empty.GetRandom()))
             .Build();
 
-        var actor = Aggregates.Actor.From(message.Actor.Id, message.Actor.Type);
+        var actor = message.Actor.AsAggregate();
         var actionItem = new Aggregates.ActionItem(NetworkIdentity.From(message.ActionItem.Id),
             Title.From(message.ActionItem.Name), Content.From(message.ActionItem.Content));
 

@@ -1,4 +1,5 @@
-﻿using BienOblige.ValueObjects;
+﻿using BienOblige.ActivityStream.Builders;
+using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.ValueObjects;
 
@@ -20,7 +21,7 @@ public class ActionItemBuilder
 
         var result = new ActionItem(_id, _title, _content);
         if (_actorBuilder is not null)
-            result.Actor = _actorBuilder.Build();
+            result.LastUpdatedBy = _actorBuilder.Build();
         return result;
     }
 

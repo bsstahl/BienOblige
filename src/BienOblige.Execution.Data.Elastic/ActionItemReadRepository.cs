@@ -1,6 +1,6 @@
 ﻿using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
-using BienOblige.ValueObjects;
+using BienOblige.ActivityStream.ValueObjects;
 using Elastic.Clients.Elasticsearch;
 
 namespace BienOblige.Execution.Data.Elastic;

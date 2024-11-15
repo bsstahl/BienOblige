@@ -1,4 +1,4 @@
-﻿namespace BienOblige.Constants;
+﻿namespace BienOblige.ActivityStream.Constants;
 
 public static class Namespaces
 {

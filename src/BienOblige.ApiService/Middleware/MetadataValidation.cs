@@ -8,8 +8,8 @@ public static class MetadataValidation
     {
         // Provide useful error messages if metadata is not supplied
 
-        var actorId = context.Request.Headers[Metadata.UpdatedByIdKey];
-        var actorType = context.Request.Headers[Metadata.UpdatedByTypeKey];
+        var actorId = string.Join(";", context.Request.Headers[Metadata.UpdatedByIdKey].Select(s => s));
+        var actorType = string.Join(";", context.Request.Headers[Metadata.UpdatedByTypeKey].Select(s => s));
 
         var results = new List<string>();
         if (string.IsNullOrWhiteSpace(actorId))

@@ -18,7 +18,6 @@
 		<ProjectReference Include="..\BienOblige.Execution.Data.Elastic\BienOblige.Execution.Data.Elastic.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
-		<ProjectReference Include="..\BienOblige\BienOblige.csproj" />
 	</ItemGroup>
 
 </Project>

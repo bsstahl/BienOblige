@@ -1,4 +1,4 @@
-﻿namespace BienOblige.Execution.Enumerations;
+﻿namespace BienOblige.ActivityStream.Enumerations;
 
 public enum ActorType
 {

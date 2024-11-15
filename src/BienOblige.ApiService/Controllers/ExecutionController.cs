@@ -1,11 +1,10 @@
 ﻿using BienOblige.ApiService.Entities;
 using BienOblige.ApiService.Extensions;
-using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application;
-using BienOblige.ValueObjects;
 using BienOblige.ApiService.Constants;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using BienOblige.ActivityStream.ValueObjects;
 
 namespace BienOblige.ApiService.Controllers
 {
@@ -32,15 +31,15 @@ namespace BienOblige.ApiService.Controllers
             [FromHeader(Name = Metadata.CorrelationIdKey)] string correlationId)
         {
             //_logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
-            
+
             // Add Ids to any ActionItem that doesn't have one
             items.ToList().ForEach(item => item.Id ??= NetworkIdentity.New().Value.ToString());
 
-            var updatingActor = Actor.From(updatedById, updatedByType);
+            var updatingActor = new Actor(updatedById, updatedByType);
 
             var resultIds = await _executionClient.CreateActionItem(
                 items.AsAggregates(),
-                updatingActor,
+                updatingActor.AsAggregate(),
                 correlationId);
 
             var resultIdValues = resultIds.Select(t => t.Value.ToString());
@@ -67,11 +66,12 @@ namespace BienOblige.ApiService.Controllers
         {
             //_logger.LogInformation("Updating ActionItem for with CorrelationId {CorrelationId}", correlationId);
 
-            var updatingActor = Actor.From(updatedById, updatedByType);
+            var updatingActor = new Actor(updatedById, updatedByType);
 
             var resultId = await _executionClient.UpdateActionItem(
                 item.AsAggregate(),
-                updatingActor, correlationId);
+                updatingActor.AsAggregate(), 
+                correlationId);
 
             var result = new UpdateResponse(resultId.Value.ToString());
 

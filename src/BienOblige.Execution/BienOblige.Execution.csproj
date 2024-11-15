@@ -8,7 +8,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BienOblige\BienOblige.csproj" />
+		<PackageReference Include="ValueOf" Version="2.0.31" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BienOblige.ActivityStream\BienOblige.ActivityStream.csproj" />
 	</ItemGroup>
 
 </Project>

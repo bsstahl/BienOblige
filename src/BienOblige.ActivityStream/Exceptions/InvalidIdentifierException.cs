@@ -1,4 +1,4 @@
-﻿namespace BienOblige.Exceptions;
+﻿namespace BienOblige.ActivityStream.Exceptions;
 
 public class InvalidIdentifierException : Exception
 {

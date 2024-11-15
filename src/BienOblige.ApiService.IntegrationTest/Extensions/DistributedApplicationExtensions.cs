@@ -5,7 +5,7 @@ namespace BienOblige.ApiService.IntegrationTest.Extensions;
 
 internal static class DistributedApplicationExtensions
 {
-    internal static (ILogger, HttpClient) GetRequiredServices(
+    internal static (ILogger<T>, HttpClient) GetRequiredServices<T>(
         this DistributedApplication? app, 
         Guid correlationId, 
         Guid actorId, string actorType)
@@ -24,7 +24,7 @@ internal static class DistributedApplicationExtensions
         httpClient.DefaultRequestHeaders.Add("x-updatedby-type", actorType);
         httpClient.DefaultRequestHeaders.Add("x-correlation-id", correlationId.ToString());
 
-        var logger = app.Services.GetRequiredService<ILogger<Execution_Create_Should>>();
+        var logger = app.Services.GetRequiredService<ILogger<T>>();
 
         logger.LogInformation("Logger and HTTP Client created");
 

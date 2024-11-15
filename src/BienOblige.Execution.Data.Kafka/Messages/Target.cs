@@ -59,7 +59,7 @@ public class Target
     [JsonPropertyName("@type")]
     public string ObjectType { get; set; }
 
-    [JsonPropertyName("@id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
     [JsonPropertyName("name")]
@@ -68,5 +68,6 @@ public class Target
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
+    // [JsonExtensionData]
     public IDictionary<string, string> ExtendedProperties = new Dictionary<string, string>();
 }

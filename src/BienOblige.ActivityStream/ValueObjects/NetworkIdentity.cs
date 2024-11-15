@@ -1,8 +1,7 @@
-﻿using BienOblige.Exceptions;
-using System.Runtime.CompilerServices;
+﻿using BienOblige.ActivityStream.Exceptions;
 using ValueOf;
 
-namespace BienOblige.ValueObjects;
+namespace BienOblige.ActivityStream.ValueObjects;
 
 public class NetworkIdentity : ValueOf<Uri, NetworkIdentity>
 {

@@ -1,7 +1,7 @@
 ﻿using BienOblige.Execution.Data.Kafka.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using BienOblige.ValueObjects;
+using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Execution.Application.Extensions;
 
 namespace BienOblige.Execution.Data.Kafka.Messages;
@@ -44,7 +44,7 @@ public class Activity
 
 
     public Activity(string activityType, string correlationId, DateTimeOffset published,
-        Aggregates.ActionItem actionItem, IEnumerable<Context> context, Aggregates.Actor updatingActor)
+        Aggregates.ActionItem actionItem, IEnumerable<Context> context, BienOblige.ActivityStream.Aggregates.Actor updatingActor)
     {
         // _context.Add(new Context(BienOblige.Constants.Namespaces.RootNamespaceName));
         // context.Where(c => c.HasKey).ToList().ForEach(c => _context.Add(c));

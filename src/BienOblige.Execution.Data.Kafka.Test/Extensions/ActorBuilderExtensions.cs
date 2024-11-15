@@ -1,5 +1,5 @@
-﻿using BienOblige.Execution.Builders;
-using BienOblige.Execution.Enumerations;
+﻿using BienOblige.ActivityStream.Enumerations;
+using BienOblige.ActivityStream.Builders;
 
 namespace BienOblige.Execution.Data.Kafka.Test.Extensions;
 

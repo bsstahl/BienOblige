@@ -1,10 +1,10 @@
-using BienOblige.ValueObjects;
+using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Execution.Application.Test.Extensions;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit.Abstractions;
+using BienOblige.ActivityStream.Aggregates;
 using BienOblige.Execution.Application.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using BienOblige.Execution.Aggregates;
+using Xunit.Abstractions;
 
 namespace BienOblige.Execution.Application.Test;
 
@@ -29,7 +29,9 @@ public class Client_AssignExecutor_Should
         NetworkIdentity? executorId = (null as NetworkIdentity).CreateRandom();
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
         var correlationId = Guid.NewGuid().ToString();
-        var updatingActor = Actor.From(updatingActorId, "Person");
+        var updatingActor = new Actor(
+            NetworkIdentity.From(updatingActorId), 
+            ActivityStream.Enumerations.ActorType.Person);
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(() 
@@ -42,7 +44,10 @@ public class Client_AssignExecutor_Should
         var actionItemId = (null as NetworkIdentity).CreateRandom();
         NetworkIdentity? executorId = null;
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
-        var updatingActor = Actor.From(updatingActorId, "Person");
+        var updatingActor = new Actor(
+            NetworkIdentity.From(updatingActorId), 
+            ActivityStream.Enumerations.ActorType.Person);
+
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();

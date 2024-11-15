@@ -39,7 +39,8 @@ The entities involved in *ActionItem* management are:
     * https://bienoblige.com/ns/status#Incomplete - Work may be started but is not yet done
     * https://bienoblige.com/ns/status#InProgress - Work is in the process of being done
     * https://bienoblige.com/ns/status#Complete - Work is done
-    * https://bienoblige.com/ns/status#Cancelled - Work will not be done
+    * https://bienoblige.com/ns/status#Cancelled - Work no longer needs to be done
+    * https://bienoblige.com/ns/status#Skipped - Work was not done (didn't get to it)
   * Custom
     * https://example.com/ns/status#AwaitingApproval
 * **Effort** - Quantifies the expected workload for an ActionItem

@@ -1,5 +1,5 @@
-using BienOblige.ValueObjects;
-using BienOblige.Exceptions;
+using BienOblige.ActivityStream.ValueObjects;
+using BienOblige.ActivityStream.Exceptions;
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Extensions;
 using BienOblige.Execution.Application.Interfaces;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 using Microsoft.Extensions.Logging;
 using BienOblige.Execution.Application.Enumerations;
+using BienOblige.ActivityStream.Aggregates;
 
 namespace BienOblige.Execution.Application.Test;
 
@@ -32,7 +33,9 @@ public class Client_CreateActionItem_Should
     {
         List<ActionItem> items = new();
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
-        var updatingActor = Actor.From(updatingActorId, "Person");
+        var updatingActor = new Actor(
+            NetworkIdentity.From(updatingActorId), 
+            ActivityStream.Enumerations.ActorType.Person);
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
@@ -45,7 +48,9 @@ public class Client_CreateActionItem_Should
     {
         List<ActionItem>? items = null;
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
-        var updatingActor = Actor.From(updatingActorId, "Person");
+        var updatingActor = new Actor(
+            NetworkIdentity.From(updatingActorId), 
+            ActivityStream.Enumerations.ActorType.Person);
         var correlationId = Guid.NewGuid().ToString();
 
         var target = _services.GetRequiredService<Client>();
@@ -79,7 +84,9 @@ public class Client_CreateActionItem_Should
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<InvalidIdentifierException>(()
             => target.CreateActionItem(new[] { item },
-                Actor.From(string.Empty.GetRandom(), "Person"),
+                new Actor(
+                    NetworkIdentity.From(string.Empty.GetRandom()),
+                    ActivityStream.Enumerations.ActorType.Person),
                 correlationId));
     }
 
@@ -87,7 +94,9 @@ public class Client_CreateActionItem_Should
     public async Task SuccessfullyCreateTheActivity()
     {
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
-        var updatingActor = Actor.From(updatingActorId, "Person");
+        var updatingActor = new Actor(
+            NetworkIdentity.From(updatingActorId), 
+            ActivityStream.Enumerations.ActorType.Person);
         var item = new ActionItemBuilder()
             .UseRandomValues()
             .Build();

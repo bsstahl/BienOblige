@@ -47,7 +47,8 @@
       "updated": "2024-09-20T10:00:00Z",
       "bienoblige:completionMethod": [
         "bienoblige:completionmethod#Manual",
-        "bienoblige:completionmethod#ParentCompleted"
+        "bienoblige:completionmethod#ParentCompleted",
+        "bienoblige:completionmethod#AllChildrenCompleted"
       ],
       "bienoblige:effort": {
         "@type": "https://bienoblige.com/effort#StoryPoints",
@@ -59,9 +60,15 @@
         { "id": "https://example.com/requirements#cdl" }
       ],
       "bienoblige:exceptions": [],
-      "bienoblige:parent": "https://bienoblige.com/actionitems/85b6a2cd-31e5-4d95-9291-225ce51b6d15",
+      "bienoblige:parent": {
+        "@type": "bienoblige:ActionItem",
+        "id": "https://bienoblige.com/actionitems/85b6a2cd-31e5-4d95-9291-225ce51b6d15",
+      },
       "bienoblige:prerequisites": [
-        { "id": "https://bienoblige.com/actionitems/854dc0a9-adeb-4b6e-9699-5a2c5a0dab3a" }
+        {
+          "@type": "bienoblige:ActionItem", 
+          "id": "https://bienoblige.com/actionitems/854dc0a9-adeb-4b6e-9699-5a2c5a0dab3a" 
+        }
       ],
       "bienoblige:priority": "https://bienoblige.com/ns/priority#Medium",
       "bienoblige:status": "https://bienoblige.com/ns/status#Incomplete"

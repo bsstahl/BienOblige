@@ -1,4 +1,4 @@
-﻿using BienOblige.ValueObjects;
+﻿using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -29,23 +29,4 @@ internal class MockActionItemReader : IGetActionItems
 
         return result;
     }
-
-    public Task<IEnumerable<ActionItem>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<ActionItem>> GetGraph(NetworkIdentity parentId)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal MockActionItemReader SetupExistingActionItem(ActionItem item)
-    {
-        _actionItemsReader
-            .Setup(x => x.Get(item.Id))
-            .Returns(Task.FromResult<ActionItem?>(item));
-        return this;
-    }
-
 }

@@ -1,9 +1,10 @@
 ﻿using BienOblige.Execution.Builders;
-using BienOblige.Constants;
+using BienOblige.ActivityStream.Constants;
 using BienOblige.Execution.Application.Enumerations;
 using BienOblige.Execution.Application.Extensions;
-using BienOblige.ValueObjects;
+using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Execution.Data.Kafka.Extensions;
+using BienOblige.ActivityStream.Builders;
 
 namespace BienOblige.Execution.Data.Kafka.Builders;
 

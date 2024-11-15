@@ -1,5 +1,6 @@
-﻿using BienOblige.Execution.ValueObjects;
-using BienOblige.ValueObjects;
+﻿using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.ValueObjects;
+using BienOblige.Execution.ValueObjects;
 
 namespace BienOblige.Execution.Aggregates;
 
@@ -9,9 +10,13 @@ public class ActionItem
     public Title Title { get; set; }
     public Content Content { get; set; }
 
-    public NetworkIdentity? ParentId { get; set; }
+    public NetworkObject? Parent { get; set; }
+    public NetworkObject? Target { get; set; }
 
-    public Actor? Actor { get; set; }
+    public Actor? Generator { get; set; }
+    public Actor? LastUpdatedBy { get; set; }
+
+    public DateTimeOffset LastUpdatedAt { get; set; }
 
     public ActionItem(Title title, Content content)
         : this(NetworkIdentity.New(), title, content)

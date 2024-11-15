@@ -1,4 +1,4 @@
-﻿using BienOblige.ValueObjects;
+﻿using BienOblige.ActivityStream.ValueObjects;
 
 namespace BienOblige.Execution.Data.Kafka.Extensions;
 

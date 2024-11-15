@@ -1,4 +1,6 @@
-﻿using BienOblige.ValueObjects;
+﻿using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.ValueObjects;
+using BienOblige.ActivityStream.Constants;
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
 using BienOblige.Execution.Data.Kafka.Constants;
@@ -6,7 +8,6 @@ using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using BienOblige.Execution.Application.Enumerations;
-using BienOblige.Constants;
 
 namespace BienOblige.Execution.Data.Kafka
 {

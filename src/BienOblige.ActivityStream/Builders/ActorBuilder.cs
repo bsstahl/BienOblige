@@ -1,9 +1,8 @@
-﻿using BienOblige.Execution.Aggregates;
-using BienOblige.Execution.Enumerations;
-using BienOblige.Execution.ValueObjects;
-using BienOblige.ValueObjects;
+﻿using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.Enumerations;
+using BienOblige.ActivityStream.ValueObjects;
 
-namespace BienOblige.Execution.Builders;
+namespace BienOblige.ActivityStream.Builders;
 
 public class ActorBuilder
 {

@@ -51,7 +51,7 @@ internal static class ActivityExtensions
         }
     }
 
-    private static async Task ProcessUpdate(this IManageTransactions<Application.Aggregates.Activity> activityManager,
+    private static Task ProcessUpdate(this IManageTransactions<Application.Aggregates.Activity> activityManager,
         ILogger logger,
         IGetActionItems readRepo,
         IUpdateActionItems writeRepo)

@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add service defaults & Aspire components.
 builder.AddServiceDefaults();
 builder.AddKafkaProducer<string, string>(BienOblige.Constants.ServiceNames.KafkaService);
+builder.AddElasticsearchClient(BienOblige.Constants.ServiceNames.SearchService);
 
 // Add Application services to the container.
 builder.Services.UseExecutionClient();

@@ -1,8 +1,9 @@
-﻿using BienOblige.ValueObjects;
+﻿using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Execution.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 using BienOblige.Execution.Application.Enumerations;
+using BienOblige.ActivityStream.Aggregates;
 
 namespace BienOblige.Execution.Application;
 
@@ -24,20 +25,16 @@ public class Client
         ArgumentNullException.ThrowIfNull(updatingActor);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(correlationId);
 
-        if (items.Count() == 0)
-            throw new ArgumentException("No ActionItems to create");
+        foreach (var item in items)
+        {
+            item.Generator ??= updatingActor;
+            item.LastUpdatedBy = updatingActor;
+            item.LastUpdatedAt = DateTimeOffset.UtcNow;
+        }
 
-        // TODO: Figure out how to manage the correlation Id so that it doesn't have to get passed-in to the model layers
-        // since it is not needed for the Application proper (just the wire formats)
-
-        //if (await _actionItemReader.Exists(item.Id))
-        //{
-        //    _logger.LogError("ActionItem with ID {ActionItemId} already exists", item.Id);
-        //    throw new DuplicateIdentifierException(item.Id);
-        //}
-        //else
-
-        return await _activityCreator.Create(ActivityType.Create, items, updatingActor, correlationId);
+        return items.Any()
+            ? await _activityCreator.Create(ActivityType.Create, items, updatingActor, correlationId)
+            : throw new ArgumentException("No ActionItems to create");
     }
 
     public async Task<NetworkIdentity> UpdateActionItem(ActionItem changes, Actor updatingActor, string correlationId)

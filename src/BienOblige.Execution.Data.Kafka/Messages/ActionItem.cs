@@ -1,5 +1,5 @@
 ﻿using BienOblige.Execution.Data.Kafka.Extensions;
-using BienOblige.ValueObjects;
+using BienOblige.ActivityStream.ValueObjects;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -7,10 +7,6 @@ namespace BienOblige.Execution.Data.Kafka.Messages;
 
 public class ActionItem
 {
-    // TODO: Make the following properties optional
-    // actionItemContent
-    // targetType, targetId, targetName, targetDescription
-
     public ActionItem(string id, string name, string content)
     {
         Id = id;

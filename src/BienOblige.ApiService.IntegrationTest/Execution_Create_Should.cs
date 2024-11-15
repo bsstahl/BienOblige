@@ -28,11 +28,12 @@ public class Execution_Create_Should
     [Fact]
     public async Task RespondWithAnAcceptedResult()
     {
-        var (logger, httpClient) = this.App.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid(), "Service");
+        var (logger, httpClient) = this.App.GetRequiredServices<Controllers.ExecutionController>(Guid.NewGuid(), Guid.NewGuid(), "Service");
 
         var content = new ActionItemBuilder()
             .UseRandomValues()
             .BuildJsonContent();
+
         var response = await httpClient.PostAsync("/api/Execution/", content);
 
         var body = await response.Content.ReadAsStringAsync();
@@ -45,7 +46,7 @@ public class Execution_Create_Should
     public async Task RespondWithTheSpecifiedCorrelationIdHeader()
     {
         var expectedCorrelationId = Guid.NewGuid();
-        var (logger, httpClient) = this.App.GetRequiredServices(expectedCorrelationId, Guid.NewGuid(), "Person");
+        var (logger, httpClient) = this.App.GetRequiredServices<Controllers.ExecutionController>(expectedCorrelationId, Guid.NewGuid(), "Person");
 
         var content = new ActionItemBuilder()
             .UseRandomValues()
@@ -62,7 +63,7 @@ public class Execution_Create_Should
     [Fact]
     public async Task RespondWithTheSpecifiedActionItemId()
     {
-        var (logger, httpClient) = this.App.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid(), "Organization");
+        var (logger, httpClient) = this.App.GetRequiredServices<Controllers.ExecutionController>(Guid.NewGuid(), Guid.NewGuid(), "Organization");
 
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
@@ -83,7 +84,7 @@ public class Execution_Create_Should
     [Fact]
     public async Task ProduceAMessageOnTheActionItemStream()
     {
-        var (logger, httpClient) = this.App.GetRequiredServices(Guid.NewGuid(), Guid.NewGuid(), "Group");
+        var (logger, httpClient) = this.App.GetRequiredServices<Controllers.ExecutionController>(Guid.NewGuid(), Guid.NewGuid(), "Group");
 
         var content = new ActionItemBuilder()
             .UseRandomValues()
@@ -101,7 +102,7 @@ public class Execution_Create_Should
     public async Task ProduceOneMessageOnTheActionItemStreamPerActionItem()
     {
         var correlationId = Guid.NewGuid();
-        var (logger, httpClient) = this.App.GetRequiredServices(correlationId, Guid.NewGuid(), "Application");
+        var (logger, httpClient) = this.App.GetRequiredServices<Controllers.ExecutionController>(correlationId, Guid.NewGuid(), "Application");
 
         var itemCount = 10.GetRandom(3);
         var actionItems = new List<Execution.Aggregates.ActionItem>();
