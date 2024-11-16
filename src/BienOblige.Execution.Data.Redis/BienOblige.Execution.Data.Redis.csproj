@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BienOblige.ActivityStream\BienOblige.ActivityStream.csproj" />
+    <ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
+    <ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>

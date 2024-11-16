@@ -1,4 +1,5 @@
 ﻿using BienOblige.Execution.Application.Interfaces;
+using BienOblige.Execution.Worker.Extensions;
 
 namespace BienOblige.Execution.Worker;
 

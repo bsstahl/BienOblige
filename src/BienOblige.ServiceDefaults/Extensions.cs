@@ -10,6 +10,7 @@ using OpenTelemetry.Trace;
 using Microsoft.Extensions.Configuration;
 using BienOblige.Constants;
 using Confluent.Kafka;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -94,6 +95,7 @@ public static class Extensions
         return builder;
     }
 
+
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
         // Adding health checks endpoints to applications in non-development environments has security implications.
@@ -115,9 +117,11 @@ public static class Extensions
         return app;
     }
 
-    public static WebApplication CreateTopicIfNotExist(this WebApplication app, string topicName)
+
+    public static IHost CreateTopicIfNotExist(this IHost host, string topicName)
     {
-        var bootstrapServers = app.Configuration.GetConnectionString(ServiceNames.KafkaService);
+        var config = host.Services.GetRequiredService<IConfiguration>();
+        var bootstrapServers = config.GetConnectionString(ServiceNames.KafkaService);
         using var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = bootstrapServers }).Build();
         try
         {
@@ -130,6 +134,6 @@ public static class Extensions
             Console.WriteLine($"An error occured creating topic {e.Results[0].Topic}: {e.Results[0].Error.Reason}");
         }
 
-        return app;
+        return host;
     }
 }

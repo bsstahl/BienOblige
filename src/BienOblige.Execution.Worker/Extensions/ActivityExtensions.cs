@@ -1,7 +1,7 @@
 ﻿using BienOblige.Execution.Application.Enumerations;
 using BienOblige.Execution.Application.Interfaces;
 
-namespace BienOblige.Execution.Worker;
+namespace BienOblige.Execution.Worker.Extensions;
 
 internal static class ActivityExtensions
 {

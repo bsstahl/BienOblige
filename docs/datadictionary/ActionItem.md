@@ -3,7 +3,7 @@
 * Fields
   * Standard AS2 *Object* fields
     * *attributedTo* (optional) - The **Executor** of the ActionItem
-    * *content* - A detailed description of the work to be performed. This field is required as it is the detail of the task that will be performed.
+    * *content* - (optional) A detailed description of the work to be performed. This field is required as it is the detail of the task that will be performed.
     * *context* (optional) - The context in which the work needs to be performed. Generally this refers to the reason for the work (i.e. an Audit, Customer Sale, etc.)
     * *endTime* (optional) - The date and time by which the work needs to be completed
     * *generator* (optional) - The **Actor** (Person, Application or Service) that created the ActionItem
@@ -31,7 +31,4 @@
     * *bienoblige:onUpdate* (optional) - An array of URIs that represent custom code to be executed when the **ActionItem** is updated.
     * *bienoblige:onComplete* (optional) - An array of URIs that represent custom code to be executed when the **ActionItem** is marked as complete.
 
-> TODO: Among the *content*, *name* and *summary* fields, which should be required and which should be optional? It seems like only one of them should be required, but which one? The *summary* is the most complete...
->
 > TODO: Handle the situation where the children of a task are all closed, but in different ways (some completed, some cancelled). Should the parent task be considered complete or cancelled or neither?
-

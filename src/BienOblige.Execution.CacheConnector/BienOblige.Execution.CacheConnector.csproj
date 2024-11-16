@@ -3,23 +3,20 @@
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<UserSecretsId>dotnet-BienOblige.Execution.Worker-c9e29540-237d-4e02-9bc0-9bbfe47232de</UserSecretsId>
+		<UserSecretsId>dotnet-BienOblige.Execution.CacheConnector-aa5752ee-1d8d-430d-860a-81cfe30b0cb9</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Aspire.Elastic.Clients.Elasticsearch" Version="9.0.0-preview.5.24551.3" />
-		<PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.5.24551.3" />
 		<PackageReference Include="Aspire.StackExchange.Redis" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
 		<PackageReference Include="Aspire.Confluent.Kafka" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />
+		<ProjectReference Include="..\BienOblige.ActivityStream\BienOblige.ActivityStream.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution.Data.Redis\BienOblige.Execution.Data.Redis.csproj" />
+		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
 	</ItemGroup>
-
 </Project>

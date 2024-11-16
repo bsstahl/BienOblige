@@ -1,11 +1,10 @@
 ﻿using BienOblige.Execution.Aggregates;
-using BienOblige.Execution.Application.Interfaces;
 using BienOblige.ActivityStream.ValueObjects;
 using Elastic.Clients.Elasticsearch;
 
 namespace BienOblige.Execution.Data.Elastic;
 
-public class ActionItemReadRepository : IGetActionItems
+public class ActionItemReadRepository : IFindActionItems
 {
     ElasticsearchClient _client;
 

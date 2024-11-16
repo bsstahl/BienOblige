@@ -1,5 +1,8 @@
 using BienOblige.ServiceDefaults.Kafka;
 using BienOblige.ServiceDefaults.Elastic;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using BienOblige.ServiceDefaults.Redis;
 
 namespace BienOblige.AppHost;
 
@@ -11,8 +14,9 @@ internal class Program
             .CreateBuilder(args);
 
         // Generic service registration
-        var kafka = builder.UseBienObligeKafka(Constants.ServiceNames.KafkaService);
         var search = builder.UseBienObligeElasticSearch(Constants.ServiceNames.SearchService);
+        var kafka = builder.UseBienObligeKafka(Constants.ServiceNames.KafkaService);
+        var cache = builder.UseBienObligeRedis(Constants.ServiceNames.CacheService);
 
         // To connect to an existing server, call AddConnectionString instead of WithReference below
 
@@ -25,9 +29,16 @@ internal class Program
         var executionService = builder
             .AddProject<Projects.BienOblige_Execution_Worker>(Constants.ServiceNames.ExecutionService)
             .WithReference(kafka)
-            .WithReference(search)
+            .WithReference(cache)
             .WaitFor(kafka)
-            .WaitFor(search);
+            .WaitFor(cache);
+
+        var cacheConnector = builder
+            .AddProject<Projects.BienOblige_Execution_CacheConnector>(Constants.ServiceNames.CacheConnectorService)
+            .WithReference(cache)
+            .WithReference(kafka)
+            .WaitFor(cache)
+            .WaitFor(kafka);
 
         builder.Build().Run();
     }

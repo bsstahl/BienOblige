@@ -10,6 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.5.24551.3" />
 		<PackageReference Include="Aspire.Hosting.Testing" Version="9.0.0" />
 		<PackageReference Include="Confluent.Kafka" Version="2.6.0" />
 		<PackageReference Include="coverlet.collector" Version="6.0.2">

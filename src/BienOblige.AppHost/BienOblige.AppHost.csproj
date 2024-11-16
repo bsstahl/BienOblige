@@ -25,16 +25,18 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
+		<ProjectReference Include="..\BienOblige.Execution.CacheConnector\BienOblige.Execution.CacheConnector.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution.Worker\BienOblige.Execution.Worker.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" IsAspireProjectResource="false" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
-		<PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.4.24511.1" />
-		<PackageReference Include="System.Text.Json" Version="9.0.0" />
+		<PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.5.24551.3" />
+		<PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
 		<PackageReference Include="Aspire.Hosting.Kafka" Version="9.0.0" />
 		<PackageReference Include="Confluent.Kafka" Version="2.6.0" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
 	</ItemGroup>
 
 </Project>
