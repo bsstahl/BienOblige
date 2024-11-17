@@ -1,9 +1,8 @@
 ﻿using BienOblige.ActivityStream.ValueObjects;
-using BienOblige.Execution.Aggregates;
+using BienOblige.ActivityStream.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.Logging;
-using BienOblige.Execution.Application.Enumerations;
-using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.Enumerations;
 
 namespace BienOblige.Execution.Application;
 

@@ -1,4 +1,4 @@
-﻿using BienOblige.Execution.Aggregates;
+﻿using BienOblige.ActivityStream.Aggregates;
 
 namespace BienOblige.Execution.Data.Kafka.Test.Extensions;
 

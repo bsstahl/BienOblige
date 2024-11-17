@@ -44,22 +44,22 @@ public class ActionItem
         return JsonSerializer.Serialize(this);
     }
 
-    public Aggregates.ActionItem AsAggregate()
+    public ActivityStream.Aggregates.ActionItem AsAggregate()
     {
-        return new Aggregates.ActionItem(
+        return new ActivityStream.Aggregates.ActionItem(
             NetworkIdentity.From(this.Id),
-            ValueObjects.Title.From(this.Name),
-            ValueObjects.Content.From(this.Content));
+            ActivityStream.ValueObjects.Name.From(this.Name),
+            ActivityStream.ValueObjects.Content.From(this.Content));
     }
 
-    public static ActionItem From(Aggregates.ActionItem item)
+    public static ActionItem From(ActivityStream.Aggregates.ActionItem item)
     {
-        return new ActionItem(item.Id.Value.ToString(), item.Title.Value, item.Content.Value)
+        return new ActionItem(item.Id.Value.ToString(), item.Name.Value, item.Content.Value)
         { 
             Target = item.Target is not null 
                 ? new Target(item.Target.ObjectTypeName.Value, 
                     item.Target.Id.Value.ToString(), 
-                    item.Target.Name) 
+                    item.Target.Name.Value) 
                 : null
         };
     }

@@ -1,11 +1,11 @@
-﻿using BienOblige.Execution.Aggregates;
-using BienOblige.Execution.Application.Interfaces;
-using BienOblige.Execution.Data.Elastic.Extensions;
+﻿// using BienOblige.Search.Aggregates;
+using BienOblige.Search.Application.Interfaces;
+using BienOblige.Search.Data.Elastic.Extensions;
 using BienOblige.ActivityStream.ValueObjects;
 using Elastic.Clients.Elasticsearch;
 using BienOblige.ActivityStream.Aggregates;
 
-namespace BienOblige.Execution.Data.Elastic;
+namespace BienOblige.Search.Data.Elastic;
 
 public class ActionItemWriteRepository : IUpdateActionItems
 {

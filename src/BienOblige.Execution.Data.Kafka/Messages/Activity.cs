@@ -44,7 +44,7 @@ public class Activity
 
 
     public Activity(string activityType, string correlationId, DateTimeOffset published,
-        Aggregates.ActionItem actionItem, IEnumerable<Context> context, BienOblige.ActivityStream.Aggregates.Actor updatingActor)
+        ActivityStream.Aggregates.ActionItem actionItem, IEnumerable<Context> context, BienOblige.ActivityStream.Aggregates.Actor updatingActor)
     {
         // _context.Add(new Context(BienOblige.Constants.Namespaces.RootNamespaceName));
         // context.Where(c => c.HasKey).ToList().ForEach(c => _context.Add(c));

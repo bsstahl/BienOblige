@@ -1,8 +1,8 @@
 ﻿using ValueOf;
 
-namespace BienOblige.Execution.ValueObjects;
+namespace BienOblige.ActivityStream.ValueObjects;
 
-public class Title: ValueOf<string, Title>
+public class Name: ValueOf<string, Name>
 {
     override protected void Validate()
     {

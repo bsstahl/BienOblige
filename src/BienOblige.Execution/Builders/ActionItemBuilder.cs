@@ -1,14 +1,13 @@
-﻿using BienOblige.ActivityStream.Builders;
+﻿using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.Builders;
 using BienOblige.ActivityStream.ValueObjects;
-using BienOblige.Execution.Aggregates;
-using BienOblige.Execution.ValueObjects;
 
 namespace BienOblige.Execution.Builders;
 
 public class ActionItemBuilder
 {
     private NetworkIdentity? _id;
-    private Title? _title;
+    private Name? _title;
     private Content? _content;
 
     private ActorBuilder? _actorBuilder;
@@ -41,12 +40,12 @@ public class ActionItemBuilder
         return this;
     }
 
-    public ActionItemBuilder Title(string value)
+    public ActionItemBuilder Name(string value)
     {
-        return this.Title(ValueObjects.Title.From(value));
+        return this.Title(ActivityStream.ValueObjects.Name.From(value));
     }
 
-    public ActionItemBuilder Title(Title value)
+    public ActionItemBuilder Title(Name value)
     {
         _title = value;
         return this;
@@ -54,7 +53,7 @@ public class ActionItemBuilder
 
     public ActionItemBuilder Content(string value)
     {
-        return this.Content(ValueObjects.Content.From(value));
+        return this.Content(ActivityStream.ValueObjects.Content.From(value));
     }
 
     public ActionItemBuilder Content(Content value)

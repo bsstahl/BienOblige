@@ -32,7 +32,7 @@ public class Actor
 
     public static Actor From(ActivityStream.Aggregates.Actor actor)
     {
-        return new Actor(actor.Id.Value.ToString(), actor.Type.ToString());
+        return new Actor(actor.Id.Value.ToString(), actor.ObjectTypeName.Value.ToString());
     }
 
 }

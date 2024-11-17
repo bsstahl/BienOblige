@@ -10,7 +10,7 @@ public static class CreateMessageBuilderExtensions
     public static ActivityMessageBuilder UseRandomValues(this ActivityMessageBuilder builder)
     {
         return builder
-            .ActivityType(Enum.GetNames<Application.Enumerations.ActivityType>().GetRandom())
+            .ActivityType(Enum.GetNames<ActivityStream.Enumerations.ActivityType>().GetRandom())
             .CorrelationId($"urn:uid:{Guid.NewGuid()}")
             .PublishedNow()
             .Actor(new ActorBuilder().UseRandomValues())

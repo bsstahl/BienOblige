@@ -8,7 +8,7 @@ public class ActorBuilder
 {
     private NetworkIdentity? _id;
     private ActorType? _type;
-    private ActorName? _name;
+    private Name? _name;
 
     public Actor Build()
     {
@@ -39,14 +39,14 @@ public class ActorBuilder
         return this;
     }
 
-    public ActorBuilder Name(string value)
+    public ActorBuilder Name(string actorName)
     {
-        return this.Name(ActorName.From(value));
+        return this.Name(ValueObjects.Name.From(actorName));
     }
 
-    public ActorBuilder Name(ActorName value)
+    public ActorBuilder Name(Name actorName)
     {
-        _name = value;
+        _name = actorName;
         return this;
     }
 }

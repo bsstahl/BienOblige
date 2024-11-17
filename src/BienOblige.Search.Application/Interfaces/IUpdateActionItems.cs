@@ -1,7 +1,7 @@
 ﻿using BienOblige.ActivityStream.Aggregates;
 using BienOblige.ActivityStream.ValueObjects;
 
-namespace BienOblige.Execution.Application.Interfaces;
+namespace BienOblige.Search.Application.Interfaces;
 
 public interface IUpdateActionItems
 {

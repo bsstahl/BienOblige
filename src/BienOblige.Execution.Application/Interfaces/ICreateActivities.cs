@@ -1,7 +1,6 @@
 ﻿using BienOblige.ActivityStream.Aggregates;
 using BienOblige.ActivityStream.ValueObjects;
-using BienOblige.Execution.Aggregates;
-using BienOblige.Execution.Application.Enumerations;
+using BienOblige.ActivityStream.Enumerations;
 
 namespace BienOblige.Execution.Application.Interfaces;
 

@@ -1,14 +1,14 @@
-﻿using BienOblige.Execution.Application.Interfaces;
+﻿using BienOblige.Search.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BienOblige.Execution.Data.Elastic.Extensions;
+namespace BienOblige.Search.Data.Elastic.Extensions;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection UseElasticActionItemRepositories(this IServiceCollection services)
     {
         return services
-            .AddSingleton<IGetActionItems, ActionItemReadRepository>()
+            .AddSingleton<IFindActionItems, ActionItemReadRepository>()
             .AddSingleton<IUpdateActionItems, ActionItemWriteRepository>();
     }
 

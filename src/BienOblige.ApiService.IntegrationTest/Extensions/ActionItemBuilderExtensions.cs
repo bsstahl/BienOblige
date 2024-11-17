@@ -10,7 +10,7 @@ internal static class ActionItemBuilderExtensions
         var idValue = string.Empty.GetRandom();
         return builder
             .Id($"https://example.org/actionitems/{idValue}")
-            .Title($"Title of ActionItem {idValue}")
+            .Name($"Title of ActionItem {idValue}")
             .Content($"Content of ActionItem {idValue}");
     }
 }

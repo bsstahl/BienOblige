@@ -1,4 +1,4 @@
-﻿namespace BienOblige.Execution.Data.Elastic.Constants;
+﻿namespace BienOblige.Search.Data.Elastic.Constants;
 
 public static class Indexes
 {

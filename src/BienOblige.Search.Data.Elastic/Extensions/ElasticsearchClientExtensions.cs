@@ -1,6 +1,6 @@
 ﻿using Elastic.Clients.Elasticsearch;
 
-namespace BienOblige.Execution.Data.Elastic.Extensions;
+namespace BienOblige.Search.Data.Elastic.Extensions;
 
 internal static class ElasticsearchClientExtensions
 {

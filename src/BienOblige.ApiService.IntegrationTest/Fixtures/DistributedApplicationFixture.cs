@@ -29,7 +29,7 @@ public class DistributedApplicationFixture : IAsyncLifetime
                 startTask.Wait();
 
                 var resourcesTask = resourceNotificationService
-                    .WaitForResourceAsync("api", KnownResourceStates.Running)
+                    .WaitForResourceAsync(BienOblige.Constants.ServiceNames.ApiService, KnownResourceStates.Running)
                     .WaitAsync(TimeSpan.FromSeconds(60));
                 resourcesTask.Wait();
             }
@@ -46,7 +46,7 @@ public class DistributedApplicationFixture : IAsyncLifetime
 
             this.AppHost.Services.AddLogging(h =>
                 h.AddXUnit(output)
-                .SetMinimumLevel(LogLevel.Warning));
+                .SetMinimumLevel(LogLevel.Trace));
 
             _isConfigured = true;
         }

@@ -12,8 +12,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BienOblige.Execution.Application\BienOblige.Execution.Application.csproj" />
-		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
+		<ProjectReference Include="..\BienOblige.ActivityStream\BienOblige.ActivityStream.csproj" />
+		<ProjectReference Include="..\BienOblige.Search.Application\BienOblige.Search.Application.csproj" />
+		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 </Project>

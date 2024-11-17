@@ -12,12 +12,13 @@ internal static class DistributedApplicationExtensions
     {
         ArgumentNullException.ThrowIfNull(app, nameof(app));
 
+        var apiResourceName = BienOblige.Constants.ServiceNames.ApiService;
         var applicationModel = app.Services.GetRequiredService<DistributedApplicationModel>();
         var resources = applicationModel.Resources;
         var resource = resources
-            .SingleOrDefault(r => string.Equals(r.Name, "api", StringComparison.OrdinalIgnoreCase)) as IResourceWithEndpoints;
+            .SingleOrDefault(r => string.Equals(r.Name, apiResourceName, StringComparison.OrdinalIgnoreCase)) as IResourceWithEndpoints;
 
-        var httpClient = app.CreateHttpClient("api");
+        var httpClient = app.CreateHttpClient(apiResourceName);
         ArgumentNullException.ThrowIfNull(httpClient, nameof(httpClient));
 
         httpClient.DefaultRequestHeaders.Add("x-updatedby-id", $"https://example.org/{actorId}");

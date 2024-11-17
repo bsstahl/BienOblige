@@ -105,7 +105,7 @@ public class Execution_Create_Should
         var (logger, httpClient) = this.App.GetRequiredServices<Controllers.ExecutionController>(correlationId, Guid.NewGuid(), "Application");
 
         var itemCount = 10.GetRandom(3);
-        var actionItems = new List<Execution.Aggregates.ActionItem>();
+        var actionItems = new List<ActivityStream.Aggregates.ActionItem>();
         for (var i = 0; i < itemCount; i++)
             actionItems.Add(new ActionItemBuilder().UseRandomValues().Build());
         var contents = JsonContent.Create(actionItems);

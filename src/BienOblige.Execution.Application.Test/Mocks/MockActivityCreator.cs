@@ -1,12 +1,12 @@
-﻿using BienOblige.Execution.Aggregates;
-using BienOblige.Execution.Application.Enumerations;
-using BienOblige.Execution.Application.Interfaces;
+﻿using BienOblige.Execution.Application.Interfaces;
 using BienOblige.ActivityStream.ValueObjects;
 using Microsoft.Extensions.Logging;
 using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.Enumerations;
 
 namespace BienOblige.Execution.Application.Test.Mocks;
 
+[ExcludeFromCodeCoverage]
 internal class MockActivityCreator(ILogger<MockActivityCreator> logger, IServiceProvider services) : ICreateActivities
 {
     private readonly ILogger _logger = logger;

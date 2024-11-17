@@ -33,14 +33,14 @@ public class ActionItem
         this.Content = content;
     }
 
-    public Execution.Aggregates.ActionItem AsAggregate()
+    public ActivityStream.Aggregates.ActionItem AsAggregate()
     {
         ArgumentNullException.ThrowIfNull(this.Id, nameof(this.Id));
 
-        return new Execution.Aggregates.ActionItem(
+        return new ActivityStream.Aggregates.ActionItem(
             ActivityStream.ValueObjects.NetworkIdentity.From(this.Id),
-            Execution.ValueObjects.Title.From(this.Name),
-            Execution.ValueObjects.Content.From(this.Content))
+            ActivityStream.ValueObjects.Name.From(this.Name),
+            ActivityStream.ValueObjects.Content.From(this.Content))
         {
             Generator = this.Generator?.AsAggregate(),
             Target = this.Target?.AsAggregate(),
@@ -48,9 +48,9 @@ public class ActionItem
         };
     }
 
-    public static ActionItem From(Execution.Aggregates.ActionItem item)
+    public static ActionItem From(ActivityStream.Aggregates.ActionItem item)
     {
-        return new ActionItem(item.Id.Value.ToString(), item.Title.Value, item.Content.Value);
+        return new ActionItem(item.Id.Value.ToString(), item.Name.Value, item.Content.Value);
     }
 
 }

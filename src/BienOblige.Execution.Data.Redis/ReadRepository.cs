@@ -16,7 +16,7 @@ namespace BienOblige.Execution.Data.Redis
         public ReadRepository(ILogger<ReadRepository> logger, IConnectionMultiplexer mux)
         {
             _logger = logger;
-            _mux = mux; // TODO: Do I need to persist this reference?
+            _mux = mux; // TODO: Do I need to hold this reference?
             _db = mux.GetDatabase(0);
         }
 
@@ -25,7 +25,7 @@ namespace BienOblige.Execution.Data.Redis
             return (await _db.StringGetAsync(id.ToString())).HasValue;
         }
 
-        public async Task<Aggregates.ActionItem?> Get(NetworkIdentity id)
+        public async Task<ActivityStream.Aggregates.ActionItem?> Get(NetworkIdentity id)
         {
             var result = await _db.StringGetAsync(id.ToString());
             return result.HasValue 

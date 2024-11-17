@@ -15,11 +15,11 @@ public class WriteRepository : IUpdateActionItems
     public WriteRepository(ILogger<WriteRepository> logger, IConnectionMultiplexer mux)
     {
         _logger = logger;
-        _mux = mux; // TODO: Do I need to persist this reference
+        _mux = mux; // TODO: Do I need to hold this reference
         _db = mux.GetDatabase(0);
     }
 
-    public async Task<NetworkIdentity> Update(Aggregates.ActionItem changes, ActivityStream.Aggregates.Actor actor, string correlationId)
+    public async Task<NetworkIdentity> Update(ActivityStream.Aggregates.ActionItem changes, ActivityStream.Aggregates.Actor actor, string correlationId)
     {
         changes.LastUpdatedAt = DateTimeOffset.UtcNow;
         changes.LastUpdatedBy = actor;

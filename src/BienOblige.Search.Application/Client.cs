@@ -1,7 +1,7 @@
-﻿using BienOblige.Execution.Aggregates;
-using BienOblige.ActivityStream.ValueObjects;
+﻿using BienOblige.ActivityStream.ValueObjects;
 using Microsoft.Extensions.Logging;
 using Elastic.Clients.Elasticsearch;
+using BienOblige.ActivityStream.Aggregates;
 
 namespace BienOblige.Search.Application
 {

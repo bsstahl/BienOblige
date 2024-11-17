@@ -2,17 +2,17 @@
 
 public static class ActionItemExtensions
 {
-    internal static IEnumerable<Execution.Aggregates.ActionItem> AsAggregates(this IEnumerable<Entities.ActionItem> actionItems)
+    internal static IEnumerable<ActivityStream.Aggregates.ActionItem> AsAggregates(this IEnumerable<Entities.ActionItem> actionItems)
     {
         return actionItems.Select(actionItem => actionItem.AsAggregate());
     }
 
-    public static JsonContent AsJsonContent(this Execution.Aggregates.ActionItem actionItem)
+    public static JsonContent AsJsonContent(this ActivityStream.Aggregates.ActionItem actionItem)
     {
         return JsonContent.Create(new
         {
             Id = actionItem.Id.Value,
-            Name = actionItem.Title.Value,
+            Name = actionItem.Name.Value,
             Content = actionItem.Content.Value
         });
     }

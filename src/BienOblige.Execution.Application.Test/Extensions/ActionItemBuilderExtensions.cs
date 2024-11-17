@@ -10,7 +10,7 @@ internal static class ActionItemBuilderExtensions
         var idValue = Guid.NewGuid().ToString();
         return builder
             .Id($"https://example.org/{idValue}")
-            .Title($"Title of task {idValue}")
+            .Name($"Title of task {idValue}")
             .Content($"Content of task {idValue}");
     }
 }

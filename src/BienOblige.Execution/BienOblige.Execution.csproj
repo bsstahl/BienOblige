@@ -15,4 +15,9 @@
 	  <ProjectReference Include="..\BienOblige.ActivityStream\BienOblige.ActivityStream.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Aggregates\" />
+	  <Folder Include="ValueObjects\" />
+	</ItemGroup>
+
 </Project>

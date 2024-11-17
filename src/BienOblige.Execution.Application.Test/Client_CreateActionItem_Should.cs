@@ -1,6 +1,6 @@
 using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.ActivityStream.Exceptions;
-using BienOblige.Execution.Aggregates;
+using BienOblige.ActivityStream.Aggregates;
 using BienOblige.Execution.Application.Extensions;
 using BienOblige.Execution.Application.Interfaces;
 using BienOblige.Execution.Application.Test.Extensions;
@@ -9,8 +9,7 @@ using BienOblige.Execution.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 using Microsoft.Extensions.Logging;
-using BienOblige.Execution.Application.Enumerations;
-using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.Enumerations;
 
 namespace BienOblige.Execution.Application.Test;
 

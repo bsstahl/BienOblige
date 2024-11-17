@@ -1,4 +1,4 @@
-﻿using BienOblige.Execution.Application.Enumerations;
+﻿using BienOblige.ActivityStream.Enumerations;
 using BienOblige.Execution.Application.Interfaces;
 
 namespace BienOblige.Execution.Worker.Extensions;

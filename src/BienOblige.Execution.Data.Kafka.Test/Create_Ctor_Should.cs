@@ -1,11 +1,9 @@
 ﻿using BienOblige.Execution.Builders;
-using BienOblige.Execution.Application.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Xunit.Abstractions;
 using BienOblige.ActivityStream.ValueObjects;
-using BienOblige.Execution.ValueObjects;
 using BienOblige.ActivityStream.Enumerations;
 using BienOblige.ActivityStream.Builders;
 
@@ -39,13 +37,13 @@ public class Create_Ctor_Should
                 .ActorType(ActorType.Person))
             .ActionItem(new ActionItemBuilder()
                 .Id(Guid.NewGuid())
-                .Title(string.Empty.GetRandom())
+                .Name(string.Empty.GetRandom())
                 .Content(string.Empty.GetRandom()))
             .Build();
 
         var actor = message.Actor.AsAggregate();
-        var actionItem = new Aggregates.ActionItem(NetworkIdentity.From(message.ActionItem.Id),
-            Title.From(message.ActionItem.Name), Content.From(message.ActionItem.Content));
+        var actionItem = new ActivityStream.Aggregates.ActionItem(NetworkIdentity.From(message.ActionItem.Id),
+            Name.From(message.ActionItem.Name), Content.From(message.ActionItem.Content));
 
         // In prod we could use either the Builder above or
         // parameters to the ctor as below. This is a test
