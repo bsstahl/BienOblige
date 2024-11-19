@@ -1,16 +1,15 @@
-﻿using BienOblige.ActivityStream.Aggregates;
-using BienOblige.ActivityStream.ValueObjects;
-using BienOblige.ActivityStream.Constants;
-using BienOblige.Execution.Application.Interfaces;
+﻿using BienOblige.Execution.Application.Interfaces;
 using BienOblige.Execution.Data.Kafka.Constants;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using BienOblige.ActivityStream.Enumerations;
+using BienOblige.ActivityStream.ValueObjects;
+using BienOblige.ActivityStream.Aggregates;
 
 namespace BienOblige.Execution.Data.Kafka
 {
-    public class ActivityWriteRepository : ICreateActivities
+    public class ActivityWriteRepository : IPublishActivityCommands
     {
         ILogger _logger;
         IProducer<string, string> _producer;
@@ -21,44 +20,23 @@ namespace BienOblige.Execution.Data.Kafka
             _producer = producer;
         }
 
-        public async Task<IEnumerable<NetworkIdentity>> Create(ActivityType activityType, IEnumerable<ActionItem> items, 
-            Actor actor, string correlationId)
+        public async Task<NetworkIdentity> Publish(Activity activity)
         {
-            ArgumentNullException.ThrowIfNull(items);
-            ArgumentNullException.ThrowIfNull(actor);
-            ArgumentNullException.ThrowIfNull(correlationId);
+            ArgumentNullException.ThrowIfNull(activity);
 
-            if (items.Count() == 0)
-                throw new ArgumentException("No ActionItems to create");
-
-            var context = new List<Messages.Context>()
-            { 
-               new Messages.Context(Namespaces.RootNamespaceName),
-               new Messages.Context(Namespaces.BienObligeNamespaceName, Namespaces.BienObligeNamespaceKey),
-               new Messages.Context(Namespaces.SchemaNamespaceName, Namespaces.SchemaNamespaceKey)
+            // Use the Target Id as the key for maintaining order
+            // If there is no Target, use the Activity Id
+            var message = new Message<string, string>()
+            {
+                Key = activity.Target?.Id?.Value?.ToString() ?? activity.Id.ToString(),
+                Value = JsonSerializer.Serialize(activity)
             };
 
-            var results = new List<NetworkIdentity>();
-            foreach (var item in items)
-            {
-                var value = new Messages.Activity(ActivityType.Create.ToString(), correlationId, 
-                    DateTimeOffset.UtcNow, item, context, actor);
-
-                var message = new Message<string, string>()
-                {
-                    Key = item.Id.Value.ToString(),
-                    Value = JsonSerializer.Serialize(value)
-                };
-
-                var result = await _producer.ProduceAsync(Topics.CommandChannelName, message);
-
-                // TODO: Validate that the result is a successful publication
-
-                results.Add(item.Id);
-            }
-
-            return results;
+            var result = await _producer.ProduceAsync(Topics.CommandChannelName, message);
+            
+            // TODO: Add error handling
+            
+            return activity.Id;
         }
-
     }
 }

@@ -4,9 +4,9 @@ using BienOblige.Execution.Data.Kafka.Messages;
 
 namespace BienOblige.Execution.Data.Kafka;
 
-public class ContextCollectionConverter : JsonConverter<IEnumerable<Context>>
+public class ContextCollectionConverter : JsonConverter<IEnumerable<ContextItem>>
 {
-    public override IEnumerable<Context>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IEnumerable<ContextItem>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
 
@@ -34,7 +34,7 @@ public class ContextCollectionConverter : JsonConverter<IEnumerable<Context>>
         //return list;
     }
 
-    public override void Write(Utf8JsonWriter writer, IEnumerable<Context> value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, IEnumerable<ContextItem> value, JsonSerializerOptions options)
     {
         writer.WriteStartArray();
         
@@ -44,13 +44,13 @@ public class ContextCollectionConverter : JsonConverter<IEnumerable<Context>>
         writer.WriteEndArray();
     }
 
-    private void WriteUnkeyed(Utf8JsonWriter writer, IEnumerable<Context> value, JsonSerializerOptions options)
+    private void WriteUnkeyed(Utf8JsonWriter writer, IEnumerable<ContextItem> value, JsonSerializerOptions options)
     {
         foreach (var item in value)
             writer.WriteStringValue(item.Name.Value);
     }
 
-    private void WriteKeyed(Utf8JsonWriter writer, IEnumerable<Context> value, JsonSerializerOptions options)
+    private void WriteKeyed(Utf8JsonWriter writer, IEnumerable<ContextItem> value, JsonSerializerOptions options)
     {
         var dict = value.ToDictionary(x => x.Key!.Value, x => x.Name.Value);
         JsonSerializer.Serialize(writer, dict, options);

@@ -31,9 +31,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\BienOblige.ApiClient\BienOblige.ApiClient.csproj" />
 		<ProjectReference Include="..\BienOblige.ApiService\BienOblige.ApiService.csproj" />
+		<ProjectReference Include="..\BienOblige.Api\BienOblige.Api.csproj" />
 		<ProjectReference Include="..\BienOblige.AppHost\BienOblige.AppHost.csproj" />
-		<ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
 		<ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />
 	</ItemGroup>
 

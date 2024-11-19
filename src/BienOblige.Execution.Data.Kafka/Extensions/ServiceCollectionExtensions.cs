@@ -12,6 +12,6 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection UseKafkaActivityWriteRepository(this IServiceCollection services)
     {
-        return services.AddSingleton<ICreateActivities, ActivityWriteRepository>();
+        return services.AddSingleton<IPublishActivityCommands, ActivityWriteRepository>();
     }
 }

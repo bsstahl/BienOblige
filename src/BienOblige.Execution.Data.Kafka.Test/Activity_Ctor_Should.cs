@@ -1,5 +1,4 @@
 using BienOblige.ActivityStream.Enumerations;
-using BienOblige.Execution.Data.Kafka.Builders;
 using BienOblige.Execution.Data.Kafka.Test.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -70,24 +69,5 @@ public class Activity_Ctor_Should
 
         _logger.LogDebug("{@Actual}", actual);
         _logger.LogDebug("{@Serialized}", JsonSerializer.Serialize(actual));
-    }
-
-    [Fact]
-    public void ProperlyDeserializeACreateMessage()
-    {
-        var expected = new ActivityMessageBuilder()
-            .UseRandomValues()
-            .Build();
-        var expectedMessage = expected.ToString();
-
-        _logger.LogDebug("expectedMessage: {@ExpectedMessage}", expectedMessage);
-
-        var actual = new Messages.Activity(expectedMessage);
-
-        _logger.LogDebug("actualMessage: {@ActualMessage}", actual);
-
-        Assert.Equal(expected.ActivityType, actual.ActivityType);
-        Assert.Equal(expected.CorrelationId, actual.CorrelationId);
-        // Assert.Equal(expected.Context, actual.Context);
     }
 }

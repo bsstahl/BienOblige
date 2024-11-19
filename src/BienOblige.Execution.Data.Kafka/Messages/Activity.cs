@@ -1,28 +1,27 @@
-﻿using BienOblige.Execution.Data.Kafka.Extensions;
+﻿using BienOblige.Execution.Application.Extensions;
+using BienOblige.Execution.Data.Kafka.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using BienOblige.ActivityStream.ValueObjects;
-using BienOblige.Execution.Application.Extensions;
 
 namespace BienOblige.Execution.Data.Kafka.Messages;
 
 public class Activity
 {
-    // private List<Context> _context = new();
+    private List<ContextItem> _context = new();
     private string _jsonMessage = string.Empty;
 
-    //[JsonPropertyName("@context")]
-    //public IEnumerable<Context> Context
-    //{
-    //    get
-    //    {
-    //        return _context;
-    //    }
-    //    set
-    //    {
-    //        _context = value.ToList();
-    //    }
-    //}
+    [JsonPropertyName("@context")]
+    public IEnumerable<ContextItem> ContextItems
+    {
+        get
+        {
+            return _context;
+        }
+        set
+        {
+            _context = value.ToList();
+        }
+    }
 
     [JsonPropertyName("@type")]
     public string ActivityType { get; private set; }
@@ -39,26 +38,27 @@ public class Activity
     [JsonPropertyName("published")]
     public DateTimeOffset Published { get; set; }
 
+    [JsonPropertyName("target")]
+    public ActionItem Target { get; set; }
+
 
     override public string ToString() => _jsonMessage;
 
 
     public Activity(string activityType, string correlationId, DateTimeOffset published,
-        ActivityStream.Aggregates.ActionItem actionItem, IEnumerable<Context> context, BienOblige.ActivityStream.Aggregates.Actor updatingActor)
+        ActionItem actionItem, Context context, Actor updatingActor)
     {
-        // _context.Add(new Context(BienOblige.Constants.Namespaces.RootNamespaceName));
-        // context.Where(c => c.HasKey).ToList().ForEach(c => _context.Add(c));
-
+        this.ContextItems = context;
         this.ActivityType = activityType;
         this.CorrelationId = correlationId;
         this.Published = published;
-        this.Actor = Actor.From(updatingActor);
-
-        this.ActionItem = ActionItem.From(actionItem);
+        this.Actor = updatingActor;
+        this.ActionItem = actionItem;
 
         _jsonMessage = JsonSerializer.Serialize(this);
     }
 
+    [JsonConstructor]
     public Activity(string jsonMessage)
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(jsonMessage, nameof(jsonMessage));
@@ -87,13 +87,25 @@ public class Activity
         }
     }
 
-    public Application.Aggregates.Activity AsAggregate()
+    public ActivityStream.Aggregates.Activity AsAggregate()
     {
-        return new Application.Aggregates.Activity(
-            NetworkIdentity.From(this.CorrelationId),
+        return new ActivityStream.Aggregates.Activity(
+            ActivityStream.ValueObjects.NetworkIdentity.From(this.CorrelationId),
             this.ActivityType.AsActivityType(),
             this.Actor.AsAggregate(),
             this.ActionItem.AsAggregate(),
             this.Published);
+    }
+
+    public static Activity From(ActivityStream.Aggregates.Activity activity)
+    {
+        return new Activity(
+            activity.ActivityType.ToString(),
+            activity.Id.Value.ToString(),
+            activity.Published ?? DateTimeOffset.UtcNow,
+            ActionItem.From(activity.Target),
+            Context.From(activity.Context),
+            Actor.From(activity.Actor))
+        { };
     }
 }

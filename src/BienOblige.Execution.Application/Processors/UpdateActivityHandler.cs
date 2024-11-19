@@ -1,5 +1,5 @@
 ﻿using BienOblige.Execution.Application.Interfaces;
-using BienOblige.Execution.Application.Aggregates;
+using BienOblige.ActivityStream.Aggregates;
 
 namespace BienOblige.Execution.Application.Processors;
 

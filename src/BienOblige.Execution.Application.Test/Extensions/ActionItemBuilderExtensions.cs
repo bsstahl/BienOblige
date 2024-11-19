@@ -1,4 +1,4 @@
-﻿using BienOblige.Execution.Builders;
+﻿using BienOblige.ActivityStream.Builders;
 
 namespace BienOblige.Execution.Application.Test.Extensions;
 

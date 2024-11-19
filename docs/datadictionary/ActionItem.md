@@ -16,7 +16,6 @@ The fields of an **ActionItem** are defined as follows:
   * *published* (optional) - The date and time of the creation of the **ActionItem**. Defaults to the *published* date and time on the Activity object on creation.
   * *summary* (optional) - A complete summary of the **ActionItem** including all relevant details.
   * *tag* (optional) - a collection of objects representing characteristics of the work, used for searching and sorting. These objects will usually be custom types, although standard AS2 objects such as *person* may be used.
-  * *target* (optional) - An object representing the entity on which the work is to be performed
   * *type* - An array holding both the custom object type ("bienoblige:ActionItem") and the standard fallback AS2 type ("Object")
   * *updated* (optional) - The date and time of the last update to the **ActionItem**. Defaults to the *published* date and time on creation.
 * Custom *ActionItem* fields
@@ -27,6 +26,7 @@ The fields of an **ActionItem** are defined as follows:
   * *bienoblige:origin* (optional) - A reference to the original **ActionItem** that led to its creation. This is used to trace the lineage of work. Typically, this field is omitted or null, but it is populated when a new **ActionItem** is generated from an existing one, such as when a quality check fails on the original **ActionItem** and rework is required.
   * *bienoblige:priority* (optional) - a value indicating the importance of the work.
   * *bienoblige:status* (optional) - the current state within the lifecycle of the *ActionItem*. Defaults to `https://bienoblige.com/ns/status#Incomplete` on creation.
+  * *bienoblige:target* (optional) - An object representing the entity on which the work is to be performed
   * *bienoblige:effort* (optional) - an object specifying the type and amount of effort required to complete the work. Prior to the completion of the task, this may be a projected or standard value. After the task is completed, it may be modified to an actual value but that is not required. Whether the value represents a standard, expected, or actual value is identified within the object.
   * *bienoblige:updatedBy* (optional) - a reference to the **Actor** that last updated the **ActionItem**. This is used to track the history of changes to the work. If supplied, it should correspond to the date and time specified in the *updated* field if there is one.
 * Custom Lifecycle Event Handlers

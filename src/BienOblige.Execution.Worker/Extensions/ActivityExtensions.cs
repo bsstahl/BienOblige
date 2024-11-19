@@ -6,7 +6,7 @@ namespace BienOblige.Execution.Worker.Extensions;
 internal static class ActivityExtensions
 {
     internal static async Task Process(
-        this IManageTransactions<Application.Aggregates.Activity> activityManager,
+        this IManageTransactions<ActivityStream.Aggregates.Activity> activityManager,
         ILogger logger,
         IGetActionItems readRepo,
         IUpdateActionItems writeRepo)
@@ -26,7 +26,7 @@ internal static class ActivityExtensions
         }
     }
 
-    private static async Task ProcessCreate(this IManageTransactions<Application.Aggregates.Activity> activityManager,
+    private static async Task ProcessCreate(this IManageTransactions<ActivityStream.Aggregates.Activity> activityManager,
         ILogger logger,
         IGetActionItems readRepo,
         IUpdateActionItems writeRepo)
@@ -37,7 +37,7 @@ internal static class ActivityExtensions
             ["MethodName"] = nameof(ProcessCreate)
         });
 
-        var actionItemId = activityManager.Content.ActionItem.Id;
+        var actionItemId = activityManager.Content.Target.Id;
         if (await readRepo.Exists(actionItemId))
         {
             // TODO: Add an exception to the existing ActionItem
@@ -46,12 +46,12 @@ internal static class ActivityExtensions
         }
         else
         {
-            var item = await writeRepo.Update(activityManager.Content.ActionItem, activityManager.Content.Actor, activityManager.Content.Id.Value.ToString());
+            var item = await writeRepo.Update(activityManager.Content.Target, activityManager.Content.Actor, activityManager.Content.Id.Value.ToString());
             logger.LogInformation("Created ActionItem {Id} with correlation {CorrelationId}", item.Value.ToString(), activityManager.Content.Id.Value);
         }
     }
 
-    private static Task ProcessUpdate(this IManageTransactions<Application.Aggregates.Activity> activityManager,
+    private static Task ProcessUpdate(this IManageTransactions<ActivityStream.Aggregates.Activity> activityManager,
         ILogger logger,
         IGetActionItems readRepo,
         IUpdateActionItems writeRepo)

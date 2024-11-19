@@ -13,4 +13,7 @@ public class TypeName : ValueOf<string, TypeName>
 
     public static TypeName From(ActorType value)
         => TypeName.From(value.ToString());
+
+    public static TypeName From(ActivityType value)
+        => TypeName.From(value.ToString());
 }

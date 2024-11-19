@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using BienOblige.Execution.Application.Aggregates;
+using BienOblige.ActivityStream.Aggregates;
 using BienOblige.Execution.Application;
 using BienOblige.Execution.Data.Kafka.Constants;
 using BienOblige.Execution.Application.Interfaces;

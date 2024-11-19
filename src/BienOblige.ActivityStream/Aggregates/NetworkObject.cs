@@ -38,20 +38,11 @@ public class NetworkObject(NetworkIdentity id, TypeName objectTypeName)
     [JsonPropertyName("published")]
     public DateTimeOffset? Published { get; set; }
 
-    //[JsonPropertyName("startTime")]
-    //public DateTimeOffset? StartTime { get; set; }
-
-    //[JsonPropertyName("mediaType")]
-    //public MediaType? MediaType { get; set; }
-
     [JsonPropertyName("summary")]
     public string? Summary { get; set; }
 
     [JsonPropertyName("tag")]
     public NetworkObjectCollection? Tags { get; set; }
-
-    [JsonPropertyName("target")]
-    public NetworkObject? Target { get; set; }
 
     [JsonPropertyName("updated")]
     public DateTimeOffset LastUpdatedAt { get; set; }
@@ -59,5 +50,11 @@ public class NetworkObject(NetworkIdentity id, TypeName objectTypeName)
 
     [JsonExtensionData]
     public Dictionary<string, JsonElement> AdditionalProperties { get; set; } = new();
+
+    //[JsonPropertyName("startTime")]
+    //public DateTimeOffset? StartTime { get; set; }
+
+    //[JsonPropertyName("mediaType")]
+    //public MediaType? MediaType { get; set; }
 
 }

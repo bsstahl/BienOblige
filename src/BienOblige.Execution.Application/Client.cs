@@ -2,57 +2,28 @@
 using BienOblige.ActivityStream.Aggregates;
 using BienOblige.Execution.Application.Interfaces;
 using Microsoft.Extensions.Logging;
-using BienOblige.ActivityStream.Enumerations;
 
 namespace BienOblige.Execution.Application;
 
 public class Client
 {
     private readonly ILogger _logger;
-    private readonly ICreateActivities _activityCreator;
+    private readonly IPublishActivityCommands _activityPublisher;
 
-    public Client(ILogger<Client> logger, ICreateActivities activityCreator)
+    public Client(ILogger<Client> logger, IPublishActivityCommands activityPublisher)
     {
         _logger = logger;
-        _activityCreator = activityCreator;
+        _activityPublisher = activityPublisher;
     }
 
-    public async Task<IEnumerable<NetworkIdentity>> CreateActionItem(IEnumerable<ActionItem> items, 
-        Actor updatingActor, string correlationId)
+    public async Task<NetworkIdentity> PublishActivityCommand(Activity activity)
     {
-        ArgumentNullException.ThrowIfNull(items);
-        ArgumentNullException.ThrowIfNull(updatingActor);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(correlationId);
+        // TODO: Add error handling
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(activity.Target);
+        ArgumentNullException.ThrowIfNull(activity.Actor);
 
-        foreach (var item in items)
-        {
-            item.Generator ??= updatingActor;
-            item.LastUpdatedBy = updatingActor;
-            item.LastUpdatedAt = DateTimeOffset.UtcNow;
-        }
-
-        return items.Any()
-            ? await _activityCreator.Create(ActivityType.Create, items, updatingActor, correlationId)
-            : throw new ArgumentException("No ActionItems to create");
+        return await _activityPublisher.Publish(activity);
     }
 
-    public async Task<NetworkIdentity> UpdateActionItem(ActionItem changes, Actor updatingActor, string correlationId)
-    {
-        ArgumentNullException.ThrowIfNull(changes);
-        ArgumentNullException.ThrowIfNull(updatingActor);
-        ArgumentNullException.ThrowIfNull(changes.Id);
-
-        var result = await _activityCreator.Create(ActivityType.Update, [ changes ], updatingActor, correlationId);
-        return result.Single();
-    }
-
-    public Task AssignExecutor(NetworkIdentity actionItemId, NetworkIdentity executorId, Actor assigningActor, string correlationId)
-    {
-        ArgumentNullException.ThrowIfNull(actionItemId);
-        ArgumentNullException.ThrowIfNull(executorId);
-        ArgumentNullException.ThrowIfNull(assigningActor);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(correlationId);
-
-        throw new NotImplementedException();
-    }
 }

@@ -7,43 +7,35 @@ using BienOblige.ActivityStream.Enumerations;
 namespace BienOblige.Execution.Application.Test.Mocks;
 
 [ExcludeFromCodeCoverage]
-internal class MockActivityCreator(ILogger<MockActivityCreator> logger, IServiceProvider services) : ICreateActivities
+internal class MockActivityCreator(ILogger<MockActivityCreator> logger, IServiceProvider services) : IPublishActivityCommands
 {
     private readonly ILogger _logger = logger;
-    private readonly Mock<ICreateActivities> _activitiesCreator = new();
     private readonly IServiceProvider _services = services;
+    private readonly Mock<IPublishActivityCommands> _activitiesCreator = new();
 
-    public async Task<IEnumerable<NetworkIdentity>> Create(ActivityType activityType, IEnumerable<ActionItem> items, Actor updatingActor, string correlationId)
+    public async Task<NetworkIdentity> Publish(Activity activity)
     {
-        return await _activitiesCreator.Object.Create(activityType, items, updatingActor, correlationId);
+        return await _activitiesCreator.Object.Publish(activity);
     }
 
-    internal void SetupCreateActivities(ActivityType activityType, ActionItem[] actionItems, Actor updatingActor, string correlationId)
+    internal void SetupCreateActivities(ActivityType activityType, ActionItem actionItem, Actor updatingActor, NetworkIdentity correlationId)
     {
-        var itemIds = actionItems.Select(i => i.Id);
-        var itemIdValues = itemIds.Select(i => i.Value.ToString());
-        var uId = updatingActor.Id.Value.ToString();
-        var cId = correlationId;
-
         _activitiesCreator
-            .Setup(x => x.Create(It.IsAny<ActivityType>(), It.IsAny<IEnumerable<ActionItem>>(), It.IsAny<Actor>(), It.IsAny<string>()))
-            .Returns(Task.FromResult(itemIds))
-            .Callback<ActivityType, IEnumerable<ActionItem>, Actor, string>((p_activityType, p_item, p_actor, p_correlationId) =>
+            .Setup(x => x.Publish(It.IsAny<Activity>()))
+            .Returns(Task.FromResult(actionItem.Id))
+            .Callback<Activity>(p =>
                 {
-                    if (!activityType.Equals(p_activityType))
-                        throw new ArgumentException($"Incorrect ActivityType: Expected {activityType} but got {p_activityType}");
+                    if (!activityType.Equals(p.ActivityType))
+                        throw new ArgumentException($"Incorrect ActivityType: Expected '{activityType}' but got '{p.ActivityType}'");
 
-                    p_item.ToList().ForEach(p_item =>
-                    {
-                        if (!itemIdValues.Contains(p_item.Id.Value.ToString()))
-                            throw new ArgumentException($"Expected Id {p_item.Id.Value.ToString()} not found in {itemIdValues}");
-                    });
+                    if (!actionItem.Id.Equals(p.Target.Id))
+                        throw new ArgumentException($"Incorrect ActionItem Id: Expected '{actionItem.Id}' but got '{p.Target.Id}'");
 
-                    if (!uId.Equals(p_actor.Id.Value.ToString()))
-                        throw new ArgumentException($"Incorrect Updating Actor Id: Expected {uId} but got {p_actor.Id.Value.ToString()}");
+                    if (!correlationId.Equals(p.Id))
+                        throw new ArgumentException($"Incorrect Correlation Id: Expected '{correlationId}' but got '{p.Id}'");
 
-                    if (!cId.Equals(p_correlationId))
-                        throw new ArgumentException($"Incorrect Correlation Id: Expected {correlationId} but got {p_correlationId}");
+                    if (!updatingActor.Id.Equals(p.Actor.Id))
+                        throw new ArgumentException($"Incorrect Actor Id: Expected '{updatingActor.Id}' but got '{p.Actor.Id}'");
                 })
             .Verifiable(Times.Once);
     }

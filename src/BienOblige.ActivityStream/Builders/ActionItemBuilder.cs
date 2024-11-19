@@ -1,8 +1,7 @@
 ﻿using BienOblige.ActivityStream.Aggregates;
-using BienOblige.ActivityStream.Builders;
 using BienOblige.ActivityStream.ValueObjects;
 
-namespace BienOblige.Execution.Builders;
+namespace BienOblige.ActivityStream.Builders;
 
 public class ActionItemBuilder
 {

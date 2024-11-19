@@ -29,6 +29,9 @@ public class ActionItem : NetworkObject
     [JsonPropertyName("bienoblige:effort")]
     public NetworkObject? Effort { get; set; }
 
+    [JsonPropertyName("bienoblige:target")]
+    public NetworkObject? Target { get; set; }
+
     [JsonPropertyName("bienoblige:updatedBy")]
     public Actor? LastUpdatedBy { get; set; }
 

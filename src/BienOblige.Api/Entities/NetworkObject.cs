@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BienOblige.ApiService.Entities;
+namespace BienOblige.Api.Entities;
 
 public class NetworkObject
 {
@@ -18,13 +18,5 @@ public class NetworkObject
     {
         this.ObjectId = objectId;
         this.ObjectType = objectType;
-    }
-
-    public BienOblige.ActivityStream.Aggregates.NetworkObject AsAggregate()
-    {
-        ArgumentNullException.ThrowIfNull(this.ObjectId, nameof(this.ObjectId));
-        return new ActivityStream.Aggregates.NetworkObject(
-            ActivityStream.ValueObjects.NetworkIdentity.From(this.ObjectId),
-            ActivityStream.ValueObjects.TypeName.From(this.ObjectType));
     }
 }

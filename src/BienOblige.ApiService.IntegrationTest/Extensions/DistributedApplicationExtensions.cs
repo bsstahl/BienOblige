@@ -1,11 +1,12 @@
 ﻿using Aspire.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace BienOblige.ApiService.IntegrationTest.Extensions;
 
 internal static class DistributedApplicationExtensions
 {
-    internal static (ILogger<T>, HttpClient) GetRequiredServices<T>(
+    internal static (ILogger<T>, IConfiguration, HttpClient) GetRequiredServices<T>(
         this DistributedApplication? app, 
         Guid correlationId, 
         Guid actorId, string actorType)
@@ -21,6 +22,8 @@ internal static class DistributedApplicationExtensions
         var httpClient = app.CreateHttpClient(apiResourceName);
         ArgumentNullException.ThrowIfNull(httpClient, nameof(httpClient));
 
+        var config = app.Services.GetRequiredService<IConfiguration>();
+
         httpClient.DefaultRequestHeaders.Add("x-updatedby-id", $"https://example.org/{actorId}");
         httpClient.DefaultRequestHeaders.Add("x-updatedby-type", actorType);
         httpClient.DefaultRequestHeaders.Add("x-correlation-id", correlationId.ToString());
@@ -29,7 +32,7 @@ internal static class DistributedApplicationExtensions
 
         logger.LogInformation("Logger and HTTP Client created");
 
-        return (logger, httpClient);
+        return (logger, config, httpClient);
     }
 
 }

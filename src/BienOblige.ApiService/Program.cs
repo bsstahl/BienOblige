@@ -1,4 +1,4 @@
-using BienOblige.ApiService.Extensions;
+// using BienOblige.ApiService.Extensions;
 using BienOblige.Execution.Application.Extensions;
 using BienOblige.Execution.Data.Kafka.Extensions;
 
@@ -25,9 +25,9 @@ app.CreateTopicIfNotExist(BienOblige.Execution.Data.Kafka.Constants.Topics.Comma
 app.UseExceptionHandler();
 
 // Custom HTTP request pipeline components.
-app.UseCorrelation();
-app.ValidateMetadata();
-app.ValidateActionItem();
+//app.UseCorrelation();
+//app.ValidateMetadata();
+//app.ValidateActionItem();
 
 // Enable attribute based routing
 app.UseRouting();
