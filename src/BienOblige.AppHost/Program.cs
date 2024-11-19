@@ -1,7 +1,5 @@
 using BienOblige.ServiceDefaults.Kafka;
 using BienOblige.ServiceDefaults.Elastic;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using BienOblige.ServiceDefaults.Redis;
 
 namespace BienOblige.AppHost;
@@ -10,13 +8,15 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        var containerLifetime = ContainerLifetime.Session;
+
         var builder = DistributedApplication
             .CreateBuilder(args);
 
         // Generic service registration
-        var search = builder.UseBienObligeElasticSearch(Constants.ServiceNames.SearchService);
-        var kafka = builder.UseBienObligeKafka(Constants.ServiceNames.KafkaService);
-        var cache = builder.UseBienObligeRedis(Constants.ServiceNames.CacheService);
+        var search = builder.UseBienObligeElasticSearch(Constants.ServiceNames.SearchService, containerLifetime);
+        var kafka = builder.UseBienObligeKafka(Constants.ServiceNames.KafkaService, containerLifetime);
+        var cache = builder.UseBienObligeRedis(Constants.ServiceNames.CacheService, containerLifetime);
 
         // To connect to an existing server, call AddConnectionString instead of WithReference below
 

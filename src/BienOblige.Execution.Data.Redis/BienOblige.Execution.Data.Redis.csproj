@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="2.6.1" />
+    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.16.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BienOblige.ActivityStream\BienOblige.ActivityStream.csproj" />
     <ProjectReference Include="..\BienOblige.Execution\BienOblige.Execution.csproj" />
     <ProjectReference Include="..\BienOblige.ServiceDefaults\BienOblige.ServiceDefaults.csproj" />

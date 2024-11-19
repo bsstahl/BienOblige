@@ -6,10 +6,11 @@ public static class ApplicationBuilderExtensions
 
     public static IResourceBuilder<ElasticsearchResource> UseBienObligeElasticSearch(
         this IDistributedApplicationBuilder builder,
-        string serviceName)
+        string serviceName, ContainerLifetime? lifetime = null)
     {
         var password = builder.AddParameter("search-password", secret: true);
         return builder
-            .AddElasticsearch(serviceName, password, port: _searchPort);
+            .AddElasticsearch(serviceName, password, port: _searchPort)
+            .WithLifetime(lifetime ?? ContainerLifetime.Session);
     }
 }

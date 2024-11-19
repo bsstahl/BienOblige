@@ -1,4 +1,5 @@
 // using BienOblige.ApiService.Extensions;
+using BienOblige.ApiService.Extensions;
 using BienOblige.Execution.Application.Extensions;
 using BienOblige.Execution.Data.Kafka.Extensions;
 
@@ -28,6 +29,8 @@ app.UseExceptionHandler();
 //app.UseCorrelation();
 //app.ValidateMetadata();
 //app.ValidateActionItem();
+
+app.UseBearerTokenAuthentication();
 
 // Enable attribute based routing
 app.UseRouting();

@@ -1,10 +1,7 @@
 ﻿using BienOblige.Api.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace BienOblige.ApiClient;
 

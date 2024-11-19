@@ -6,11 +6,12 @@ public static class ApplicationBuilderExtensions
 {
     public static IResourceBuilder<KafkaServerResource> UseBienObligeKafka(
         this IDistributedApplicationBuilder appBuilder,
-        string serviceName)
+        string serviceName, ContainerLifetime? lifetime = null)
     {
+        var containerLifetime = lifetime ?? ContainerLifetime.Session;
         return appBuilder
-            .AddKafka(serviceName)
-            .WithKafkaUI();
+            .AddKafka(serviceName).WithLifetime(containerLifetime)
+            .WithKafkaUI().WithLifetime(containerLifetime);
     }
 
 }
