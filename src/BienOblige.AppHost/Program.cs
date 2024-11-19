@@ -8,7 +8,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var containerLifetime = ContainerLifetime.Session;
+        var containerLifetime = ContainerLifetime.Persistent;
 
         var builder = DistributedApplication
             .CreateBuilder(args);

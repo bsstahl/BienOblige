@@ -14,13 +14,13 @@ using Xunit.Abstractions;
 namespace BienOblige.ApiService.IntegrationTest;
 
 [Collection("DistributedApplication")]
-public class Execution_Create_Should
+public class ActivityInbox_Post_Should
 {
     private readonly DistributedApplicationFixture _appFixture;
 
     public DistributedApplication App => _appFixture.App;
 
-    public Execution_Create_Should(ITestOutputHelper output, DistributedApplicationFixture appFixture)
+    public ActivityInbox_Post_Should(ITestOutputHelper output, DistributedApplicationFixture appFixture)
     { 
         _appFixture = appFixture;
         _appFixture.Configure(output);
@@ -29,7 +29,7 @@ public class Execution_Create_Should
     [Fact]
     public async Task RespondWithAnAcceptedResult()
     {
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Execution_Create_Should>(Guid.NewGuid(), Guid.NewGuid(), "Service");
+        var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_Post_Should>(Guid.NewGuid(), Guid.NewGuid(), "Service");
 
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()

@@ -11,9 +11,11 @@ public static class ApplicationBuilderExtensions
         var containerLifetime = lifetime ?? ContainerLifetime.Session;
         return appBuilder
             .AddRedis(serviceName)
+            .WithContainerName($"BienOblige_{serviceName}")
+            .WithLifetime(containerLifetime)
+            .WithArgs("--notify-keyspace-events KEA")
+            .WithRedisCommander(configureContainer: r => r
                 .WithLifetime(containerLifetime)
-                .WithArgs("--notify-keyspace-events KEA")
-            .WithRedisCommander()
-                .WithLifetime(containerLifetime);
+                .WithContainerName($"BienOblige_ui_{serviceName}"));
     }
 }

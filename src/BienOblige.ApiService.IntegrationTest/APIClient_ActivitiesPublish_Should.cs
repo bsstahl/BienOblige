@@ -8,13 +8,13 @@ using Xunit.Abstractions;
 namespace BienOblige.ApiService.IntegrationTest;
 
 [Collection("DistributedApplication")]
-public class Activities_Publish_Should
+public class APIClient_ActivitiesPublish_Should
 {
     private readonly DistributedApplicationFixture _appFixture;
 
     public DistributedApplication App => _appFixture.App;
 
-    public Activities_Publish_Should(ITestOutputHelper output, DistributedApplicationFixture appFixture)
+    public APIClient_ActivitiesPublish_Should(ITestOutputHelper output, DistributedApplicationFixture appFixture)
     {
         _appFixture = appFixture;
         _appFixture.Configure(output);

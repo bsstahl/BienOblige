@@ -10,8 +10,11 @@ public static class ApplicationBuilderExtensions
     {
         var containerLifetime = lifetime ?? ContainerLifetime.Session;
         return appBuilder
-            .AddKafka(serviceName).WithLifetime(containerLifetime)
-            .WithKafkaUI().WithLifetime(containerLifetime);
+            .AddKafka(serviceName)
+            .WithLifetime(containerLifetime)
+            .WithContainerName($"BienOblige_{serviceName}")
+            .WithKafkaUI(configureContainer: r => r
+                .WithContainerName($"BienOblige_ui_{serviceName}")
+                .WithLifetime(containerLifetime));
     }
-
 }

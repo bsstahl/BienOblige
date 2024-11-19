@@ -11,6 +11,7 @@ public static class ApplicationBuilderExtensions
         var password = builder.AddParameter("search-password", secret: true);
         return builder
             .AddElasticsearch(serviceName, password, port: _searchPort)
+            .WithContainerName($"BienOblige_{serviceName}")
             .WithLifetime(lifetime ?? ContainerLifetime.Session);
     }
 }
