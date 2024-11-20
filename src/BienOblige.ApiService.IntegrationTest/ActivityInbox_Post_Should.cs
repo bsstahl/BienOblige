@@ -136,19 +136,33 @@ public class ActivityInbox_Post_Should
     }
 
     [Fact]
-    public async Task ProduceAConsumableMessageOnTheActionItemStream()
+    public async Task ProduceAConsumableMessageOnTheActivityStream()
     {
         var correlationId = Guid.NewGuid();
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(correlationId, Guid.NewGuid(), "Application");
 
         var itemCount = 10.GetRandom(3);
         var actionItems = new List<ActionItem>();
         for (var i = 0; i < itemCount; i++)
-            actionItems.Add(new ActionItemBuilder().UseRandomValues().Build());
+            actionItems.Add(new ActionItemBuilder()
+                .UseRandomValues()
+                .Build());
+
+        var activities = new ActivitiesCollectionBuilder()
+            .Id(correlationId)
+            .ActivityType(Api.Enumerations.ActivityType.Create)
+            .Actor(new ActorBuilder()
+                .Id(Guid.NewGuid())
+                .ActorType(Api.Enumerations.ActorType.Application)
+                .Name($"ActorName: {string.Empty.GetRandom()}"))
+            .ActionItems(actionItems)
+            .Build();
+
         var content = JsonContent.Create(actionItems);
 
-        var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
+        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(correlationId, Guid.NewGuid(), "Application");
 
+        logger.LogInformation("Request Content: {@Content}", content);
+        var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
         var body = await response.Content.ReadAsStringAsync();
         logger.LogInformation("HTTP Response: {@Response}", response);
 

@@ -11,6 +11,7 @@ public class ActivitiesCollectionBuilder
     private DateTimeOffset? _published;
 
     private ActionItemCollectionBuilder _actionItemCollectionBuilder = new();
+    private List<ActionItem> _actionItems = new();
 
     public IEnumerable<Activity> Build()
     {
@@ -18,7 +19,8 @@ public class ActivitiesCollectionBuilder
         ArgumentNullException.ThrowIfNull(_activityType, nameof(_activityType));
         ArgumentNullException.ThrowIfNull(_actorBuilder, nameof(_actorBuilder));
 
-        var actionItems = _actionItemCollectionBuilder.Build();
+        var actionItems = new List<ActionItem>(_actionItems);
+        actionItems.AddRange(_actionItemCollectionBuilder.Build());
         if (!actionItems.Any())
             throw new ArgumentNullException($"At least 1 ActionItem must be supplied");
 
@@ -65,6 +67,12 @@ public class ActivitiesCollectionBuilder
     public ActivitiesCollectionBuilder ActionItems(ActionItemCollectionBuilder value)
     {
         _actionItemCollectionBuilder = value;
+        return this;
+    }
+
+    public ActivitiesCollectionBuilder ActionItems(IEnumerable<ActionItem> value)
+    {
+        _actionItems.AddRange(value);
         return this;
     }
 }

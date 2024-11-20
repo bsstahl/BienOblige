@@ -3,6 +3,7 @@ using BienOblige.ApiService.IntegrationTest.Builders;
 using BienOblige.ApiService.IntegrationTest.Extensions;
 using BienOblige.ApiService.IntegrationTest.Fixtures;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace BienOblige.ApiService.IntegrationTest;
@@ -38,7 +39,8 @@ public class APIClient_ActivitiesPublish_Should
         var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Service");
         var client = new ApiClient.Activities(logger, config, httpClient);
         
-        logger.LogInformation("Publishing activities: {@Activities}", content);
+        var serialized = JsonSerializer.Serialize(content);
+        logger.LogInformation("Publishing activities: {@Activities}", serialized);
         var response = await client.Publish(content);
         logger.LogInformation("Response: {@Response}", response);
 
