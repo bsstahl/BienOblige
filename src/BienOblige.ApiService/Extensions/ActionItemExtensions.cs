@@ -20,7 +20,9 @@ public static class ActionItemExtensions
         {
             Generator = actionItem.Generator?.AsAggregate(),
             Target = actionItem.Target?.AsAggregate(),
-            Parent = actionItem.Parent?.AsAggregate()
+            Parent = actionItem.Parent is not null
+                ? ActivityStream.ValueObjects.NetworkIdentity.From(actionItem.Parent)
+                : null
         };
     }
 

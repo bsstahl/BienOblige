@@ -15,7 +15,7 @@ public class ActionItem : NetworkObject
     public RequirementsCollection ExecutorRequirements { get; set; } = new();
 
     [JsonPropertyName("bienoblige:parent")]
-    public NetworkObject? Parent { get; set; }
+    public NetworkIdentity? Parent { get; set; }
 
     [JsonPropertyName("bienoblige:origin")]
     public NetworkObject? Origin { get; set; }

@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BienOblige.ApiClient", "Bie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BienOblige.Api", "BienOblige.Api\BienOblige.Api.csproj", "{AAFAF8E8-83D2-40D7-BE41-091EFAFDA220}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BienOblige.Api.Test", "BienOblige.Api.Test\BienOblige.Api.Test.csproj", "{6F51BBD6-0B44-4492-A105-D434BAC6E127}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +124,10 @@ Global
 		{AAFAF8E8-83D2-40D7-BE41-091EFAFDA220}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAFAF8E8-83D2-40D7-BE41-091EFAFDA220}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAFAF8E8-83D2-40D7-BE41-091EFAFDA220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F51BBD6-0B44-4492-A105-D434BAC6E127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F51BBD6-0B44-4492-A105-D434BAC6E127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F51BBD6-0B44-4492-A105-D434BAC6E127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F51BBD6-0B44-4492-A105-D434BAC6E127}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +150,7 @@ Global
 		{C09A08D0-88AA-8933-169D-E4C681580AA8} = {5F8D7236-A488-43D6-97E1-7BCD2ED89773}
 		{BA8E2401-097D-499C-9C5D-3546C35D2307} = {D6C45C03-7AEE-4F95-8B32-E0106977326D}
 		{AAFAF8E8-83D2-40D7-BE41-091EFAFDA220} = {D6C45C03-7AEE-4F95-8B32-E0106977326D}
+		{6F51BBD6-0B44-4492-A105-D434BAC6E127} = {7881CA14-4432-418D-A6C9-1579518D5542}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F93FA578-CDB9-4E04-991F-36B56AB2DAB7}

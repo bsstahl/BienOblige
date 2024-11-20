@@ -47,7 +47,6 @@ public class NetworkObject(NetworkIdentity id, TypeName objectTypeName)
     [JsonPropertyName("updated")]
     public DateTimeOffset LastUpdatedAt { get; set; }
 
-
     [JsonExtensionData]
     public Dictionary<string, JsonElement> AdditionalProperties { get; set; } = new();
 

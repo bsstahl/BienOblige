@@ -11,7 +11,7 @@ public static class ActivityExtensions
             ActivityStream.ValueObjects.NetworkIdentity.From(activity.CorrelationId),
             Enum.Parse<ActivityStream.Enumerations.ActivityType>(activity.ActivityType.ToString()),
             activity.Actor.AsAggregate(),
-            activity.Target.AsAggregate(),
+            activity.ActionItem.AsAggregate(),
             activity.Published ?? DateTimeOffset.UtcNow
         );
     }

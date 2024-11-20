@@ -1,32 +1,38 @@
 ﻿using BienOblige.Api.Entities;
 using BienOblige.Api.Enumerations;
+using BienOblige.Api.Extensions;
 
 namespace BienOblige.Api.Builders;
 
 public class ActionItemBuilder
 {
-    public Uri? _id;
-    public string? _name;
-    public string? _content;
-    public Actor? _generator;
-    public NetworkObject? _target;
-    public NetworkObject? _parent;
-    public IEnumerable<CompletionMethod> _completionMethods = new List<CompletionMethod>();
+    private Uri? _id;
+    private string? _name;
+    private string? _content;
+    private Actor? _generator;
+    private NetworkObject? _target;
+    private Uri? _parent;
+    private IEnumerable<CompletionMethod> _completionMethods = new List<CompletionMethod>();
 
-    public ActionItem Build()
+    private ActionItemCollectionBuilder? _children;
+
+    public IEnumerable<ActionItem> Build()
     {
         ArgumentNullException.ThrowIfNull(_id, nameof(_id));
         ArgumentNullException.ThrowIfNullOrWhiteSpace(_name, nameof(_name));
         ArgumentNullException.ThrowIfNullOrWhiteSpace(_content, nameof(_content));
 
         // TODO: Implement remaining properties
-        return new ActionItem(_id.ToString(), _name, _content)
+        var results = (_children?.Build(_id) ?? Enumerable.Empty<ActionItem>()).ToList();
+        results.Add(new ActionItem(_id.ToString(), _name, _content)
         {
             Generator = _generator,
             Target = _target,
-            Parent = _parent,
+            Parent = _parent?.ToString(),
             CompletionMethods = _completionMethods
-        };
+        });
+
+        return results;
     }
 
     public ActionItemBuilder Id(Guid value)
@@ -55,5 +61,23 @@ public class ActionItemBuilder
     {
         _content = value;
         return this;
+    }
+
+    public ActionItemBuilder Parent(Uri id)
+    {
+        _parent = id;
+        return this;
+    }
+
+    public ActionItemBuilder Children(ActionItemCollectionBuilder value)
+    {
+        _children = value;
+        return this;
+    }
+
+    internal void AssignId(Uri instanceBaseUri)
+    {
+        _children?.AssignIds(instanceBaseUri);
+        _id ??= instanceBaseUri.AsInstanceId();
     }
 }

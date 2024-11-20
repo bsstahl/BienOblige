@@ -8,7 +8,7 @@ public class PublicationResult
     public bool SuccessfullyPublished { get; set; }
     public IEnumerable<string> Errors { get; set; }
 
-    public PublicationResult(Activity activity, bool successfullyPublished, IEnumerable<string> errors = null)
+    public PublicationResult(Activity activity, bool successfullyPublished, IEnumerable<string>? errors = null)
     {
         this.Activity = activity;
         this.SuccessfullyPublished = successfullyPublished;

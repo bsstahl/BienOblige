@@ -6,31 +6,28 @@ namespace BienOblige.Api.Entities;
 public class Activity
 {
     [JsonPropertyName("id")]
-    public Uri CorrelationId { get; set; }
+    public required Uri CorrelationId { get; set; }
 
     [JsonPropertyName("@type")]
-    public string ActivityType { get; set; }
+    public required string ActivityType { get; set; }
 
     [JsonPropertyName("actor")]
-    public Actor Actor { get; set; }
+    public required Actor Actor { get; set; }
 
-    [JsonPropertyName("target")]
-    public ActionItem Target { get; set; }
+    [JsonPropertyName("object")]
+    public required ActionItem ActionItem { get; set; }
 
     [JsonPropertyName("published")]
     public DateTimeOffset? Published { get; set; }
 
-
-    public Activity()
-    { }
-
-    public Activity(Uri correlationId, ActivityType activityType, Actor updatingActor,
-        ActionItem actionItem, DateTimeOffset? published = null)
-    {
-        this.CorrelationId = correlationId;
-        this.ActivityType = activityType.ToString();
-        this.Actor = updatingActor;
-        this.Target = actionItem;
-        this.Published = published ?? DateTimeOffset.UtcNow;
-    }
+    //[JsonConstructor]
+    //public Activity(Uri Id, ActivityType @type, Actor actor,
+    //    ActionItem @object, DateTimeOffset? published = null)
+    //{
+    //    this.CorrelationId = Id;
+    //    this.ActivityType = @type.ToString();
+    //    this.Actor = actor;
+    //    this.ActionItem = @object;
+    //    this.Published = published ?? DateTimeOffset.UtcNow;
+    //}
 }

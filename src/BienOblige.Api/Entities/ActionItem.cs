@@ -43,7 +43,7 @@ public class ActionItem
     public NetworkObject? Target { get; set; }
 
     [JsonPropertyName("bienoblige:parent")]
-    public NetworkObject? Parent { get; set; }
+    public string? Parent { get; set; }
 
     [JsonPropertyName("bienoblige:completionMethods")]
     public IEnumerable<CompletionMethod> CompletionMethods { get; set; } = new List<CompletionMethod>();

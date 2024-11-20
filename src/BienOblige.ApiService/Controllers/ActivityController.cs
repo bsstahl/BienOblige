@@ -31,7 +31,7 @@ namespace BienOblige.ApiService.Controllers
             //_logger.LogInformation("Creating ActionItem for request with correlation ID {CorrelationId}", correlationId);
 
             var resultId = await _executionClient.PublishActivityCommand(activity.AsAggregate());
-            var result = new Api.Messages.ActivityPublicationResponse(resultId.Value.ToString(), activity.Target?.Id);
+            var result = new Api.Messages.ActivityPublicationResponse(resultId.Value.ToString(), activity.ActionItem?.Id);
 
             // _logger.LogInformation("Created {Count} ActionItem(s) for request with correlation ID {@CorrelationId}. Result: {@Result}", resultIds.Count(), correlationId, result);
 

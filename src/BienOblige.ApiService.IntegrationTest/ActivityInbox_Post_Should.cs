@@ -33,7 +33,10 @@ public class ActivityInbox_Post_Should
 
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
-            .Build();
+            .Id(Guid.NewGuid())
+            .Build()
+            .Single();
+
         var correlationId = NetworkIdentity.New().Value;
         var updatingActor = new ActorBuilder()
             .ActorType(Api.Enumerations.ActorType.Organization)
@@ -41,7 +44,14 @@ public class ActivityInbox_Post_Should
             .Name("Acme Bird Feed")
             .Build();
 
-        var message = new Activity(correlationId, Api.Enumerations.ActivityType.Create, updatingActor, actionItem);
+        var message = new Activity()
+        {
+            CorrelationId = correlationId,
+            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
+            Actor = updatingActor,
+            ActionItem = actionItem
+        };
+
         var content = JsonContent.Create(message);
 
         var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
@@ -61,15 +71,26 @@ public class ActivityInbox_Post_Should
         var correlationId = NetworkIdentity.From(correlationGuid).Value;
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
-            .Build();
+            .Id(Guid.NewGuid())
+            .Build()
+            .Single();
+
         var updatingActor = new ActorBuilder()
             .ActorType(Api.Enumerations.ActorType.Organization)
             .Id(Guid.NewGuid())
-            .Name("Acme Bird Feed")
+            .Name("Acme Bird Feed Company")
             .Build();
 
-        var message = new Activity(correlationId, Api.Enumerations.ActivityType.Create, updatingActor, actionItem);
+        var message = new Activity()
+        {
+            CorrelationId = correlationId,
+            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
+            Actor = updatingActor,
+            ActionItem = actionItem
+        };
         var content = JsonContent.Create(message);
+
+        logger.LogInformation("HTTP Request Payload: {@Request}", JsonSerializer.Serialize(message));
 
         var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
         var body = await response.Content.ReadAsStringAsync();
@@ -87,7 +108,10 @@ public class ActivityInbox_Post_Should
 
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
-            .Build();
+            .Id(Guid.NewGuid())
+            .Build()
+            .Single();
+
         var correlationId = NetworkIdentity.New().Value;
         var updatingActor = new ActorBuilder()
             .ActorType(Api.Enumerations.ActorType.Organization)
@@ -95,7 +119,13 @@ public class ActivityInbox_Post_Should
             .Name("Acme Bird Feed")
             .Build();
 
-        var message = new Activity(correlationId, Api.Enumerations.ActivityType.Create, updatingActor, actionItem);
+        var message = new Activity()
+        {
+            CorrelationId = correlationId,
+            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
+            Actor = updatingActor,
+            ActionItem = actionItem
+        };
         var content = JsonContent.Create(message);
 
         var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
@@ -116,7 +146,10 @@ public class ActivityInbox_Post_Should
 
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
-            .Build();
+            .Id(Guid.NewGuid())
+            .Build()
+            .Single();
+
         var correlationId = NetworkIdentity.New().Value;
         var updatingActor = new ActorBuilder()
             .ActorType(Api.Enumerations.ActorType.Organization)
@@ -124,7 +157,13 @@ public class ActivityInbox_Post_Should
             .Name(string.Empty.GetRandom())
             .Build();
 
-        var message = new Activity(correlationId, Api.Enumerations.ActivityType.Create, updatingActor, actionItem);
+        var message = new Activity()
+        {
+            CorrelationId = correlationId,
+            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
+            Actor = updatingActor,
+            ActionItem = actionItem
+        };
         var content = JsonContent.Create(message);
 
         var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
@@ -141,11 +180,11 @@ public class ActivityInbox_Post_Should
         var correlationId = Guid.NewGuid();
 
         var itemCount = 10.GetRandom(3);
-        var actionItems = new List<ActionItem>();
+        var actionItems = new ActionItemCollectionBuilder();
         for (var i = 0; i < itemCount; i++)
             actionItems.Add(new ActionItemBuilder()
                 .UseRandomValues()
-                .Build());
+                .Id(Guid.NewGuid()));
 
         var activities = new ActivitiesCollectionBuilder()
             .Id(correlationId)

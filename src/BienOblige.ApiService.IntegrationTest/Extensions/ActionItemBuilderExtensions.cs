@@ -11,13 +11,8 @@ public static class ActionItemBuilderExtensions
     {
         var idValue = string.Empty.GetRandom();
         return builder
-            .Id($"https://example.org/actionitems/{idValue}")
             .Name($"Title of ActionItem {idValue}")
             .Content($"Content of ActionItem {idValue}");
     }
 
-    public static JsonContent BuildJsonContent(this ActionItemBuilder builder)
-    {
-        return builder.Build().AsJsonContent();
-    }
 }
