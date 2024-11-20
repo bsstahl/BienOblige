@@ -17,7 +17,14 @@ public class ActionItemBuilder
         ArgumentNullException.ThrowIfNull(_title, nameof(_title));
         ArgumentNullException.ThrowIfNull(_content, nameof(_content));
 
-        var result = new ActionItem(_id, _title, _content);
+        var result = new ActionItem()
+        {
+            Id = _id,
+            Name = _title,
+            Content = _content,
+            ObjectTypeName = ActionItem.GetObjectTypeName()
+        };
+
         if (_actorBuilder is not null)
             result.LastUpdatedBy = _actorBuilder.Build();
         return result;

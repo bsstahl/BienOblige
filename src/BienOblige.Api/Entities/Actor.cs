@@ -2,13 +2,13 @@
 
 namespace BienOblige.Api.Entities;
 
-public class Actor(string id, string actorType)
+public class Actor
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; } = id;
+    public required string Id { get; set; }
 
     [JsonPropertyName("@type")]
-    public string ActorType { get; set; } = actorType;
+    public required string ActorType { get; set; }
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }

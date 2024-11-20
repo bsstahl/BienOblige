@@ -14,7 +14,12 @@ public class ActorBuilder
     {
         ArgumentNullException.ThrowIfNull(_id, nameof(_id));
         ArgumentNullException.ThrowIfNull(_type, nameof(_type));
-        return new Actor(_id, _type.Value, _name);
+        return new Actor()
+        {
+            Id = _id,
+            ObjectTypeName = [TypeName.From(_type.Value)],
+            Name = _name
+        };
     }
 
     public ActorBuilder Id(Guid value)

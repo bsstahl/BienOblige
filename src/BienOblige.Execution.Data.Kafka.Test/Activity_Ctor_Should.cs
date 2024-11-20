@@ -39,7 +39,7 @@ public class Activity_Ctor_Should
         //Assert.Equal("https://bienoblige.com/ns", actualContext.Single(c => c.HasKey && c!.Key!.Value == "bienoblige").Name.Value);
         //Assert.Equal("https://schema.org", actualContext.Single(c => c.HasKey && c!.Key!.Value == "schema").Name.Value);
 
-        Assert.Equal("Create", actual.Type);
+        Assert.Equal("Create", actual!.Type);
 
         Assert.Equal("urn:uid:E22CA55E-5F20-4899-A0DF-DACAE99F00B8", actual.Id);
         Assert.Equal("https://example.com/users/1234567", actual.Actor.Id);
@@ -73,7 +73,7 @@ public class Activity_Ctor_Should
         //Assert.Equal("https://bienoblige.com/ns", actualContext.Single(c => c.HasKey && c!.Key!.Value == "bienoblige").Name.Value);
         //Assert.Equal("https://schema.org", actualContext.Single(c => c.HasKey && c!.Key!.Value == "schema").Name.Value);
 
-        Assert.Equal(ActivityType.Create.ToString(), actual.Type);
+        Assert.Equal(ActivityType.Create.ToString(), actual!.Type);
 
         Assert.Equal(correlationId, actual.Id);
         Assert.Equal(actorId, actual.Actor.Id);

@@ -14,8 +14,10 @@ public class ActorBuilder
         ArgumentNullException.ThrowIfNull(_id);
         ArgumentNullException.ThrowIfNull(_actorType);
 
-        return new Actor(_id.ToString(), _actorType.Value.ToString())
-        {
+        return new Actor()
+        { 
+            Id = _id.ToString(),
+            ActorType = _actorType.Value.ToString(),
             Name = _name
         };
     }

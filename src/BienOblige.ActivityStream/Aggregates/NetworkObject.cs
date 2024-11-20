@@ -5,14 +5,13 @@ using System.Text.Json.Serialization;
 
 namespace BienOblige.ActivityStream.Aggregates;
 
-public class NetworkObject(NetworkIdentity id, TypeName objectTypeName)
+public class NetworkObject
 {
     [JsonPropertyName("id")]
-    public NetworkIdentity Id { get; set; } = id;
+    public required NetworkIdentity Id { get; set; }
 
     [JsonPropertyName("@type")]
-    public TypeName ObjectTypeName { get; set; } = objectTypeName;
-
+    public required IEnumerable<TypeName> ObjectTypeName { get; set; }
 
     [JsonPropertyName("attributedTo")]
     public NetworkObject? AttributedTo { get; set; }
@@ -49,11 +48,5 @@ public class NetworkObject(NetworkIdentity id, TypeName objectTypeName)
 
     [JsonExtensionData]
     public Dictionary<string, JsonElement> AdditionalProperties { get; set; } = new();
-
-    //[JsonPropertyName("startTime")]
-    //public DateTimeOffset? StartTime { get; set; }
-
-    //[JsonPropertyName("mediaType")]
-    //public MediaType? MediaType { get; set; }
 
 }

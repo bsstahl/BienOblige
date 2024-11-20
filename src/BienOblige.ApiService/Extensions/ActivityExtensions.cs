@@ -7,12 +7,14 @@ public static class ActivityExtensions
     public static ActivityStream.Aggregates.Activity AsAggregate(this Activity activity)
     {
         ArgumentNullException.ThrowIfNull(activity);
-        return new ActivityStream.Aggregates.Activity(
-            ActivityStream.ValueObjects.NetworkIdentity.From(activity.CorrelationId),
-            Enum.Parse<ActivityStream.Enumerations.ActivityType>(activity.ActivityType.ToString()),
-            activity.Actor.AsAggregate(),
-            activity.ActionItem.AsAggregate(),
-            activity.Published ?? DateTimeOffset.UtcNow
-        );
+        return new ActivityStream.Aggregates.Activity()
+        {
+            Id = ActivityStream.ValueObjects.NetworkIdentity.From(activity.CorrelationId),
+            ActivityType = Enum.Parse<ActivityStream.Enumerations.ActivityType>(activity.ActivityType.ToString()),
+            Actor = activity.Actor.AsAggregate(),
+            ActionItem = activity.ActionItem.AsAggregate(),
+            Published = activity.Published ?? DateTimeOffset.UtcNow,
+            ObjectTypeName = ActivityStream.Aggregates.Activity.GetObjectTypeName()
+        };
     }
 }

@@ -6,7 +6,10 @@ namespace BienOblige.ActivityStream.Aggregates;
 
 public class ActionItem : NetworkObject
 {
-    // TODO: Convert NetworkObjects to more specific types as appropriate
+    private static string[] DefaultObjectTypeName = new string[] { "bienoblige:ActionItem", "Object" };
+
+
+    // TODO: Convert the NetworkObjects to more specific types as appropriate
 
     [JsonPropertyName("bienoblige:exceptions")]
     public ExceptionCollection Exceptions { get; set; } = new();
@@ -35,16 +38,13 @@ public class ActionItem : NetworkObject
     [JsonPropertyName("bienoblige:updatedBy")]
     public Actor? LastUpdatedBy { get; set; }
 
-    public ActionItem(Name name, Content content)
-        : this(NetworkIdentity.New(), name, content)
-    { }
-
-    public ActionItem(NetworkIdentity id, Name name, Content content)
-        :base(id, TypeName.From(typeof(ActionItem)))
+    public ActionItem(): base()
     {
-        base.Id = id;
-        base.Name = name;
-        base.Content = content;
+        base.ObjectTypeName = ActionItem.GetObjectTypeName();
     }
 
+    public static IEnumerable<TypeName> GetObjectTypeName()
+    {
+        return DefaultObjectTypeName.Select(t => TypeName.From(t));
+    }
 }

@@ -6,11 +6,14 @@ namespace BienOblige.Api.Entities;
 
 public class ActionItem
 {
+    public static string[] DefaultObjectTypeName = new string[] { "bienoblige:ActionItem", "Object" };
+
+
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
     [JsonPropertyName("@type")]
-    public string[] ObjectTypeName { get; set; } = new[] { "bienoblige:ActionItem", "Object" };
+    public string[] ObjectTypeName { get; set; } = DefaultObjectTypeName;
 
     [JsonPropertyName("name")]
     public string Name { get; set; }

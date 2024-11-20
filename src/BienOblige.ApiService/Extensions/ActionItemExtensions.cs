@@ -13,17 +13,14 @@ public static class ActionItemExtensions
     {
         ArgumentNullException.ThrowIfNull(actionItem.Id, nameof(actionItem.Id));
 
-        return new ActivityStream.Aggregates.ActionItem(
-            ActivityStream.ValueObjects.NetworkIdentity.From(actionItem.Id),
-            ActivityStream.ValueObjects.Name.From(actionItem.Name),
-            ActivityStream.ValueObjects.Content.From(actionItem.Content))
-        {
-            Generator = actionItem.Generator?.AsAggregate(),
-            Target = actionItem.Target?.AsAggregate(),
-            Parent = actionItem.Parent is not null
-                ? ActivityStream.ValueObjects.NetworkIdentity.From(actionItem.Parent)
-                : null
-        };
+        return new ActivityStream.Builders.ActionItemBuilder()
+            .Id(ActivityStream.ValueObjects.NetworkIdentity.From(actionItem.Id))
+            .Name(actionItem.Name)
+            .Content(ActivityStream.ValueObjects.Content.From(actionItem.Content))
+            // .Generator(actionItem.Generator?.AsAggregate())
+            // .Target(actionItem.Target?.AsAggregate())
+            // .Parent(actionItem.Parent is not null ? ActivityStream.ValueObjects.NetworkIdentity.From(actionItem.Parent) : null)
+            .Build();
     }
 
 }

@@ -30,14 +30,15 @@ public class Client_PublishActivityCommand_Should
     public async Task ThrowIfNoActivityIsSupplied()
     {
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
-        var updatingActor = new Actor(
-            NetworkIdentity.From(updatingActorId), 
-            ActorType.Person);
+        var updatingActor = new ActorBuilder()
+            .Id(updatingActorId)
+            .ActorType(ActorType.Person)
+            .Build();
 
         var activity = null as Activity;
 
         var target = _services.GetRequiredService<Client>();
-        await Assert.ThrowsAsync<ArgumentNullException>(() 
+        await Assert.ThrowsAsync<ArgumentNullException>(()
             => target.PublishActivityCommand(activity!));
     }
 
@@ -45,12 +46,20 @@ public class Client_PublishActivityCommand_Should
     public async Task ThrowIfNoActionItemIsSupplied()
     {
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
-        var updatingActor = new Actor(
-            NetworkIdentity.From(updatingActorId),
-            ActorType.Person);
+        var updatingActor = new ActorBuilder()
+            .Id(updatingActorId)
+            .ActorType(ActorType.Person)
+            .Build();
 
-        var activity = new Activity(NetworkIdentity.New(), ActivityType.Update,
-            updatingActor, null!, DateTimeOffset.UtcNow);
+        var activity = new Activity()
+        {
+            Id = NetworkIdentity.New(),
+            ActivityType = ActivityType.Update,
+            Actor = updatingActor,
+            ActionItem = null!,
+            Published = DateTimeOffset.UtcNow,
+            ObjectTypeName = Activity.GetObjectTypeName()
+        };
 
         var target = _services.GetRequiredService<Client>();
         await Assert.ThrowsAsync<ArgumentNullException>(()
@@ -65,11 +74,18 @@ public class Client_PublishActivityCommand_Should
             .Build();
 
         var correlationId = Guid.NewGuid().ToString();
-        var activity = new Activity(NetworkIdentity.New(), ActivityType.Update,
-            null!, item, DateTimeOffset.UtcNow);
+        var activity = new Activity()
+        {
+            Id = NetworkIdentity.New(), 
+            ActivityType = ActivityType.Update,
+            Actor = null!,
+            ActionItem = item, 
+            Published = DateTimeOffset.UtcNow,
+            ObjectTypeName = Activity.GetObjectTypeName()
+        };
 
         var target = _services.GetRequiredService<Client>();
-        await Assert.ThrowsAsync<ArgumentNullException>(() 
+        await Assert.ThrowsAsync<ArgumentNullException>(()
             => target.PublishActivityCommand(activity));
     }
 
@@ -77,9 +93,10 @@ public class Client_PublishActivityCommand_Should
     public async Task SuccessfullyCreateTheActivity()
     {
         var updatingActorId = (null as NetworkIdentity).CreateRandom().Value.ToString();
-        var updatingActor = new Actor(
-            NetworkIdentity.From(updatingActorId), 
-            ActorType.Service);
+        var updatingActor = new ActorBuilder()
+            .Id(NetworkIdentity.From(updatingActorId))
+            .ActorType(ActorType.Service)
+            .Build();
 
         var activityType = ActivityType.Create;
         var item = new ActionItemBuilder()
@@ -90,8 +107,15 @@ public class Client_PublishActivityCommand_Should
         var mockRepo = _services.GetRequiredService<IPublishActivityCommands>() as MockActivityCreator;
         mockRepo!.SetupCreateActivities(activityType, item, updatingActor, correlationId);
 
-        var activity = new Activity(correlationId, activityType,
-            updatingActor, item, DateTimeOffset.UtcNow);
+        var activity = new Activity()
+        {
+            Id = correlationId, 
+            ActivityType = activityType,
+            Actor = updatingActor, 
+            ActionItem = item, 
+            Published = DateTimeOffset.UtcNow,
+            ObjectTypeName = Activity.GetObjectTypeName()
+        };
 
         var target = _services.GetRequiredService<Client>();
         var id = await target.PublishActivityCommand(activity);
