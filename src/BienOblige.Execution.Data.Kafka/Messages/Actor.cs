@@ -6,15 +6,16 @@ namespace BienOblige.Execution.Data.Kafka.Messages;
 
 public class Actor
 {
+    [JsonConstructor]
     public Actor(string id, string @type)
     {
         Id = id;
         Type = @type;
     }
 
-    internal Actor(JsonElement actorNode)
-        : this(actorNode.GetStringProperty("id"), actorNode.GetStringProperty("@type"))
-    { }
+    //internal Actor(JsonElement actorNode)
+    //    : this(actorNode.GetStringProperty("id"), actorNode.GetStringProperty("@type"))
+    //{ }
 
     [JsonPropertyName("@type")]
     public string @Type { get; set; }

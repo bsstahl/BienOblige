@@ -7,6 +7,7 @@ namespace BienOblige.Execution.Data.Kafka.Messages;
 
 public class ActionItem
 {
+    [JsonConstructor]
     public ActionItem(string id, string name, string content)
     {
         Id = id;
@@ -14,15 +15,15 @@ public class ActionItem
         Content = content;
     }
 
-    public ActionItem(JsonElement element)
-    {
-        this.Id = element.GetStringProperty("id");
-        this.Name = element.GetStringProperty(nameof(Name).ToLower());
-        this.Content = element.GetStringProperty(nameof(Content).ToLower());
+    //public ActionItem(JsonElement element)
+    //{
+    //    this.Id = element.GetStringProperty("id");
+    //    this.Name = element.GetStringProperty(nameof(Name).ToLower());
+    //    this.Content = element.GetStringProperty(nameof(Content).ToLower());
 
-        if (element.TryGetProperty(nameof(Target).ToLower(), out var targetElement))
-            this.Target = Target.Parse(targetElement);
-    }
+    //    if (element.TryGetProperty(nameof(Target).ToLower(), out var targetElement))
+    //        this.Target = Target.Parse(targetElement);
+    //}
 
     [JsonPropertyName("@type")]
     public string[] ObjectType { get; private set; } = new[] { "bienoblige:ActionItem", "Object" };

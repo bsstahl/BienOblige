@@ -20,7 +20,7 @@ public class Client
     {
         // TODO: Add error handling
         ArgumentNullException.ThrowIfNull(activity);
-        ArgumentNullException.ThrowIfNull(activity.Target);
+        ArgumentNullException.ThrowIfNull(activity.ActionItem);
         ArgumentNullException.ThrowIfNull(activity.Actor);
 
         return await _activityPublisher.Publish(activity);

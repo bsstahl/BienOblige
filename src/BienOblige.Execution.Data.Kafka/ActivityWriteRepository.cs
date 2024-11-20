@@ -3,7 +3,6 @@ using BienOblige.Execution.Data.Kafka.Constants;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using BienOblige.ActivityStream.Enumerations;
 using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.ActivityStream.Aggregates;
 
@@ -23,13 +22,14 @@ namespace BienOblige.Execution.Data.Kafka
         public async Task<NetworkIdentity> Publish(Activity activity)
         {
             ArgumentNullException.ThrowIfNull(activity);
+            var publishActivity = Messages.Activity.From(activity);
 
             // Use the Target Id as the key for maintaining order
             // If there is no Target, use the Activity Id
             var message = new Message<string, string>()
             {
-                Key = activity.Target?.Id?.Value?.ToString() ?? activity.Id.ToString(),
-                Value = JsonSerializer.Serialize(activity)
+                Key = activity.ActionItem?.Id?.Value?.ToString() ?? activity.Id.ToString(),
+                Value = JsonSerializer.Serialize(publishActivity)
             };
 
             var result = await _producer.ProduceAsync(Topics.CommandChannelName, message);

@@ -1,26 +1,26 @@
 ﻿using System.Text.Json;
+using ValueOf;
 
 namespace BienOblige.Execution.Data.Kafka.Messages;
 
-public class Context: List<ContextItem>
+public class Context : ValueOf<List<ContextItem>, Context>
 {
-    public Context(JsonElement element)
+    public static Context From(JsonElement element)
     {
         // TODO: Add better validation
+        var items = new List<ContextItem>();
         if (element.ValueKind.Equals(JsonValueKind.String))
-            this.Add(new ContextItem(element.GetString()));
+            items.Add(new ContextItem(element.GetString()));
         else
-            this.AddRange(element.EnumerateObject().Select(e => new ContextItem(e.Value.ToString(), e.Name)));
-    }
-
-    public Context(IEnumerable<ContextItem> items)
-    {
-        this.AddRange(items);
+            items.AddRange(element.EnumerateObject().Select(e => new ContextItem(e.Value.ToString(), e.Name)));
+        return Context.From(items);
     }
 
     public static Context From(ActivityStream.ValueObjects.Context context)
     {
-        return new Context(context.Value.Select(c => new ContextItem(c.Value.Value, c.Value.Key)));
+        var items = new List<ContextItem>();
+        context.Value.ToList().ForEach(c => items.Add(new ContextItem(c.Value.Value, c.Value.Key)));
+        return Context.From(items);
     }
 
 }

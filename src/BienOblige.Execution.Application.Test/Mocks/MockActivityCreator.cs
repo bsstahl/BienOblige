@@ -28,8 +28,8 @@ internal class MockActivityCreator(ILogger<MockActivityCreator> logger, IService
                     if (!activityType.Equals(p.ActivityType))
                         throw new ArgumentException($"Incorrect ActivityType: Expected '{activityType}' but got '{p.ActivityType}'");
 
-                    if (!actionItem.Id.Equals(p.Target.Id))
-                        throw new ArgumentException($"Incorrect ActionItem Id: Expected '{actionItem.Id}' but got '{p.Target.Id}'");
+                    if (!actionItem.Id.Equals(p.ActionItem.Id))
+                        throw new ArgumentException($"Incorrect ActionItem Id: Expected '{actionItem.Id}' but got '{p.ActionItem.Id}'");
 
                     if (!correlationId.Equals(p.Id))
                         throw new ArgumentException($"Incorrect Correlation Id: Expected '{correlationId}' but got '{p.Id}'");

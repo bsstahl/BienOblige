@@ -5,6 +5,7 @@ using BienOblige.Execution.Application;
 using BienOblige.Execution.Data.Kafka.Constants;
 using BienOblige.Execution.Application.Interfaces;
 using System.Text;
+using System.Text.Json;
 
 namespace BienOblige.Execution.Data.Kafka;
 
@@ -27,11 +28,11 @@ public class ActivityReadRepository : IGetActivities
         try
         {
             var consumeResult = _consumer.Consume(stoppingToken);
-            _logger.LogInformation($"Consumed message '{consumeResult.Message.Value}' at: '{consumeResult.TopicPartitionOffset}'.");
-
             var messageValue = consumeResult.Message.Value;
 
-            var content = new Messages.Activity(consumeResult.Message.Value);
+            _logger.LogInformation($"Consumed message '{messageValue}' at: '{consumeResult.TopicPartitionOffset}'.");
+
+            var content = JsonSerializer.Deserialize<Messages.Activity>(messageValue);
 
             var headers = consumeResult.Message.Headers.ToDictionary(
                 h => h.Key,
@@ -39,7 +40,14 @@ public class ActivityReadRepository : IGetActivities
 
             var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(consumeResult.Message.Timestamp.UnixTimestampMs);
 
-            var trx = new ReadTransactionManager<Activity>(_consumer, consumeResult, content.AsAggregate(), headers, timestamp);
+            var activityAggregate = content?.AsAggregate();
+            if (activityAggregate is null)
+            {
+                _logger.LogError("Failed to deserialize message content");
+                throw new InvalidOperationException("Failed to deserialize message content");
+            }
+
+            var trx = new ReadTransactionManager<Activity>(_consumer, consumeResult, activityAggregate, headers, timestamp);
             return await Task.FromResult(trx);
         }
         catch (ConsumeException ex)

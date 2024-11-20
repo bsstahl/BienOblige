@@ -1,5 +1,4 @@
 ﻿using BienOblige.Execution.Application.Extensions;
-using BienOblige.Execution.Data.Kafka.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -7,105 +6,98 @@ namespace BienOblige.Execution.Data.Kafka.Messages;
 
 public class Activity
 {
-    private List<ContextItem> _context = new();
-    private string _jsonMessage = string.Empty;
-
     [JsonPropertyName("@context")]
-    public IEnumerable<ContextItem> ContextItems
-    {
-        get
-        {
-            return _context;
-        }
-        set
-        {
-            _context = value.ToList();
-        }
-    }
+    public Context? Context { get; set; }
 
     [JsonPropertyName("@type")]
-    public string ActivityType { get; private set; }
+    public string @Type { get; private set; }
 
     [JsonPropertyName("id")]
-    public string CorrelationId { get; set; }
+    public string Id { get; set; }
 
     [JsonPropertyName("actor")]
-    public Actor Actor { get; set; }
+    public Actor? Actor { get; set; }
 
     [JsonPropertyName("object")]
-    public ActionItem ActionItem { get; set; }
+    public ActionItem? ActionItem { get; set; }
 
     [JsonPropertyName("published")]
-    public DateTimeOffset Published { get; set; }
+    public DateTimeOffset? Published { get; set; }
 
-    [JsonPropertyName("target")]
-    public ActionItem Target { get; set; }
+    //[JsonPropertyName("target")]
+    //public ActionItem? Target { get; set; }
 
+    [JsonExtensionData]
+    public Dictionary<string, JsonElement> ExtensionData { get; set; } = new();
 
-    override public string ToString() => _jsonMessage;
-
-
-    public Activity(string activityType, string correlationId, DateTimeOffset published,
-        ActionItem actionItem, Context context, Actor updatingActor)
-    {
-        this.ContextItems = context;
-        this.ActivityType = activityType;
-        this.CorrelationId = correlationId;
-        this.Published = published;
-        this.Actor = updatingActor;
-        this.ActionItem = actionItem;
-
-        _jsonMessage = JsonSerializer.Serialize(this);
-    }
 
     [JsonConstructor]
-    public Activity(string jsonMessage)
+    public Activity(string id, string @type)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(jsonMessage, nameof(jsonMessage));
-
-        _jsonMessage = jsonMessage;
-
-        using (JsonDocument doc = JsonDocument.Parse(jsonMessage))
-        {
-            var root = doc.RootElement;
-
-            // TODO: Actually use the supplied context
-            // var context = root.GetProperty("@context").ParseContext();
-            //this.Context = new List<Context>()
-            //{
-            //    new Context(BienOblige.Constants.Namespaces.RootNamespaceName),
-            //    new Context(BienOblige.Constants.Namespaces.BienObligeNamespaceName, BienOblige.Constants.Namespaces.BienObligeNamespaceKey),
-            //    new Context(BienOblige.Constants.Namespaces.SchemaNamespaceName, BienOblige.Constants.Namespaces.SchemaNamespaceKey)
-            //};
-
-            this.CorrelationId = root.GetStringProperty("id");
-            this.ActivityType = root.GetStringProperty("@type");
-            this.Published = DateTimeOffset.Parse(root.GetStringProperty(nameof(this.Published).ToLower()));
-            this.Actor = new Actor(root.GetProperty(nameof(this.Actor).ToLower()));
-
-            this.ActionItem = new ActionItem(root.GetProperty("object"));
-        }
+        this.Id = id;
+        this.@Type = @type;
     }
+
+    //public Activity(string activityType, string correlationId, DateTimeOffset published,
+    //    ActionItem actionItem, Context context, Actor updatingActor)
+    //{
+    //    this.ContextItems = context;
+    //    this.ActivityType = activityType;
+    //    this.CorrelationId = correlationId;
+    //    this.Published = published;
+    //    this.Actor = updatingActor;
+    //    this.ActionItem = actionItem;
+    //}
+
+    //[JsonConstructor]
+    //public Activity(string jsonMessage)
+    //{
+    //    ArgumentNullException.ThrowIfNullOrWhiteSpace(jsonMessage, nameof(jsonMessage));
+
+    //    _jsonMessage = jsonMessage;
+
+    //    using (JsonDocument doc = JsonDocument.Parse(jsonMessage))
+    //    {
+    //        var root = doc.RootElement;
+
+    //        // TODO: Actually use the supplied context
+    //        // var context = root.GetProperty("@context").ParseContext();
+    //        //this.Context = new List<Context>()
+    //        //{
+    //        //    new Context(BienOblige.Constants.Namespaces.RootNamespaceName),
+    //        //    new Context(BienOblige.Constants.Namespaces.BienObligeNamespaceName, BienOblige.Constants.Namespaces.BienObligeNamespaceKey),
+    //        //    new Context(BienOblige.Constants.Namespaces.SchemaNamespaceName, BienOblige.Constants.Namespaces.SchemaNamespaceKey)
+    //        //};
+
+    //        this.CorrelationId = root.GetStringProperty("id");
+    //        this.ActivityType = root.GetStringProperty("@type");
+    //        this.Published = DateTimeOffset.Parse(root.GetStringProperty(nameof(this.Published).ToLower()));
+    //        this.Actor = new Actor(root.GetProperty(nameof(this.Actor).ToLower()));
+
+    //        this.ActionItem = new ActionItem(root.GetProperty("object"));
+    //    }
+    //}
 
     public ActivityStream.Aggregates.Activity AsAggregate()
     {
         return new ActivityStream.Aggregates.Activity(
-            ActivityStream.ValueObjects.NetworkIdentity.From(this.CorrelationId),
-            this.ActivityType.AsActivityType(),
-            this.Actor.AsAggregate(),
-            this.ActionItem.AsAggregate(),
-            this.Published);
+            ActivityStream.ValueObjects.NetworkIdentity.From(this.Id),
+            this.Type.AsActivityType(),
+            this.Actor?.AsAggregate(),
+            this.ActionItem?.AsAggregate(),
+            this.Published ?? DateTimeOffset.UtcNow);
     }
 
     public static Activity From(ActivityStream.Aggregates.Activity activity)
     {
-        return new Activity(
-            activity.ActivityType.ToString(),
-            activity.Id.Value.ToString(),
-            activity.Published ?? DateTimeOffset.UtcNow,
-            ActionItem.From(activity.Target),
-            Context.From(activity.Context),
-            Actor.From(activity.Actor))
-        { };
+        var id = activity.Id.Value.ToString();
+        var activityType = activity.ActivityType.ToString();
+        return new Activity(id, activityType)
+        {
+            Published = activity.Published ?? DateTimeOffset.UtcNow,
+            ActionItem = ActionItem.From(activity.ActionItem),
+            Context = Context.From(activity.Context),
+            Actor = Actor.From(activity.Actor)
+        };
     }
 }
