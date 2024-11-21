@@ -1,5 +1,4 @@
 using BienOblige.ActivityStream.Enumerations;
-using BienOblige.Execution.Data.Kafka.Test.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;

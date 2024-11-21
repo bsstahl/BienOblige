@@ -29,7 +29,8 @@ public class ActionItemCollectionBuilder_Build_Should
         // The child item's ParentId should be the parent item's Id
         var actualParent = content.Single(r => r.ActionItem.Parent is null).ActionItem;
         var actualChild = content.Single(r => r.ActionItem.Parent is not null).ActionItem;
+
+        Assert.Equal(2, content.Count());
         Assert.Equal(actualChild.Parent, actualParent.Id);
     }
-
 }
