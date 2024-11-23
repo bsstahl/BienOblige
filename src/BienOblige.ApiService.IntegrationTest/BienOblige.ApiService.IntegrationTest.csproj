@@ -17,7 +17,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.16.0" />
+		<PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.16.1" />
 		<PackageReference Include="MartinCostello.Logging.XUnit" Version="0.4.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
@@ -28,7 +28,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="TestHelperExtensions" Version="2.2.1" />
+		<PackageReference Include="TestHelperExtensions" Version="2.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>

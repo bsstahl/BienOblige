@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.16.0" />
+		<PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.16.1" />
 
 		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.0.0" />

@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Enumerations;
+using BienOblige.Api.Interfaces;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -43,7 +44,7 @@ public class ActionItem
     public Actor? Generator { get; set; }
 
     [JsonPropertyName("target")]
-    public NetworkObject? Target { get; set; }
+    public IActionItemTarget? Target { get; set; }
 
     [JsonPropertyName("bienoblige:parent")]
     public string? Parent { get; set; }
@@ -59,13 +60,4 @@ public class ActionItem
 
     [JsonExtensionData]
     public Dictionary<string, JsonElement> AdditionalProperties { get; set; } = new();
-
-
-    public ActionItem(string id, string name, string content)
-    {
-        this.Id = id;
-        this.Name = name;
-        this.Content = content;
-    }
-
 }

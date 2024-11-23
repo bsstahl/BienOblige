@@ -1,6 +1,5 @@
 ﻿using BienOblige.Api.Entities;
 using BienOblige.Api.Enumerations;
-using BienOblige.Api.Extensions;
 
 namespace BienOblige.Api.Builders;
 

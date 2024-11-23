@@ -1,6 +1,7 @@
 ﻿using BienOblige.Api.Entities;
 using BienOblige.Api.Enumerations;
 using BienOblige.Api.Extensions;
+using BienOblige.Api.Interfaces;
 
 namespace BienOblige.Api.Builders;
 
@@ -10,7 +11,7 @@ public class ActionItemBuilder
     private string? _name;
     private string? _content;
     private Actor? _generator;
-    private NetworkObject? _target;
+    private IActionItemTarget? _target;
     private Uri? _parent;
     private IEnumerable<CompletionMethod> _completionMethods = new List<CompletionMethod>();
 
@@ -24,8 +25,11 @@ public class ActionItemBuilder
 
         // TODO: Implement remaining properties
         var results = (_children?.Build(_id) ?? Enumerable.Empty<ActionItem>()).ToList();
-        results.Add(new ActionItem(_id.ToString(), _name, _content)
+        results.Add(new ActionItem()
         {
+            Id = _id.ToString(),
+            Name = _name,
+            Content = _content,
             Generator = _generator,
             Target = _target,
             Parent = _parent?.ToString(),

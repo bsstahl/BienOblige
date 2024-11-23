@@ -10,7 +10,7 @@ public static class NetworkObjectExtensions
         return new ActivityStream.Aggregates.NetworkObject()
         {
             Id = ActivityStream.ValueObjects.NetworkIdentity.From(value.ObjectId),
-            ObjectTypeName = [ActivityStream.ValueObjects.TypeName.From(value.ObjectType)]
+            ObjectTypeName = value.ObjectType.Select(t => ActivityStream.ValueObjects.TypeName.From(t))
         };
     }
 

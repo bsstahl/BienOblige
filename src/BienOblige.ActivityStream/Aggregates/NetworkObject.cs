@@ -22,9 +22,6 @@ public class NetworkObject
     [JsonPropertyName("@context")]
     public Context Context { get; set; } = Context.Default;
 
-    [JsonPropertyName("endTime")]
-    public DateTimeOffset? EndTime { get; set; }
-
     [JsonPropertyName("generator")]
     public NetworkObject? Generator { get; set; }
 
