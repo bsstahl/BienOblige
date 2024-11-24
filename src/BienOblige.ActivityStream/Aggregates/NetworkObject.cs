@@ -20,7 +20,7 @@ public class NetworkObject
     public Content? Content { get; set; }
 
     [JsonPropertyName("@context")]
-    public Context Context { get; set; } = Context.Default;
+    public Context Context { get; set; } = Context.Empty;
 
     [JsonPropertyName("generator")]
     public NetworkObject? Generator { get; set; }

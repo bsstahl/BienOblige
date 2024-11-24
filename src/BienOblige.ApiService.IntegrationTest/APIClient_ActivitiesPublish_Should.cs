@@ -27,7 +27,7 @@ public class APIClient_ActivitiesPublish_Should
     {
         // TODO: Add content
         var content = new Api.Builders.ActivitiesCollectionBuilder()
-            .Id(Guid.NewGuid())
+            .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new Api.Builders.ActorBuilder()
                 .Id(Guid.NewGuid())
@@ -59,7 +59,7 @@ public class APIClient_ActivitiesPublish_Should
                 .UseRandomValues());
 
         var content = new Api.Builders.ActivitiesCollectionBuilder()
-            .Id(Guid.NewGuid())
+            .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new Api.Builders.ActorBuilder()
                 .Id(Guid.NewGuid())
@@ -91,7 +91,7 @@ public class APIClient_ActivitiesPublish_Should
                 ));
 
         var content = new ActivitiesCollectionBuilder()
-            .Id(Guid.NewGuid())
+            .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())

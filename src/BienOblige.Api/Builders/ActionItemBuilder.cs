@@ -13,7 +13,7 @@ public class ActionItemBuilder
     private Actor? _generator;
     private IActionItemTarget? _target;
     private Uri? _parent;
-    private IEnumerable<CompletionMethod> _completionMethods = new List<CompletionMethod>();
+    private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
 
     private ActionItemCollectionBuilder? _children;
 
@@ -70,6 +70,18 @@ public class ActionItemBuilder
     public ActionItemBuilder Parent(Uri id)
     {
         _parent = id;
+        return this;
+    }
+
+    public ActionItemBuilder ClearCompletionMethods()
+    {
+        _completionMethods.Clear();
+        return this;
+    }
+
+    public ActionItemBuilder AddCompletionMethod(CompletionMethod value)
+    {
+        _completionMethods.Add(value);
         return this;
     }
 

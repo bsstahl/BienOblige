@@ -8,13 +8,7 @@ public class ObjectBuilder
 {
     private Uri? _id;
     private List<string> _objectTypes = new();
-    private List<KeyValuePair<string?, string>> _context =
-    [
-        new KeyValuePair<string?, string>(null, "https://www.w3.org/ns/activitystreams"),
-        new KeyValuePair<string?, string>("bienoblige", "https://bienoblige.com/ns"),
-        new KeyValuePair<string?, string>("schema", "https://schema.org")
-    ];
-
+    private List<KeyValuePair<string?, string>> _context = Constants.Context.Default;
     private List<ObjectBuilder> _attachmentBuilders = new();
     private ObjectBuilder? _attributedToBuilder;
     private ObjectBuilder? _audienceBuilder;

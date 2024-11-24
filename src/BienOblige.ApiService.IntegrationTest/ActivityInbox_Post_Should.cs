@@ -46,6 +46,7 @@ public class ActivityInbox_Post_Should
 
         var message = new Activity()
         {
+            Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
             ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
             Actor = updatingActor,
@@ -83,6 +84,7 @@ public class ActivityInbox_Post_Should
 
         var message = new Activity()
         {
+            Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
             ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
             Actor = updatingActor,
@@ -121,6 +123,7 @@ public class ActivityInbox_Post_Should
 
         var message = new Activity()
         {
+            Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
             ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
             Actor = updatingActor,
@@ -159,6 +162,7 @@ public class ActivityInbox_Post_Should
 
         var message = new Activity()
         {
+            Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
             ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
             Actor = updatingActor,
@@ -187,7 +191,7 @@ public class ActivityInbox_Post_Should
                 .Id(Guid.NewGuid()));
 
         var activities = new ActivitiesCollectionBuilder()
-            .Id(correlationId)
+            .CorrelationId(correlationId)
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())

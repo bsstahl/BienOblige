@@ -12,7 +12,7 @@ public class Activity_Serialization_Should
     {
         // TODO: Add content
         var content = new Api.Builders.ActivitiesCollectionBuilder()
-            .Id(Guid.NewGuid())
+            .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new Api.Builders.ActorBuilder()
                 .Id(Guid.NewGuid())

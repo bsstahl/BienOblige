@@ -5,15 +5,16 @@ namespace BienOblige.Api.Builders;
 
 public class ActivitiesCollectionBuilder
 {
-    const string _defaultBaseUri = "https://bienoblige.com/api/v1";
+    const string _defaultBaseUri = "https://bienoblige.com";
 
-    private Uri? _id;
+    private List<KeyValuePair<string?, string>> _context = Constants.Context.Default;
+
+    private Uri? _correlationId;
     private ActivityType? _activityType;
     private ActorBuilder? _actorBuilder;
     private DateTimeOffset? _published;
 
     private ActionItemCollectionBuilder _actionItemCollectionBuilder = new();
-    //private List<ActionItem> _actionItems = new();
 
     private readonly Uri _instanceBaseUri;
 
@@ -31,23 +32,28 @@ public class ActivitiesCollectionBuilder
         ArgumentNullException.ThrowIfNull(_activityType, nameof(_activityType));
         ArgumentNullException.ThrowIfNull(_actorBuilder, nameof(_actorBuilder));
 
-        _id ??= new Uri($"{_instanceBaseUri}/Activity/{Guid.NewGuid()}");
+        _correlationId ??= new Uri($"{_instanceBaseUri}/Activity/{Guid.NewGuid()}");
 
         // Assign Id's to all ActionItems
         _actionItemCollectionBuilder.AssignIds(_instanceBaseUri);
-
 
         var actionItems = new List<ActionItem>(_actionItemCollectionBuilder.Build());
         // actionItems.AddRange(_actionItems);
         if (!actionItems.Any())
             throw new ArgumentNullException($"At least 1 ActionItem must be supplied");
 
-        var published = _published ?? DateTimeOffset.UtcNow;
+        // Define the published date anywhere it isn't set
+        _published ??= DateTimeOffset.UtcNow;
+        actionItems.ToList().ForEach(i => i.Published ??= _published);
+
         var updatingActor = _actorBuilder.Build();
 
+        // Create an Activity for each ActionItem
         return actionItems.Select(x => new Activity()
         {
-            CorrelationId = _id,
+            Id = new Uri($"{_instanceBaseUri}Activity/{Guid.NewGuid()}"),
+            Context = _context,
+            CorrelationId = _correlationId,
             ActivityType = _activityType.Value.ToString(),
             Actor = updatingActor,
             ActionItem = x,
@@ -55,19 +61,31 @@ public class ActivitiesCollectionBuilder
         });
     }
 
-    public ActivitiesCollectionBuilder Id(Guid value)
+    public ActivitiesCollectionBuilder ClearContext()
     {
-        return this.Id($"urn:uid:{value.ToString()}");
+        _context.Clear();
+        return this;
     }
 
-    public ActivitiesCollectionBuilder Id(string value)
+    public ActivitiesCollectionBuilder AddContext(string key, string value)
     {
-        return this.Id(new Uri(value));
+        _context.Add(new KeyValuePair<string?, string>(key, value));
+        return this;
     }
 
-    public ActivitiesCollectionBuilder Id(Uri value)
+    public ActivitiesCollectionBuilder CorrelationId(Guid value)
     {
-        _id = value;
+        return this.CorrelationId($"urn:uid:{value.ToString()}");
+    }
+
+    public ActivitiesCollectionBuilder CorrelationId(string value)
+    {
+        return this.CorrelationId(new Uri(value));
+    }
+
+    public ActivitiesCollectionBuilder CorrelationId(Uri value)
+    {
+        _correlationId = value;
         return this;
     }
 

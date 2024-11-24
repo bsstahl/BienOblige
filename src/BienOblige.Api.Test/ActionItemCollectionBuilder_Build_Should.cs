@@ -10,7 +10,7 @@ public class ActionItemCollectionBuilder_Build_Should
     public void ResultInAParentChildRelationshipBetweenActionItems()
     {
         var content = new ActivitiesCollectionBuilder()
-            .Id(Guid.NewGuid())
+            .CorrelationId(Guid.NewGuid())
             .ActivityType(Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())

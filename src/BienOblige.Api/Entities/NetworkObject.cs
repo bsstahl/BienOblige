@@ -1,6 +1,5 @@
 ﻿using BienOblige.Api.Builders;
 using BienOblige.Api.Extensions;
-using BienOblige.Api.ValueObjects;
 using System.Text.Json.Serialization;
 
 namespace BienOblige.Api.Entities;
