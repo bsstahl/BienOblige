@@ -14,6 +14,7 @@ public class ActionItemBuilder
     private IActionItemTarget? _target;
     private Uri? _parent;
     private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
+    private Dictionary<string, object> _additionalProperties = new();
 
     private ActionItemCollectionBuilder? _children;
 
@@ -33,7 +34,8 @@ public class ActionItemBuilder
             Generator = _generator,
             Target = _target,
             Parent = _parent?.ToString(),
-            CompletionMethods = _completionMethods
+            CompletionMethods = _completionMethods,
+            AdditionalProperties = _additionalProperties
         });
 
         return results;
@@ -90,6 +92,19 @@ public class ActionItemBuilder
         _children = value;
         return this;
     }
+
+    public ActionItemBuilder ClearAdditionalProperty()
+    {
+        _additionalProperties.Clear();
+        return this;
+    }
+
+    public ActionItemBuilder AddAdditionalProperty(string key, object value)
+    {
+        _additionalProperties.Add(key, value);
+        return this;
+    }
+
 
     internal void AssignId(Uri instanceBaseUri)
     {

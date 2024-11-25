@@ -26,6 +26,9 @@ public class Activity
     [JsonPropertyName("published")]
     public DateTimeOffset? Published { get; set; }
 
+    [JsonExtensionData]
+    public Dictionary<string, object> ExtensionData { get; set; } = new();
+
     //[JsonConstructor]
     //public Activity(Uri Id, ActivityType @type, Actor actor,
     //    ActionItem @object, DateTimeOffset? published = null)

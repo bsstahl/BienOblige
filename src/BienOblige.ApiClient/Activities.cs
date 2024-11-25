@@ -1,7 +1,9 @@
 ﻿using BienOblige.Api.Entities;
+using BienOblige.Api.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 
 namespace BienOblige.ApiClient;
 
@@ -25,16 +27,25 @@ public class Activities
 
     public async Task<PublicationResult> Publish(Activity activity)
     {
-        // TODO: Add error handling
         var payload = JsonContent.Create(activity);
-        var response = await _httpClient.PostAsync(Api.Constants.Path.Inbox, payload);
-        if (response.IsSuccessStatusCode)
-            return new PublicationResult(activity, true);
-        else
+        var result = new PublicationResult(activity, true);
+
+        try
         {
-            var errors = await response.Content.ReadAsStringAsync();
-            _logger.LogError("Failed to publish activity: {@Activity}. Errors: {@Errors}", activity, errors);
-            return new PublicationResult(activity, false, new[] { errors });
+            var response = await _httpClient.PostAsync(Api.Constants.Path.Inbox, payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errors = await response.GetPublicationFailures();
+                _logger.LogError("{@Errors}\r\n\r\nActivity: {@Activity}", errors, activity);
+                result = new PublicationResult(activity, false, errors);
+            }
         }
+        catch (Exception ex)
+        {
+            result = new PublicationResult(activity, false, ex.GetExceptionMessages());
+        }
+
+        return result;
     }
+
 }

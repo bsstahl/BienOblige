@@ -1,7 +1,6 @@
 ﻿using BienOblige.Api.Converters;
 using BienOblige.Api.Enumerations;
 using BienOblige.Api.Interfaces;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace BienOblige.Api.Entities;
@@ -71,5 +70,5 @@ public class ActionItem
     //public NetworkObjectCollection? Tags { get; set; }
 
     [JsonExtensionData]
-    public Dictionary<string, JsonElement> AdditionalProperties { get; set; } = new();
+    public Dictionary<string, object> AdditionalProperties { get; set; } = new();
 }
