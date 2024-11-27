@@ -11,12 +11,24 @@ public class ActionItemBuilder
     private string? _name;
     private string? _content;
     private Actor? _generator;
-    private IActionItemTarget? _target;
+    private ObjectBuilder? _target;
+    private DateTimeOffset? _endTime;
     private Uri? _parent;
     private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
     private Dictionary<string, object> _additionalProperties = new();
 
     private ActionItemCollectionBuilder? _children;
+    
+    private readonly Uri _instanceBaseUri;
+
+    public ActionItemBuilder()
+        : this(new Uri(Constants.Path.DefaultBaseUri))
+    { }
+
+    public ActionItemBuilder(Uri instanceBaseUri)
+    {
+        _instanceBaseUri = instanceBaseUri;
+    }
 
     public IEnumerable<ActionItem> Build()
     {
@@ -32,9 +44,10 @@ public class ActionItemBuilder
             Name = _name,
             Content = _content,
             Generator = _generator,
-            Target = _target,
+            Target = _target?.Build(),
             Parent = _parent?.ToString(),
             CompletionMethods = _completionMethods,
+            EndTime = _endTime,
             AdditionalProperties = _additionalProperties
         });
 
@@ -43,7 +56,7 @@ public class ActionItemBuilder
 
     public ActionItemBuilder Id(Guid value)
     {
-        return this.Id($"urn:uid:{value.ToString()}");
+        return this.Id($"{_instanceBaseUri}ActionItem/{value.ToString()}");
     }
 
     public ActionItemBuilder Id(string value)
@@ -69,6 +82,12 @@ public class ActionItemBuilder
         return this;
     }
 
+    public ActionItemBuilder EndTime(DateTimeOffset value)
+    {
+        _endTime = value;
+        return this;
+    }
+
     public ActionItemBuilder Parent(Uri id)
     {
         _parent = id;
@@ -90,6 +109,22 @@ public class ActionItemBuilder
     public ActionItemBuilder Children(ActionItemCollectionBuilder value)
     {
         _children = value;
+        return this;
+    }
+
+    public ActionItemBuilder Target(IActionItemTarget value)
+    {
+        return this.Target(value.AsNetworkObject());
+    }
+
+    public ActionItemBuilder Target(NetworkObject value)
+    {
+        return this.Target(value.AsObjectBuilder());
+    }
+
+    public ActionItemBuilder Target(ObjectBuilder value)
+    {
+        _target = value;
         return this;
     }
 

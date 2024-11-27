@@ -2,6 +2,8 @@
 
 > Note: A client system is any service that interacts with the ActionItem Management System. Thus, for the purposes of this document, a User Interface client such as a Web UI or mobile app is considered a type of client system.
 
+This document outlines the low-level capabilities of the system. For detailed studies of specific use cases, see [Detailed Use Cases](./use-cases/README.md).
+
 ## Subsystem Responsibilities
 
 ### Execution Subsystem

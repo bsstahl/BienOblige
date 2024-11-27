@@ -3,7 +3,7 @@ using BienOblige.Api.Enumerations;
 
 namespace BienOblige.Api.Builders;
 
-public class ActivitiesCollectionBuilder
+public class ActivityBuilder
 {
     private List<KeyValuePair<string?, string>> _context = Constants.Context.Default;
 
@@ -12,108 +12,102 @@ public class ActivitiesCollectionBuilder
     private ActorBuilder? _actorBuilder;
     private DateTimeOffset? _published;
 
-    private ActionItemCollectionBuilder _actionItemCollectionBuilder = new();
+    private ActionItemBuilder? _actionItemBuilder;
 
     private readonly Uri _instanceBaseUri;
 
-    public ActivitiesCollectionBuilder()
+    public ActivityBuilder()
         : this(new Uri(Constants.Path.DefaultBaseUri))
     { }
 
-    public ActivitiesCollectionBuilder(Uri instanceBaseUri)
+    public ActivityBuilder(Uri instanceBaseUri)
     {
         _instanceBaseUri = instanceBaseUri;
     }
 
-    public IEnumerable<Activity> Build()
+    public Activity Build()
     {
         ArgumentNullException.ThrowIfNull(_activityType, nameof(_activityType));
         ArgumentNullException.ThrowIfNull(_actorBuilder, nameof(_actorBuilder));
 
         _correlationId ??= new Uri($"{_instanceBaseUri}/Activity/{Guid.NewGuid()}");
 
-        // Assign Id's to all ActionItems
-        _actionItemCollectionBuilder.AssignIds(_instanceBaseUri);
+        // Assign an Id to the ActionItem if needed
+        _actionItemBuilder?.AssignId(_instanceBaseUri);
 
-        var actionItems = new List<ActionItem>(_actionItemCollectionBuilder.Build());
-        // actionItems.AddRange(_actionItems);
-        if (!actionItems.Any())
-            throw new ArgumentNullException($"At least 1 ActionItem must be supplied");
+        var actionItem = _actionItemBuilder?.Build().Single();
+        if (actionItem is null)
+            throw new ArgumentNullException($"An ActionItem must be supplied");
 
         // Define the published date anywhere it isn't set
         _published ??= DateTimeOffset.UtcNow;
-        actionItems.ToList().ForEach(i => i.Published ??= _published);
+        actionItem.Published ??= _published;
 
         var updatingActor = _actorBuilder.Build();
 
         // Create an Activity for each ActionItem
-        return actionItems.Select(x => new Activity()
+        return new Activity()
         {
             Id = new Uri($"{_instanceBaseUri}Activity/{Guid.NewGuid()}"),
             Context = _context,
             CorrelationId = _correlationId,
             ActivityType = _activityType.Value.ToString(),
             Actor = updatingActor,
-            ActionItem = x,
+            ActionItem = actionItem,
             Published = _published
-        });
+        };
     }
 
-    public ActivitiesCollectionBuilder ClearContext()
+    public ActivityBuilder ClearContext()
     {
         _context.Clear();
         return this;
     }
 
-    public ActivitiesCollectionBuilder AddContext(string key, string value)
+    public ActivityBuilder AddContext(string key, string value)
     {
         _context.Add(new KeyValuePair<string?, string>(key, value));
         return this;
     }
 
-    public ActivitiesCollectionBuilder CorrelationId(Guid value)
+    public ActivityBuilder CorrelationId(Guid value)
     {
         return this.CorrelationId($"urn:uid:{value.ToString()}");
     }
 
-    public ActivitiesCollectionBuilder CorrelationId(string value)
+    public ActivityBuilder CorrelationId(string value)
     {
         return this.CorrelationId(new Uri(value));
     }
 
-    public ActivitiesCollectionBuilder CorrelationId(Uri value)
+    public ActivityBuilder CorrelationId(Uri value)
     {
         _correlationId = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder ActivityType(ActivityType value)
+    public ActivityBuilder ActivityType(ActivityType value)
     {
         _activityType = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder Actor(ActorBuilder value)
+    public ActivityBuilder Actor(ActorBuilder value)
     {
         _actorBuilder = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder Published(DateTimeOffset value)
+    public ActivityBuilder Published(DateTimeOffset value)
     {
         _published = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder ActionItems(ActionItemCollectionBuilder value)
+    public ActivityBuilder ActionItem(ActionItemBuilder value)
     {
-        _actionItemCollectionBuilder = value;
+        _actionItemBuilder = value;
         return this;
     }
 
-    //public ActivitiesCollectionBuilder ActionItems(IEnumerable<ActionItem> value)
-    //{
-    //    _actionItems.AddRange(value);
-    //    return this;
-    //}
 }

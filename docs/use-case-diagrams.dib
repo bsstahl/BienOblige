@@ -1,0 +1,122 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"mermaid","items":[{"aliases":[],"languageName":"mermaid","name":"mermaid"}]}}
+
+#!mermaid
+
+graph LR
+    A((Lot Attendants)) --> |Uses| App1[LotCheck Mobile]
+    App1 <--> |Tasks &\nTask Updates| BFF1[Mobile BFF] <--> |Tasks &\nTask Updates| B{{Bien Oblige}}
+
+    C((Mechanics)) --> |Uses| App2[MechConnect Terminal]
+    App2 <--> |Tasks &\nTask Updates| BFF2[Windows BFF] <--> |Tasks &\nTask Updates| B
+
+    D((Supervisors)) --> |Uses| App3[SuperVisor Web]
+    App3 <--> |Tasks &\nTask Updates| BFF3[Web BFF] <--> |Tasks &\nTask Updates| B
+
+    B --> |Data Events| F[(Data Warehouse)]
+    F --> |Feeds| E((Analysts))
+
+#!mermaid
+
+graph LR
+    Driver((Driver)) --> |Signs Out| Telemetry[Bus Telemetry System]
+    Telemetry --> |Sends Data| BusSync[BusSync Service]
+
+    BusSync --> |Processes Data| BienOblige{{Bien Oblige}}
+
+    BienOblige --> |Notifies| LotAttendants((Lot Attendants))
+
+#!markdown
+
+## Use Cases
+
+### Simple Task
+
+#!mermaid
+
+classDiagram
+    class ActionItem {
+        +id : String = "https://bienoblige.com/actionitem/4ef7db4a-7fa5-427d-98a2-3960577f49fd"
+        +name : String = "Stage Bus for Next Activity"
+        +content : String = "Stage in lane C2 for departure at 06:15 MST"
+        +endTime : Date = "2024-11-26T16:15:37.6158033-07:00"
+        +status : String = "https://bienoblige.com/ns/status#Incomplete"
+        
+    }
+
+#!markdown
+
+### Annual PM
+
+#!mermaid
+
+classDiagram
+    %% ActionItem for PM
+    ActionItem_PM : ActionItem
+    ActionItem_PM : +id = "PM-2024-01"
+    ActionItem_PM : +name = "Annual Preventive Maintenance for Bus Type X"
+    ActionItem_PM : +description = "Comprehensive annual maintenance procedure"
+    ActionItem_PM : +dueDate = "2024-12-31"
+    ActionItem_PM : +status = "In Progress"
+
+    %% Tasks as ActionItems
+    ActionItem_T1 : ActionItem
+    ActionItem_T1 : +id = "T1"
+    ActionItem_T1 : +name = "Inspection Phase"
+    ActionItem_T1 : +description = "Initial bus condition assessment"
+    ActionItem_T1 : +dueDate = "2024-11-30"
+    ActionItem_T1 : +status = "Pending"
+
+    ActionItem_T2 : ActionItem
+    ActionItem_T2 : +id = "T2"
+    ActionItem_T2 : +name = "Repair Phase"
+    ActionItem_T2 : +description = "Address issues found during inspection"
+    ActionItem_T2 : +dueDate = "2024-12-15"
+    ActionItem_T2 : +status = "Pending"
+
+    ActionItem_T3 : ActionItem
+    ActionItem_T3 : +id = "T3"
+    ActionItem_T3 : +name = "Testing Phase"
+    ActionItem_T3 : +description = "Verify repairs and safety standards"
+    ActionItem_T3 : +dueDate = "2024-12-20"
+    ActionItem_T3 : +status = "Pending"
+
+    ActionItem_T4 : ActionItem
+    ActionItem_T4 : +id = "T4"
+    ActionItem_T4 : +name = "Documentation Phase"
+    ActionItem_T4 : +description = "Record all maintenance activities"
+    ActionItem_T4 : +dueDate = "2024-12-25"
+    ActionItem_T4 : +status = "Pending"
+
+    %% Subtasks as ActionItems
+    ActionItem_S1 : ActionItem
+    ActionItem_S1 : +id = "S1"
+    ActionItem_S1 : +name = "Check Engine Components"
+    ActionItem_S1 : +description = "Inspect engine for leaks and wear"
+    ActionItem_S1 : +dueDate = "2024-11-25"
+    ActionItem_S1 : +status = "Pending"
+
+    ActionItem_S2 : ActionItem
+    ActionItem_S2 : +id = "S2"
+    ActionItem_S2 : +name = "Inspect Brake Systems"
+    ActionItem_S2 : +description = "Ensure brakes are operational and within safety limits"
+    ActionItem_S2 : +dueDate = "2024-11-25"
+    ActionItem_S2 : +status = "Pending"
+
+    ActionItem_S3 : ActionItem
+    ActionItem_S3 : +id = "S3"
+    ActionItem_S3 : +name = "Assess Tire Wear and Pressure"
+    ActionItem_S3 : +description = "Check tire condition and inflate if necessary"
+    ActionItem_S3 : +dueDate = "2024-11-25"
+    ActionItem_S3 : +status = "Pending"
+
+    %% Relationships
+    ActionItem_PM --> ActionItem_T1 : contains
+    ActionItem_PM --> ActionItem_T2 : contains
+    ActionItem_PM --> ActionItem_T3 : contains
+    ActionItem_PM --> ActionItem_T4 : contains
+
+    ActionItem_T1 --> ActionItem_S1 : contains
+    ActionItem_T1 --> ActionItem_S2 : contains
+    ActionItem_T1 --> ActionItem_S3 : contains

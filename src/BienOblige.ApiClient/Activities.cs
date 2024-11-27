@@ -3,7 +3,6 @@ using BienOblige.Api.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
 
 namespace BienOblige.ApiClient;
 

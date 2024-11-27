@@ -31,6 +31,13 @@ public static class TestHelpers
 
     public static string[] TagObjectTypes = new[] {"Article", "Audio", "Document", "Image", "Video", "Note" };
 
+    public static DateTimeOffset GetTimeTomorrowMST(this TimeSpan time)
+    {
+        var mstZone = TimeZoneInfo.FindSystemTimeZoneById("Mountain Standard Time");
+        var midnight = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, mstZone).Date.AddDays(1);
+        return midnight.Add(time);
+    }
+
     public static void Log(this NetworkObject value, ILogger logger)
     {
         logger.LogTrace("NetworkObject: {@NetworkObject}", JsonSerializer.Serialize(value));

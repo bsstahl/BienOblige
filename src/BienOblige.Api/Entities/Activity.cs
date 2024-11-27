@@ -29,14 +29,4 @@ public class Activity
     [JsonExtensionData]
     public Dictionary<string, object> ExtensionData { get; set; } = new();
 
-    //[JsonConstructor]
-    //public Activity(Uri Id, ActivityType @type, Actor actor,
-    //    ActionItem @object, DateTimeOffset? published = null)
-    //{
-    //    this.CorrelationId = Id;
-    //    this.ActivityType = @type.ToString();
-    //    this.Actor = actor;
-    //    this.ActionItem = @object;
-    //    this.Published = published ?? DateTimeOffset.UtcNow;
-    //}
 }

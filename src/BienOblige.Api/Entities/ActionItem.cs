@@ -37,7 +37,8 @@ public class ActionItem
     public DateTimeOffset? EndTime { get; set; }
 
     [JsonPropertyName("updated")]
-    public DateTimeOffset LastUpdatedAt { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public DateTimeOffset? LastUpdatedAt { get; set; }
 
     [JsonPropertyName("summary")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -51,9 +52,9 @@ public class ActionItem
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Actor? Generator { get; set; }
 
-    [JsonPropertyName("target")]
+    [JsonPropertyName("bienoblige:target")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public IActionItemTarget? Target { get; set; }
+    public NetworkObject? Target { get; set; }
 
     [JsonPropertyName("bienoblige:parent")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -44,7 +44,7 @@ public class Car : IActionItemTarget
     /// <summary>
     /// The Vehicle Identification Number (VIN) of the car.
     /// </summary>
-    [JsonPropertyName("vehicleIdentificationNumber")]
+    [JsonPropertyName("schema:vehicleIdentificationNumber")]
     public string? Vin { get; set; }
 
     /// <summary>

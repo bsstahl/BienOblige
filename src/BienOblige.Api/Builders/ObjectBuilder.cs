@@ -95,6 +95,11 @@ public class ObjectBuilder
         return this;
     }
 
+    public ObjectBuilder Id(Guid id, string entityTypeName)
+    {
+        return this.Id($"{Constants.Path.DefaultBaseUri}/{entityTypeName}/{id.ToString()}");
+    }
+
     public ObjectBuilder Id(string id)
     {
         return this.Id(new Uri(id));
@@ -383,7 +388,7 @@ public class ObjectBuilder
 
     public ObjectBuilder AddAdditionalProperties(IDictionary<string, object> values)
     {
-        values.Select(v => this.AddAdditionalProperty(v.Key, v.Value));
+        values.ToList().ForEach(v => this.AddAdditionalProperty(v.Key, v.Value));
         return this;
     }
 
