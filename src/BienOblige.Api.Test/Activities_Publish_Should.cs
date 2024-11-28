@@ -1,6 +1,7 @@
 ﻿using BienOblige.Api.Builders;
 using BienOblige.Api.Targets;
 using BienOblige.Api.Test.Extensions;
+using BienOblige.Api.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -215,4 +216,43 @@ public class Activities_Publish_Should
         Assert.False(response.Skip(2).First().SuccessfullyPublished);
         Assert.False(response.Last().SuccessfullyPublished);
     }
+
+    [Fact]
+    public async Task PublishAValidLocationAssignmentMessage()
+    {
+        var actionItemId = NetworkIdentity.From("https://example.com", "ActionItem", "fd1cf331-c12d-4840-a197-ea2b08ddd240");
+        var locationId = NetworkIdentity.From("https://example.com", "Location", "94f6cf65-568f-49b7-a501-95e5e9371c6a");
+
+        // Arrange
+        var activity = new ActivityBuilder()
+            .CorrelationId(Guid.NewGuid())
+            .ActivityType(Api.Enumerations.ActivityType.Update)
+            .Actor(new ActorBuilder()
+                .Id(Guid.NewGuid())
+                .ActorType(Api.Enumerations.ActorType.Application)
+                .Name($"{this.GetType().Name}.{nameof(PublishAValidLocationAssignmentMessage)}"))
+            .AssignToLocation(actionItemId, new LocationBuilder()
+                .Id(locationId)
+                .Name("The company's Phoenix AZ location"))
+            .Build();
+
+        // Act
+        var client = _services.GetRequiredService<ApiClient.Activities>();
+        var response = await client.Publish(activity);
+
+        // Log Activity
+        var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient
+            ?? throw new InvalidOperationException("No Mock HttpClient found");
+
+        var logger = _services.GetRequiredService<ILogger<Activities_Publish_Should>>();
+        logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
+
+        // Assert
+        var actual = httpClient.ActivityRequests;
+        Assert.NotNull(actual);
+        Assert.Single(actual);
+        Assert.Equal(locationId.ToString(), actual.Single().ActionItem.Location?.ObjectId.ToString());
+    }
+
+
 }

@@ -31,10 +31,11 @@ public class ActivityInbox_Post_Should
     {
         var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_Post_Should>(Guid.NewGuid(), Guid.NewGuid(), "Service");
 
+        var activityType = Api.Enumerations.ActivityType.Create;
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
             .Id(Guid.NewGuid())
-            .Build()
+            .Build(activityType)
             .Single();
 
         var correlationId = NetworkIdentity.New().Value;
@@ -48,14 +49,14 @@ public class ActivityInbox_Post_Should
         {
             Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
-            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
+            ActivityType = activityType.ToString(),
             Actor = updatingActor,
             ActionItem = actionItem
         };
 
         var content = JsonContent.Create(message);
 
-        var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
+        var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
 
         var body = await response.Content.ReadAsStringAsync();
         logger.LogInformation("HTTP Response Body: {@Response}", body);
@@ -69,11 +70,12 @@ public class ActivityInbox_Post_Should
         var correlationGuid = Guid.NewGuid();
         var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(correlationGuid, Guid.NewGuid(), "Person");
 
+        var activityType = Api.Enumerations.ActivityType.Create;
         var correlationId = NetworkIdentity.From(correlationGuid).Value;
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
             .Id(Guid.NewGuid())
-            .Build()
+            .Build(activityType)
             .Single();
 
         var updatingActor = new ActorBuilder()
@@ -86,7 +88,7 @@ public class ActivityInbox_Post_Should
         {
             Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
-            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
+            ActivityType = activityType.ToString(),
             Actor = updatingActor,
             ActionItem = actionItem
         };
@@ -94,7 +96,7 @@ public class ActivityInbox_Post_Should
 
         logger.LogInformation("HTTP Request Payload: {@Request}", JsonSerializer.Serialize(message));
 
-        var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
+        var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
         var body = await response.Content.ReadAsStringAsync();
         var publicationResponse = JsonSerializer.Deserialize<ActivityPublicationResponse>(body);
 
@@ -108,10 +110,11 @@ public class ActivityInbox_Post_Should
     {
         var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Organization");
 
+        var activityType = Api.Enumerations.ActivityType.Create;
         var actionItem = new ActionItemBuilder()
             .UseRandomValues()
             .Id(Guid.NewGuid())
-            .Build()
+            .Build(activityType)
             .Single();
 
         var correlationId = NetworkIdentity.New().Value;
@@ -125,13 +128,13 @@ public class ActivityInbox_Post_Should
         {
             Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
-            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
+            ActivityType = activityType.ToString(),
             Actor = updatingActor,
             ActionItem = actionItem
         };
         var content = JsonContent.Create(message);
 
-        var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
+        var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
 
         var body = await response.Content.ReadAsStringAsync();
         logger.LogInformation("HTTP Response: {@Response}", response);
@@ -147,30 +150,23 @@ public class ActivityInbox_Post_Should
     {
         var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Group");
 
-        var actionItem = new ActionItemBuilder()
-            .UseRandomValues()
-            .Id(Guid.NewGuid())
-            .Build()
-            .Single();
-
         var correlationId = NetworkIdentity.New().Value;
-        var updatingActor = new ActorBuilder()
-            .ActorType(Api.Enumerations.ActorType.Organization)
-            .Id(Guid.NewGuid())
-            .Name(string.Empty.GetRandom())
+
+        var message = new ActivityBuilder()
+            .CorrelationId(correlationId)
+            .ActivityType(Api.Enumerations.ActivityType.Create)
+            .Actor(new ActorBuilder()
+                .ActorType(Api.Enumerations.ActorType.Organization)
+                .Id(Guid.NewGuid())
+                .Name(string.Empty.GetRandom()))
+            .ActionItem(new ActionItemBuilder()
+                .UseRandomValues()
+                .Id(Guid.NewGuid()))
             .Build();
 
-        var message = new Activity()
-        {
-            Id = NetworkIdentity.New().Value,
-            CorrelationId = correlationId,
-            ActivityType = Api.Enumerations.ActivityType.Create.ToString(),
-            Actor = updatingActor,
-            ActionItem = actionItem
-        };
         var content = JsonContent.Create(message);
 
-        var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
+        var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
 
         var body = await response.Content.ReadAsStringAsync();
         logger.LogInformation("HTTP Response: {@Response}", response);
@@ -205,7 +201,7 @@ public class ActivityInbox_Post_Should
         var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(correlationId, Guid.NewGuid(), "Application");
 
         logger.LogInformation("Request Content: {@Content}", content);
-        var response = await httpClient.PostAsync(Api.Constants.Path.Inbox, content);
+        var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
         var body = await response.Content.ReadAsStringAsync();
         logger.LogInformation("HTTP Response: {@Response}", response);
 

@@ -31,7 +31,7 @@ public class Activities
 
         try
         {
-            var response = await _httpClient.PostAsync(Api.Constants.Path.Inbox, payload);
+            var response = await _httpClient.PostAsync(Api.Constants.Path.ActivityInbox, payload);
             if (!response.IsSuccessStatusCode)
             {
                 var errors = await response.GetPublicationFailures();

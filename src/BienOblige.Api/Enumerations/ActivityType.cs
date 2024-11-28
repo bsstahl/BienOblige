@@ -4,5 +4,5 @@ public enum ActivityType
 {
     Create,
     Update,
-    Assign
+    Invite
 }

@@ -87,7 +87,7 @@ public class UseCases
                 .EndTime(TimeSpan.FromMinutes(375).GetTimeTomorrowMST()) // 06:15 AM Tomorrow
                 .Target(new ObjectBuilder()
                     .Id(Guid.NewGuid(), "Bus")
-                    .AddObjectType("schema:Bus")
+                    .AddObjectType("schema:Car")
                     .AddObjectType("Object")
                     .Name("Bus 1234")
                     .Content($"2023 MetroTransit Type X Bus with VIN *{vin}*", "text/markdown")

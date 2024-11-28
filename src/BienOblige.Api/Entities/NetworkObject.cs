@@ -6,6 +6,8 @@ namespace BienOblige.Api.Entities;
 
 public class NetworkObject
 {
+    private List<KeyValuePair<string?, string>>? _context;
+
     private readonly List<NetworkObject> _attachments = new();
     private readonly List<NetworkObject> _bcc = new();
     private readonly List<NetworkObject> _inReplyTo = new();
@@ -17,7 +19,17 @@ public class NetworkObject
 
     [JsonPropertyName("@context")]
     [JsonConverter(typeof(ContextConverter))]
-    public List<KeyValuePair<string?, string>> Context { get; set; } = new();
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<KeyValuePair<string?, string>>? Context
+    {
+        get => (_context?.Any() ?? false) ? _context : null;
+        set
+        {
+            if (value?.Any() ?? false)
+                _context ??= new();
+            _context?.AddRange(value ?? []);
+        }
+    }
 
     [JsonPropertyName("id")]
     public required Uri ObjectId { get; set; }
@@ -41,10 +53,10 @@ public class NetworkObject
 
     [JsonPropertyName("attachment")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Attachments 
-    { 
-        get => _attachments.Any() ? _attachments : null; 
-        set => _attachments.AddRange(value ?? []); 
+    public List<NetworkObject>? Attachments
+    {
+        get => _attachments.Any() ? _attachments : null;
+        set => _attachments.AddRange(value ?? []);
     }
 
     [JsonPropertyName("attributedTo")]
@@ -57,10 +69,10 @@ public class NetworkObject
 
     [JsonPropertyName("bcc")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Bcc 
-    { 
-        get => _bcc.Any() ? _bcc : null; 
-        set => _bcc.AddRange(value ?? []); 
+    public List<NetworkObject>? Bcc
+    {
+        get => _bcc.Any() ? _bcc : null;
+        set => _bcc.AddRange(value ?? []);
     }
 
     [JsonPropertyName("bto")]
@@ -94,18 +106,18 @@ public class NetworkObject
 
     [JsonPropertyName("inReplyTo")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? InReplyTo 
-    { 
-        get => _inReplyTo.Any() ? _inReplyTo : null; 
-        set => _inReplyTo.AddRange(value ?? []); 
+    public List<NetworkObject>? InReplyTo
+    {
+        get => _inReplyTo.Any() ? _inReplyTo : null;
+        set => _inReplyTo.AddRange(value ?? []);
     }
 
     [JsonPropertyName("location")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Location 
-    { 
-        get => _location.Any() ? _location : null; 
-        set => _location.AddRange(value ?? []); 
+    public List<NetworkObject>? Location
+    {
+        get => _location.Any() ? _location : null;
+        set => _location.AddRange(value ?? []);
     }
 
     [JsonPropertyName("preview")]
@@ -118,10 +130,10 @@ public class NetworkObject
 
     [JsonPropertyName("replies")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Replies 
-    { 
-        get => _replies.Any() ? _replies : null; 
-        set => _replies.AddRange(value ?? []); 
+    public List<NetworkObject>? Replies
+    {
+        get => _replies.Any() ? _replies : null;
+        set => _replies.AddRange(value ?? []);
     }
 
     [JsonPropertyName("startTime")]
@@ -134,10 +146,10 @@ public class NetworkObject
 
     [JsonPropertyName("tag")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Tags 
-    { 
-        get => _tag.Any() ? _tag : null; 
-        set => _tag.AddRange(value ?? []); 
+    public List<NetworkObject>? Tags
+    {
+        get => _tag.Any() ? _tag : null;
+        set => _tag.AddRange(value ?? []);
     }
 
     [JsonPropertyName("to")]
@@ -150,10 +162,10 @@ public class NetworkObject
 
     [JsonPropertyName("url")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<Uri>? Url 
-    { 
-        get => _url.Any() ? _url : null; 
-        set => _url.AddRange(value ?? []); 
+    public List<Uri>? Url
+    {
+        get => _url.Any() ? _url : null;
+        set => _url.AddRange(value ?? []);
     }
 
 

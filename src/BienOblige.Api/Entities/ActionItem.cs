@@ -1,6 +1,5 @@
 ﻿using BienOblige.Api.Converters;
 using BienOblige.Api.Enumerations;
-using BienOblige.Api.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace BienOblige.Api.Entities;
@@ -12,7 +11,8 @@ public class ActionItem
 
     [JsonPropertyName("@context")]
     [JsonConverter(typeof(ContextConverter))]
-    public List<KeyValuePair<string?, string>> Context { get; set; } = Constants.Context.Default;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<KeyValuePair<string?, string>>? Context { get; set; }
 
     [JsonPropertyName("id")]
     public string? Id { get; set; }
@@ -22,10 +22,12 @@ public class ActionItem
 
 
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Name { get; set; }
 
     [JsonPropertyName("content")]
-    public required string Content { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Content { get; set; }
 
 
     [JsonPropertyName("attributedTo")]
@@ -64,12 +66,14 @@ public class ActionItem
     [JsonConverter(typeof(EnumListConverter<CompletionMethod>))]
     public List<CompletionMethod> CompletionMethods { get; set; } = new List<CompletionMethod>();
 
-    //[JsonPropertyName("location")]
-    //public NetworkObjectCollection? Location { get; set; }
+    [JsonPropertyName("location")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NetworkObject? Location { get; set; }
 
     //[JsonPropertyName("tag")]
     //public NetworkObjectCollection? Tags { get; set; }
 
     [JsonExtensionData]
     public Dictionary<string, object> AdditionalProperties { get; set; } = new();
+
 }

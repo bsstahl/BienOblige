@@ -7,19 +7,28 @@ namespace BienOblige.Api.Builders;
 
 public class ActionItemBuilder
 {
+    private List<KeyValuePair<string?, string>>? _context;
+
     private Uri? _id;
     private string? _name;
     private string? _content;
     private Actor? _generator;
     private ObjectBuilder? _target;
+    private ObjectBuilder? _location;
     private DateTimeOffset? _endTime;
     private Uri? _parent;
+    private DateTimeOffset? _published;
     private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
+
     private Dictionary<string, object> _additionalProperties = new();
 
     private ActionItemCollectionBuilder? _children;
     
     private readonly Uri _instanceBaseUri;
+
+    public IEnumerable<KeyValuePair<string?, string>>? GetContext() => _context;
+    public Uri? GetId() => _id;
+
 
     public ActionItemBuilder()
         : this(new Uri(Constants.Path.DefaultBaseUri))
@@ -30,17 +39,35 @@ public class ActionItemBuilder
         _instanceBaseUri = instanceBaseUri;
     }
 
-    public IEnumerable<ActionItem> Build()
+    public IEnumerable<ActionItemBuilder> GetAllBuilders(ActionItemBuilder? parentBuilder)
+    {
+        var result = (_children?.GetAllBuilders(this) ?? Array.Empty<ActionItemBuilder>()).ToList();
+        
+        // Update this builder with the information from the parent
+        _parent ??= parentBuilder?.GetId();
+        _children = null;  // We've flattened the hierarchy
+
+        result.Add(this);
+        return result;
+    }
+
+    public IEnumerable<ActionItem> Build(ActivityType parentActivityType)
     {
         ArgumentNullException.ThrowIfNull(_id, nameof(_id));
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(_name, nameof(_name));
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(_content, nameof(_content));
+
+        if (parentActivityType.Equals(ActivityType.Create))
+        {
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(_name, nameof(_name));
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(_content, nameof(_content));
+        }
+
+        var results = (_children?.Build(parentActivityType) ?? Enumerable.Empty<ActionItem>()).ToList();
 
         // TODO: Implement remaining properties
-        var results = (_children?.Build(_id) ?? Enumerable.Empty<ActionItem>()).ToList();
         results.Add(new ActionItem()
         {
             Id = _id.ToString(),
+            Context = _context,
             Name = _name,
             Content = _content,
             Generator = _generator,
@@ -48,6 +75,8 @@ public class ActionItemBuilder
             Parent = _parent?.ToString(),
             CompletionMethods = _completionMethods,
             EndTime = _endTime,
+            Location = _location?.Build(),
+            Published = _published,
             AdditionalProperties = _additionalProperties
         });
 
@@ -125,6 +154,26 @@ public class ActionItemBuilder
     public ActionItemBuilder Target(ObjectBuilder value)
     {
         _target = value;
+        return this;
+    }
+
+    public ActionItemBuilder Location(NetworkObject value)
+    {
+        return this.Location(value.AsObjectBuilder());
+    }
+
+    public ActionItemBuilder Location(ObjectBuilder value)
+    {
+        _location = value;
+        return this;
+    }
+
+    public ActionItemBuilder Published(DateTimeOffset? value, bool overwrite = true)
+    {
+        if (overwrite)
+            _published = value;
+        else
+            _published ??= value;
         return this;
     }
 

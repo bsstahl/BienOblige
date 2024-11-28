@@ -8,7 +8,7 @@ public class ObjectBuilder
 {
     private Uri? _id;
     private List<string> _objectTypes = new();
-    private List<KeyValuePair<string?, string>> _context = Constants.Context.Default;
+    private List<KeyValuePair<string?, string>>? _context;
     private List<ObjectBuilder> _attachmentBuilders = new();
     private ObjectBuilder? _attributedToBuilder;
     private ObjectBuilder? _audienceBuilder;
@@ -40,42 +40,40 @@ public class ObjectBuilder
     {
         ArgumentNullException.ThrowIfNull(_id, nameof(_id));
 
-        return !_context.Any()
-            ? throw new ArgumentException("A context must be specified.", nameof(_context))
-                : !_objectTypes.Any()
-                    ? throw new InvalidOperationException("An object type must be specified.")
-                    : new NetworkObject
-                    {
-                        ObjectId = _id,
-                        ObjectType = _objectTypes,
-                        Attachments = _attachmentBuilders.Build(),
-                        AttributedTo = _attributedToBuilder?.Build(),
-                        Audience = _audienceBuilder?.Build(),
-                        Bcc = _bccBuilders.Build(),
-                        Bto = _btoBuilder?.Build(),
-                        Cc = _ccBuilder?.Build(),
-                        Content = _content,
-                        Context = _context,
-                        Duration = _duration,
-                        EndTime = _endTime,
-                        Generator = _generatorBuilder?.Build(),
-                        Icon = _iconBuilder?.Build(),
-                        Image = _imageBuilder?.Build(),
-                        InReplyTo = _inReplyToBuilders.Build(),
-                        Location = _locationBuilders.Build(),
-                        MediaType = _mediaType?.ToString(),
-                        Name = _name,
-                        Preview = _previewBuilder?.Build(),
-                        Published = _published,
-                        Replies = _repliesBuilders.Build(),
-                        StartTime = _startTime,
-                        Summary = _summary,
-                        Tags = _tagBuilders.Build(),
-                        To = _toBuilder?.Build(),
-                        LastUpdatedAt = _updated,
-                        Url = _urls,
-                        AdditionalProperties = _additionalProperties
-                    };
+        return !_objectTypes.Any()
+            ? throw new InvalidOperationException("An object type must be specified.")
+            : new NetworkObject
+            {
+                ObjectId = _id,
+                ObjectType = _objectTypes,
+                Attachments = _attachmentBuilders.Build(),
+                AttributedTo = _attributedToBuilder?.Build(),
+                Audience = _audienceBuilder?.Build(),
+                Bcc = _bccBuilders.Build(),
+                Bto = _btoBuilder?.Build(),
+                Cc = _ccBuilder?.Build(),
+                Content = _content,
+                Context = _context,
+                Duration = _duration,
+                EndTime = _endTime,
+                Generator = _generatorBuilder?.Build(),
+                Icon = _iconBuilder?.Build(),
+                Image = _imageBuilder?.Build(),
+                InReplyTo = _inReplyToBuilders.Build(),
+                Location = _locationBuilders.Build(),
+                MediaType = _mediaType?.ToString(),
+                Name = _name,
+                Preview = _previewBuilder?.Build(),
+                Published = _published,
+                Replies = _repliesBuilders.Build(),
+                StartTime = _startTime,
+                Summary = _summary,
+                Tags = _tagBuilders.Build(),
+                To = _toBuilder?.Build(),
+                LastUpdatedAt = _updated,
+                Url = _urls,
+                AdditionalProperties = _additionalProperties
+            };
     }
 
     public ObjectBuilder AddContext(string? key, string value)
@@ -83,15 +81,19 @@ public class ObjectBuilder
         return this.AddContext([new KeyValuePair<string?, string>(key, value)]);
     }
 
-    public ObjectBuilder AddContext(IEnumerable<KeyValuePair<string?, string>> values)
+    public ObjectBuilder AddContext(IEnumerable<KeyValuePair<string?, string>>? values)
     {
-        _context.AddRange(values);
+        if (values?.Any() ?? false)
+        {
+            _context ??= new();
+            _context.AddRange(values);
+        }
         return this;
     }
 
     public ObjectBuilder ClearContext()
     {
-        _context.Clear();
+        _context = null;
         return this;
     }
 
@@ -103,6 +105,11 @@ public class ObjectBuilder
     public ObjectBuilder Id(string id)
     {
         return this.Id(new Uri(id));
+    }
+
+    public ObjectBuilder Id(NetworkIdentity id)
+    {
+        return this.Id(id.Value);
     }
 
     public ObjectBuilder Id(Uri id)

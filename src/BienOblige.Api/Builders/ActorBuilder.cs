@@ -9,6 +9,9 @@ public class ActorBuilder
     private ActorType? _actorType;
     private string? _name;
 
+    private List<KeyValuePair<string?, string>>? _context;
+    private Dictionary<string, object> _additionalProperties = new();
+
     public Actor Build()
     {
         ArgumentNullException.ThrowIfNull(_id);
@@ -18,8 +21,33 @@ public class ActorBuilder
         { 
             Id = _id.ToString(),
             ActorType = _actorType.Value.ToString(),
-            Name = _name
+            Context = _context,
+            Name = _name,
+            AdditionalProperties = _additionalProperties
         };
+    }
+
+    public ActorBuilder ClearContext()
+    {
+        _context = null;
+        return this;
+    }
+
+    public ActorBuilder AddContext(string? key, string value)
+    {
+        _context ??= new();
+        _context.Add(new KeyValuePair<string?, string>(key, value));
+        return this;
+    }
+
+    public ActorBuilder AddContext(IEnumerable<KeyValuePair<string?, string>>? context)
+    {
+        if (context?.Any() ?? false)
+        {
+            _context ??= new();
+            _context.AddRange(context);
+        }
+        return this;
     }
 
     public ActorBuilder Id(Guid value)

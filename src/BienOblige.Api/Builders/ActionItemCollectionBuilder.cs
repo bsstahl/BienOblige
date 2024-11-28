@@ -1,27 +1,41 @@
 ﻿using BienOblige.Api.Entities;
+using BienOblige.Api.Enumerations;
 
 namespace BienOblige.Api.Builders;
 
-public class ActionItemCollectionBuilder
+public class ActionItemCollectionBuilder : List<ActionItemBuilder>
 {
-    private readonly List<ActionItemBuilder> _builders = new();
-
-    public IEnumerable<ActionItem> Build(Uri? parentId = null)
+    public IEnumerable<ActionItem> Build(ActivityType parentActivityType)
     {
-        if (parentId is not null)
-            _builders.ToList().ForEach(x => x.Parent(parentId));
-        return _builders.SelectMany(x => x.Build());
+        return this.SelectMany(x => x.Build(parentActivityType));
     }
 
-    public ActionItemCollectionBuilder Add(ActionItemBuilder builder)
+    public IEnumerable<ActionItemBuilder> GetAllBuilders(ActionItemBuilder? parentBuilder = null)
     {
-        _builders.Add(builder);
+        return this.SelectMany(x => x.GetAllBuilders(parentBuilder));
+    }
+
+    public new ActionItemCollectionBuilder Add(ActionItemBuilder builder)
+    {
+        base.Add(builder);
         return this;
     }
 
     public ActionItemCollectionBuilder AssignIds(Uri instanceBaseUri)
     {
-        _builders.ToList().ForEach(b => b.AssignId(instanceBaseUri));
+        this.ToList().ForEach(b => b.AssignId(instanceBaseUri));
+        return this;
+    }
+
+    public ActionItemCollectionBuilder Parent(Uri parentId)
+    {
+        this.ToList().ForEach(b => b.Parent(parentId));
+        return this;
+    }
+
+    public ActionItemCollectionBuilder Published(DateTimeOffset? published, bool overwrite = true)
+    {
+        this.ToList().ForEach(b => b.Published(published, overwrite));
         return this;
     }
 }

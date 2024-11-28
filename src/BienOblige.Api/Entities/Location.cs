@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace BienOblige.Api.Entities;
 
-public class Actor
+public class Location
 {
     [JsonPropertyName("@context")]
     [JsonConverter(typeof(ContextConverter))]
@@ -14,9 +14,10 @@ public class Actor
     public required string Id { get; set; }
 
     [JsonPropertyName("@type")]
-    public required string ActorType { get; set; }
+    public string ObjectType { get; set; } = "Location";
 
     [JsonPropertyName("name")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? Name { get; set; }
 
     [JsonExtensionData]
@@ -33,7 +34,7 @@ public class Actor
         return new ObjectBuilder()
             .AddContext(this.Context)
             .Id(this.Id)
-            .AddObjectType(this.ActorType)
+            .AddObjectType(this.ObjectType)
             .Name(this.Name)
             .AddAdditionalProperties(this.AdditionalProperties);
     }

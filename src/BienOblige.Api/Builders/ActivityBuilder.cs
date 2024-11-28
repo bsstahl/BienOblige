@@ -1,11 +1,12 @@
 ﻿using BienOblige.Api.Entities;
 using BienOblige.Api.Enumerations;
+using BienOblige.Api.ValueObjects;
 
 namespace BienOblige.Api.Builders;
 
 public class ActivityBuilder
 {
-    private List<KeyValuePair<string?, string>> _context = Constants.Context.Default;
+    private List<KeyValuePair<string?, string>>? _context;
 
     private Uri? _correlationId;
     private ActivityType? _activityType;
@@ -27,46 +28,49 @@ public class ActivityBuilder
 
     public Activity Build()
     {
+        ArgumentNullException.ThrowIfNull(_actionItemBuilder, nameof(_actionItemBuilder));
         ArgumentNullException.ThrowIfNull(_activityType, nameof(_activityType));
         ArgumentNullException.ThrowIfNull(_actorBuilder, nameof(_actorBuilder));
 
+        // Assign default values where needed
+        _context ??= Constants.Context.Default;
         _correlationId ??= new Uri($"{_instanceBaseUri}/Activity/{Guid.NewGuid()}");
-
-        // Assign an Id to the ActionItem if needed
-        _actionItemBuilder?.AssignId(_instanceBaseUri);
-
-        var actionItem = _actionItemBuilder?.Build().Single();
-        if (actionItem is null)
-            throw new ArgumentNullException($"An ActionItem must be supplied");
-
-        // Define the published date anywhere it isn't set
+        _actionItemBuilder.AssignId(_instanceBaseUri);
         _published ??= DateTimeOffset.UtcNow;
-        actionItem.Published ??= _published;
+        _actionItemBuilder.Published(_published, overwrite: false);
 
-        var updatingActor = _actorBuilder.Build();
-
-        // Create an Activity for each ActionItem
-        return new Activity()
+        var activity = new Activity()
         {
-            Id = new Uri($"{_instanceBaseUri}Activity/{Guid.NewGuid()}"),
+            Id = NetworkIdentity.From(_instanceBaseUri.ToString(), 
+                nameof(Activity), Guid.NewGuid().ToString()).Value,
             Context = _context,
             CorrelationId = _correlationId,
             ActivityType = _activityType.Value.ToString(),
-            Actor = updatingActor,
-            ActionItem = actionItem,
+            Actor = _actorBuilder.Build(),
+            ActionItem = _actionItemBuilder.Build(_activityType.Value).Single(),
             Published = _published
         };
+
+        return activity;
     }
 
     public ActivityBuilder ClearContext()
     {
-        _context.Clear();
+        _context = null;
         return this;
     }
 
     public ActivityBuilder AddContext(string key, string value)
     {
+        _context ??= new();
         _context.Add(new KeyValuePair<string?, string>(key, value));
+        return this;
+    }
+
+    public ActivityBuilder AddContext(IEnumerable<KeyValuePair<string?, string>> context)
+    {
+        _context ??= new();
+        _context.AddRange(context);
         return this;
     }
 
@@ -86,7 +90,7 @@ public class ActivityBuilder
         return this;
     }
 
-    public ActivityBuilder ActivityType(ActivityType value)
+    public ActivityBuilder ActivityType(ActivityType? value)
     {
         _activityType = value;
         return this;
@@ -98,7 +102,7 @@ public class ActivityBuilder
         return this;
     }
 
-    public ActivityBuilder Published(DateTimeOffset value)
+    public ActivityBuilder Published(DateTimeOffset? value)
     {
         _published = value;
         return this;
@@ -110,4 +114,21 @@ public class ActivityBuilder
         return this;
     }
 
+    public ActivityBuilder AssignToLocation(NetworkIdentity actionItemId, LocationBuilder locationBuilder)
+    {
+        return this.AssignToLocation(actionItemId, locationBuilder.Build());
+    }
+
+    public ActivityBuilder AssignToLocation(NetworkIdentity actionItemId, Location location)
+    {
+        return this.AssignToLocation(actionItemId.Value, location.AsObjectBuilder());
+    }
+
+    public ActivityBuilder AssignToLocation(Uri actionItemId, ObjectBuilder locationBuilder)
+    {
+        _actionItemBuilder = new ActionItemBuilder()
+            .Id(actionItemId)
+            .Location(locationBuilder);
+        return this;
+    }
 }

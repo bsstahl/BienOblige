@@ -5,7 +5,7 @@ namespace BienOblige.Api.Builders;
 
 public class ActivitiesCollectionBuilder
 {
-    private List<KeyValuePair<string?, string>> _context = Constants.Context.Default;
+    private List<KeyValuePair<string?, string>>? _context;
 
     private Uri? _correlationId;
     private ActivityType? _activityType;
@@ -15,6 +15,7 @@ public class ActivitiesCollectionBuilder
     private ActionItemCollectionBuilder _actionItemCollectionBuilder = new();
 
     private readonly Uri _instanceBaseUri;
+
 
     public ActivitiesCollectionBuilder()
         : this(new Uri(Constants.Path.DefaultBaseUri))
@@ -31,42 +32,41 @@ public class ActivitiesCollectionBuilder
         ArgumentNullException.ThrowIfNull(_actorBuilder, nameof(_actorBuilder));
 
         _correlationId ??= new Uri($"{_instanceBaseUri}/Activity/{Guid.NewGuid()}");
+        _context ??= Constants.Context.Default;
 
         // Assign Id's to all ActionItems
         _actionItemCollectionBuilder.AssignIds(_instanceBaseUri);
 
-        var actionItems = new List<ActionItem>(_actionItemCollectionBuilder.Build());
-        // actionItems.AddRange(_actionItems);
-        if (!actionItems.Any())
+        if (!_actionItemCollectionBuilder.Any())
             throw new ArgumentNullException($"At least 1 ActionItem must be supplied");
 
         // Define the published date anywhere it isn't set
         _published ??= DateTimeOffset.UtcNow;
-        actionItems.ToList().ForEach(i => i.Published ??= _published);
+        _actionItemCollectionBuilder.Published(_published, overwrite: false);
 
-        var updatingActor = _actorBuilder.Build();
+        var actionItemBuilders = _actionItemCollectionBuilder.GetAllBuilders();
 
         // Create an Activity for each ActionItem
-        return actionItems.Select(x => new Activity()
-        {
-            Id = new Uri($"{_instanceBaseUri}Activity/{Guid.NewGuid()}"),
-            Context = _context,
-            CorrelationId = _correlationId,
-            ActivityType = _activityType.Value.ToString(),
-            Actor = updatingActor,
-            ActionItem = x,
-            Published = _published
-        });
+        return actionItemBuilders.Select(x => new ActivityBuilder()
+            .AddContext(_context)
+            .CorrelationId(_correlationId)
+            .ActivityType(_activityType)
+            .Actor(_actorBuilder)
+            .ActionItem(x)
+            .Published(_published)
+            .Build())
+        .ToList();
     }
 
     public ActivitiesCollectionBuilder ClearContext()
     {
-        _context.Clear();
+        _context = null;
         return this;
     }
 
     public ActivitiesCollectionBuilder AddContext(string key, string value)
     {
+        _context ??= new();
         _context.Add(new KeyValuePair<string?, string>(key, value));
         return this;
     }
