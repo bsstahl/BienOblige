@@ -26,18 +26,19 @@ public class APIClient_ActivitiesPublish_Should
     public async Task RespondWithSuccessResults()
     {
         // TODO: Add content
-        var content = new Api.Builders.ActivitiesCollectionBuilder()
+        var content = new ActivitiesCollectionBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
-            .Actor(new Api.Builders.ActorBuilder()
+            .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())
                 .ActorType(Api.Enumerations.ActorType.Application)
                 .Name("MyTaskSystem"))
-            .ActionItems(new Api.Builders.ActionItemCollectionBuilder()
-                .Add(new Api.Builders.ActionItemBuilder().UseRandomValues()))
+            .ActionItems(new ActionItemCollectionBuilder()
+                .Add(new ActionItemBuilder()
+                    .UseRandomValues()))
             .Build();
 
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Service");
+        var (logger, config, httpClient) = this.App.GetRequiredServices<APIClient_ActivitiesPublish_Should>(Guid.NewGuid(), Guid.NewGuid(), "Service");
         var client = new ApiClient.Activities(logger, config, httpClient);
         
         var serialized = JsonSerializer.Serialize(content);
@@ -55,29 +56,36 @@ public class APIClient_ActivitiesPublish_Should
         var itemCount = 10.GetRandom(3);
         var aiCollectionBuilder = new ActionItemCollectionBuilder();
         for (var i = 0; i < itemCount; i++)
-            aiCollectionBuilder.Add(new Api.Builders.ActionItemBuilder()
+            aiCollectionBuilder.Add(new ActionItemBuilder()
                 .UseRandomValues());
 
-        var content = new Api.Builders.ActivitiesCollectionBuilder()
+        var content = new ActivitiesCollectionBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
-            .Actor(new Api.Builders.ActorBuilder()
+            .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())
                 .ActorType(Api.Enumerations.ActorType.Application)
                 .Name("MyTaskSystem"))
             .ActionItems(aiCollectionBuilder)
             .Build();
 
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Service");
-        var client = new ApiClient.Activities(logger, config, httpClient);
+        var (logger, config, httpClient) = this.App.GetRequiredServices<APIClient_ActivitiesPublish_Should>(Guid.NewGuid(), Guid.NewGuid(), "Service");
 
-        var serialized = JsonSerializer.Serialize(content);
-        logger.LogInformation("Publishing activities: {@Activities}", serialized);
-        var response = await client.Publish(content);
-        logger.LogInformation("Response: {@Response}", response);
+        using (logger.BeginScope(new Dictionary<string, object>
+        {
+            { "Method", "BienOblige.ApiService.IntegrationTest.APIClient_ActivitiesPublish_Should.RespondWithASuccessResultForEachActionItem" }
+        }))
+        {
+            var client = new ApiClient.Activities(logger, config, httpClient);
 
-        Assert.Equal(itemCount, response.Count(r => r.SuccessfullyPublished));
-    }
+            var serialized = JsonSerializer.Serialize(content);
+            logger.LogInformation("Publishing activities: {@Activities}", serialized);
+            var response = await client.Publish(content);
+            logger.LogInformation("Response: {@Response}", response);
+
+            Assert.Equal(itemCount, response.Count(r => r.SuccessfullyPublished));
+
+        }    }
 
     [Fact]
     public async Task CreateAParentChildRelationshipBetweenActionItems()
@@ -100,18 +108,25 @@ public class APIClient_ActivitiesPublish_Should
             .ActionItems(actionItems)
             .Build();
 
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Service");
-        var client = new ApiClient.Activities(logger, config, httpClient);
+        var (logger, config, httpClient) = this.App.GetRequiredServices<APIClient_ActivitiesPublish_Should>(Guid.NewGuid(), Guid.NewGuid(), "Service");
 
-        var serialized = JsonSerializer.Serialize(content);
-        logger.LogInformation("Publishing activities: {@Activities}", serialized);
-        var response = await client.Publish(content);
-        logger.LogInformation("Response: {@Response}", response);
+        using (logger.BeginScope(new Dictionary<string, object>
+        {
+            { "Method", "BienOblige.ApiService.IntegrationTest.APIClient_ActivitiesPublish_Should.CreateAParentChildRelationshipBetweenActionItems" }
+        }))
+        {
+            var client = new ApiClient.Activities(logger, config, httpClient);
 
-        // The child item's ParentId should be the parent item's Id
-        var actualChild = response.Single(r => r.Activity.ActionItem.Parent is not null).Activity.ActionItem;
-        var actualParent = response.Single(r => r.Activity.ActionItem.Parent is null).Activity.ActionItem;
-        Assert.Equal(actualChild.Parent, actualParent.Id);
-    }
+            var serialized = JsonSerializer.Serialize(content);
+            logger.LogInformation("Publishing activities: {@Activities}", serialized);
+            var response = await client.Publish(content);
+            logger.LogInformation("Response: {@Response}", response);
+
+            // The child item's ParentId should be the parent item's Id
+            var actualChild = response.Single(r => r.Activity.ActionItem.Parent is not null).Activity.ActionItem;
+            var actualParent = response.Single(r => r.Activity.ActionItem.Parent is null).Activity.ActionItem;
+            Assert.Equal(actualChild.Parent, actualParent.Id);
+
+        }    }
 
 }

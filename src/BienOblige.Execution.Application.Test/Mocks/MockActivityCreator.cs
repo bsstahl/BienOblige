@@ -31,7 +31,7 @@ internal class MockActivityCreator(ILogger<MockActivityCreator> logger, IService
                     if (!actionItem.Id.Equals(p.ActionItem.Id))
                         throw new ArgumentException($"Incorrect ActionItem Id: Expected '{actionItem.Id}' but got '{p.ActionItem.Id}'");
 
-                    if (!correlationId.Equals(p.Id))
+                    if (!correlationId.Equals(p.CorrelationId))
                         throw new ArgumentException($"Incorrect Correlation Id: Expected '{correlationId}' but got '{p.Id}'");
 
                     if (!updatingActor.Id.Equals(p.Actor.Id))

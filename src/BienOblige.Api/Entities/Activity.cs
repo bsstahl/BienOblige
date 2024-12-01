@@ -12,7 +12,8 @@ public class Activity
     public required Uri Id { get; set; }
 
     [JsonPropertyName("bienoblige:correlationId")]
-    public required Uri CorrelationId { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Uri? CorrelationId { get; set; }
 
     [JsonPropertyName("@type")]
     public required string ActivityType { get; set; }

@@ -6,4 +6,12 @@ public static class WebApplicationExtensions
     {
         app.UseMiddleware<Middleware.BearerTokenAuthentication>();
     }
+
+    public static void UseBienObligeValidation(this IApplicationBuilder app)
+    {
+        app
+            .UseMiddleware<Middleware.ValidateActivityCollection>()
+            .UseMiddleware<Middleware.PostDataValidation>();
+    }
+
 }

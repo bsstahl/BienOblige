@@ -9,7 +9,7 @@ internal class MockHttpClient : HttpClient
 {
     private MockHttpMessageHandler _mockHttpMessageHandler;
 
-    public IEnumerable<HttpRequestMessage> Requests => _mockHttpMessageHandler.Requests;
+    public IEnumerable<HttpContent> Requests => _mockHttpMessageHandler.RequestContent;
 
     public string JsonRequestMessages
     {
@@ -18,11 +18,11 @@ internal class MockHttpClient : HttpClient
             var result = new List<string>();
             foreach (var request in this.Requests)
             {
-                var task = request.Content?.ReadAsStringAsync() ?? Task.FromResult(string.Empty);
+                var task = request.ReadAsStringAsync() ?? Task.FromResult(string.Empty);
                 task.Wait();
                 result.Add(task.Result);
             }
-            return $"[{string.Join(",", result)}]";
+            return $"{string.Join(",", result)}";
         }
     }
 

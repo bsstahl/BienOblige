@@ -55,6 +55,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BienOblige.ApiService.Test", "BienOblige.ApiService.Test\BienOblige.ApiService.Test.csproj", "{576F63E7-33B5-4E5D-AB80-48DF1DD55BC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,10 @@ Global
 		{6F51BBD6-0B44-4492-A105-D434BAC6E127}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F51BBD6-0B44-4492-A105-D434BAC6E127}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F51BBD6-0B44-4492-A105-D434BAC6E127}.Release|Any CPU.Build.0 = Release|Any CPU
+		{576F63E7-33B5-4E5D-AB80-48DF1DD55BC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{576F63E7-33B5-4E5D-AB80-48DF1DD55BC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{576F63E7-33B5-4E5D-AB80-48DF1DD55BC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{576F63E7-33B5-4E5D-AB80-48DF1DD55BC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +162,7 @@ Global
 		{BA8E2401-097D-499C-9C5D-3546C35D2307} = {2865EDF1-3B8A-4050-B424-116413337694}
 		{AAFAF8E8-83D2-40D7-BE41-091EFAFDA220} = {7B082690-2EA6-439E-986F-A0C68B5CB968}
 		{6F51BBD6-0B44-4492-A105-D434BAC6E127} = {7881CA14-4432-418D-A6C9-1579518D5542}
+		{576F63E7-33B5-4E5D-AB80-48DF1DD55BC1} = {7881CA14-4432-418D-A6C9-1579518D5542}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F93FA578-CDB9-4E04-991F-36B56AB2DAB7}

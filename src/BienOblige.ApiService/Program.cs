@@ -25,12 +25,9 @@ app.CreateTopicIfNotExist(BienOblige.Execution.Data.Kafka.Constants.Topics.Comma
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
-// Custom HTTP request pipeline components.
-//app.UseCorrelation();
-//app.ValidateMetadata();
-//app.ValidateActionItem();
-
+// TODO: Restore Custom HTTP request pipeline components.
 app.UseBearerTokenAuthentication();
+app.UseBienObligeValidation();
 
 // Enable attribute based routing
 app.UseRouting();

@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BienOblige.ActivityStream\BienOblige.ActivityStream.csproj" />
+		<ProjectReference Include="..\BienOblige.ApiClient\BienOblige.ApiClient.csproj" />
 		<ProjectReference Include="..\BienOblige.Api\BienOblige.Api.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution.Application\BienOblige.Execution.Application.csproj" />
 		<ProjectReference Include="..\BienOblige.Execution.Data.Kafka\BienOblige.Execution.Data.Kafka.csproj" />

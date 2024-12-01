@@ -45,8 +45,8 @@ public class DistributedApplicationFixture : IAsyncLifetime
             ArgumentNullException.ThrowIfNull(this.AppHost, nameof(this.AppHost));
 
             this.AppHost.Services.AddLogging(h =>
-                h.AddXUnit(output)
-                .SetMinimumLevel(LogLevel.Trace));
+                h.AddXUnit(output).SetMinimumLevel(LogLevel.Information)
+                .AddSeq());
 
             _isConfigured = true;
         }

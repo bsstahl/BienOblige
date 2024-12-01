@@ -15,6 +15,9 @@ public class Activity
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
+    [JsonPropertyName("bienoblige:correlationId")]
+    public required string CorrelationId { get; set; }
+
     [JsonPropertyName("actor")]
     public required Actor Actor { get; set; }
 
@@ -26,13 +29,14 @@ public class Activity
 
 
     [JsonExtensionData]
-    public Dictionary<string, JsonElement> ExtensionData { get; set; } = new();
+    public Dictionary<string, JsonElement> AdditionalProperties { get; set; } = new();
 
     public ActivityStream.Aggregates.Activity AsAggregate()
     {
         return new ActivityStream.Aggregates.Activity()
         {
             Id = ActivityStream.ValueObjects.NetworkIdentity.From(this.Id),
+            CorrelationId = ActivityStream.ValueObjects.NetworkIdentity.From(this.CorrelationId),
             ActivityType = this.Type.AsActivityType(),
             Actor = this.Actor.AsAggregate(),
             ActionItem = this.ActionItem.AsAggregate(),
@@ -47,10 +51,12 @@ public class Activity
         var activityType = activity.ActivityType.ToString();
         var actor = Actor.From(activity.Actor);
         var actionItem = ActionItem.From(activity.ActionItem);
+        var correlationId = activity.CorrelationId.Value.ToString();
 
         return new Activity()
         {
             Id = id,
+            CorrelationId = correlationId,
             Type = activityType,
             Actor = actor,
             ActionItem = actionItem,

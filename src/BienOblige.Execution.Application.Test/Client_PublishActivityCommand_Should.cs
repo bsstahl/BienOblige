@@ -54,6 +54,7 @@ public class Client_PublishActivityCommand_Should
         var activity = new Activity()
         {
             Id = NetworkIdentity.New(),
+            CorrelationId = NetworkIdentity.New(),
             ActivityType = ActivityType.Update,
             Actor = updatingActor,
             ActionItem = null!,
@@ -73,10 +74,10 @@ public class Client_PublishActivityCommand_Should
             .UseRandomValues()
             .Build();
 
-        var correlationId = Guid.NewGuid().ToString();
         var activity = new Activity()
         {
-            Id = NetworkIdentity.New(), 
+            Id = NetworkIdentity.New(),
+            CorrelationId = NetworkIdentity.New(),
             ActivityType = ActivityType.Update,
             Actor = null!,
             ActionItem = item, 
@@ -109,7 +110,8 @@ public class Client_PublishActivityCommand_Should
 
         var activity = new Activity()
         {
-            Id = correlationId, 
+            Id = NetworkIdentity.New(),
+            CorrelationId = correlationId, 
             ActivityType = activityType,
             Actor = updatingActor, 
             ActionItem = item, 

@@ -1,4 +1,5 @@
-﻿using BienOblige.Api.ValueObjects;
+﻿using BienOblige.Api.Entities;
+using BienOblige.ApiClient;
 using Moq;
 using Moq.Protected;
 using System.Diagnostics.CodeAnalysis;
@@ -11,8 +12,8 @@ namespace BienOblige.Api.Test.Mocks;
 [ExcludeFromCodeCoverage]
 public class MockHttpMessageHandler : Mock<HttpMessageHandler>
 {
-    private readonly List<HttpRequestMessage> _requests = new();
-    public IEnumerable<HttpRequestMessage> Requests => _requests;
+    private readonly List<HttpContent> _requestContent = new();
+    public IEnumerable<HttpContent> RequestContent => _requestContent;
 
     public MockHttpMessageHandler()
     {
@@ -23,63 +24,65 @@ public class MockHttpMessageHandler : Mock<HttpMessageHandler>
                 ItExpr.IsAny<CancellationToken>())
             .Callback<HttpRequestMessage, CancellationToken>((request, token) =>
             {
-                _requests.Add(request);
+                try
+                {
+                    // If the request is for a singular activity, it will be wrapped in an array
+                    var requestContentTask = request.Content?.ReadAsStringAsync() ?? Task.FromResult("[]");
+                    requestContentTask.Wait();
+                    var requestContent = requestContentTask.Result;
+
+                    var activity = JsonSerializer.Deserialize<Activity>(requestContent);
+                    _requestContent.Add(new StringContent($"[{requestContent}]"));
+                }
+                catch (Exception)
+                {
+                    _requestContent.Add(request.Content);
+                }
             })
             .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
             {
-                var a = JsonSerializer.Deserialize<NetworkObjectProxy>(request.Content?.ReadAsStringAsync()?.Result ?? "{}");
-                var ai = JsonSerializer.Deserialize<NetworkObjectProxy>(a?.ExtensionData["object"].ToString() ?? "{}");
+                var requestContent = request.Content?.ReadAsStringAsync()?.Result ?? "{}";
+                var activities = JsonSerializer.Deserialize<IEnumerable<Activity>>(requestContent)
+                    ?? Array.Empty<Activity>();
 
-                if (ai.ExtensionData.TryGetValue("shouldThrow", out var shouldThrowValue))
-                    ThrowException(shouldThrowValue);
+                var publicationResults = new List<PublicationResult>();
+                foreach (var activity in activities)
+                    publicationResults.Add(GetPublicationResponse(activity));
 
-                var shouldFail = ai.ExtensionData.TryGetValue("shouldFail", out var shouldFailValue)
-                    ? bool.TryParse(shouldFailValue.ToString(), out var shouldFailParsed) ? shouldFailParsed : false
-                    : false;
-                var statusCode = shouldFail ? HttpStatusCode.BadRequest : HttpStatusCode.Accepted;
-                var content = shouldFail
-                    ? new StringContent("An error has occurred")
-                    : new StringContent(JsonSerializer.Serialize(
-                        new Messages.ActivityPublicationResponse(
-                            NetworkIdentity.New().ToString(),
-                            ai?.ExtensionData["id"].ToString())));
+                var activityContent = new StringContent(JsonSerializer
+                    .Serialize(publicationResults));
 
                 return new HttpResponseMessage()
                 {
-                    StatusCode = statusCode,
-                    Content = content
+                    StatusCode = GetOverallStatus(publicationResults),
+                    Content = activityContent
                 };
             });
 
     }
 
-    public static void ThrowException(object? exceptionTypes)
+    private static HttpStatusCode GetOverallStatus(IEnumerable<PublicationResult> publicationResults)
     {
-        var exceptionTypeNames = exceptionTypes?.ToString()?.Split(';');
-        var outerExceptionName = exceptionTypeNames?.First();
-
-        if (!string.IsNullOrWhiteSpace(outerExceptionName))
-        {
-            Exception? innerException = null;
-            var innerNames = exceptionTypeNames?.Skip(1);
-            if (innerNames?.Any() ?? false)
-            {
-                var innerExceptionName = innerNames.First();
-                var innerExceptionType = Type.GetType(innerExceptionName);
-
-                if ((innerExceptionType is not null) && typeof(Exception).IsAssignableFrom(innerExceptionType))
-                    innerException = (Exception)Activator.CreateInstance(innerExceptionType)!;
-            }
-
-            Type? exceptionType = Type.GetType(outerExceptionName);
-            if ((exceptionType is not null) && typeof(Exception).IsAssignableFrom(exceptionType))
-                throw (Exception)Activator.CreateInstance(exceptionType, "This is a test exception", innerException)!;
-        }
+        return publicationResults.All(r => r.SuccessfullyPublished)
+            ? HttpStatusCode.Accepted
+            : publicationResults.All(r => !r.SuccessfullyPublished)
+                ? HttpStatusCode.BadRequest
+                : HttpStatusCode.MultiStatus;
     }
 
-    private class NetworkObjectProxy
+    private static PublicationResult GetPublicationResponse(Activity activity)
     {
-        [JsonExtensionData]
-        public Dictionary<string, object> ExtensionData { get; set; } = new();
+        ArgumentNullException.ThrowIfNull(activity, nameof(activity));
+
+        var actionItem = activity?.ActionItem ?? throw new ArgumentException("Invalid ActionItem");
+        var shouldFail = (actionItem?.AdditionalProperties.TryGetValue("shouldFail", out var shouldFailValue) ?? false)
+            ? bool.TryParse(shouldFailValue.ToString(), out var shouldFailParsed) ? shouldFailParsed : false
+            : false;
+        var statusCode = shouldFail ? HttpStatusCode.BadRequest : HttpStatusCode.Accepted;
+
+        return shouldFail
+            ? new PublicationResult(activity, ["An error has occurred"])
+            : new PublicationResult(activity);
     }
+
 }

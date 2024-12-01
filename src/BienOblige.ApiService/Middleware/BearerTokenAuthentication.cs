@@ -1,4 +1,6 @@
-﻿namespace BienOblige.ApiService.Middleware;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace BienOblige.ApiService.Middleware;
 
 public class BearerTokenAuthentication
 {
@@ -24,9 +26,14 @@ public class BearerTokenAuthentication
         }
         else
         {
-            var response = context.Response;
-            response.StatusCode = 401;
-            await response.WriteAsync("Unauthorized");
+            context.Response.StatusCode = 401;
+            await context.Response.WriteAsJsonAsync(new ProblemDetails()
+            {
+                Title = "Unauthorized",
+                Detail = "Bearer token is missing or invalid",
+                Status = 401,
+                Instance = context.Request.Path
+            });
         }
     }
 

@@ -71,6 +71,7 @@ public class Activities_Publish_Should
         var actual = httpClient.ActivityRequests;
         Assert.NotNull(actual);
         Assert.Single(actual);
+        Assert.Equal(activity.Id, actual.Single().Id);
     }
 
     [Fact]
@@ -109,7 +110,7 @@ public class Activities_Publish_Should
             ?? throw new InvalidOperationException("No Mock HttpClient found");
         
         var logger = _services.GetRequiredService<ILogger<Activities_Publish_Should>>();
-        logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
+        logger.LogInformation("Activity Request: {@Activities}", httpClient.JsonRequestMessages);
 
         // Assert
         var actual = httpClient.ActivityRequests;
@@ -155,66 +156,82 @@ public class Activities_Publish_Should
                     )))))
             .Build();
 
-        // Act
-        var client = _services.GetRequiredService<ApiClient.Activities>();
-        var response = await client.Publish(activities);
-
-        // Log Activity
-        var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient 
-            ?? throw new InvalidOperationException("No Mock HttpClient found");
         var logger = _services.GetRequiredService<ILogger<Activities_Publish_Should>>();
-        logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
 
-        // Assert
-        var actual = httpClient.ActivityRequests;
-        Assert.NotNull(actual);
-        Assert.Equal(4, actual.Count());
+        using (logger.BeginScope(new Dictionary<string, object>
+        {
+            { "Method", "BienOblige.Api.Test.Activities_Publish_Should.ProduceTheExpectedNumberOfActivities" }
+        }))
+        {
+            // Act
+            var client = _services.GetRequiredService<ApiClient.Activities>();
+            var response = await client.Publish(activities);
+
+            // Log Activity
+            var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient
+                ?? throw new InvalidOperationException("No Mock HttpClient found");
+            logger.LogInformation("Activity Request: {@Activities}", httpClient.JsonRequestMessages);
+
+            // Assert
+            var actual = httpClient.ActivityRequests;
+            Assert.NotNull(actual);
+            Assert.Equal(4, actual.Count());
+
+        }   
     }
 
     [Fact]
     public async Task ProperlyReturnTheResults()
     {
-        // Arrange
-        var activities = new ActivitiesCollectionBuilder()
-            .CorrelationId(Guid.NewGuid())
-            .ActivityType(Api.Enumerations.ActivityType.Create)
-            .Actor(new ActorBuilder()
-                .Id(Guid.NewGuid())
-                .ActorType(Api.Enumerations.ActorType.Application)
-                .Name($"{this.GetType().Name}.{nameof(ProperlyReturnTheResults)}"))
-            .ActionItems(new ActionItemCollectionBuilder()
-                .Add(new ActionItemBuilder()
-                    .Id(Guid.NewGuid()) 
-                    .Name("ActionItem_1")
-                    .Content("ActionItem_1 content"))
-                .Add(new ActionItemBuilder()
-                    .Id(Guid.NewGuid())
-                    .AddAdditionalProperty("shouldFail", true)
-                    .Name("ActionItem_2")
-                    .Content("ActionItem_2 content"))
-                .Add(new ActionItemBuilder()
-                    .Name("ActionItem_3")
-                    .AddAdditionalProperty("shouldThrow", "System.ApplicationException")
-                    .Content("ActionItem_3 content"))
-                .Add(new ActionItemBuilder()
-                    .Name("ActionItem_4")
-                    .AddAdditionalProperty("shouldThrow", "System.InvalidOperationException;System.ArgumentNullException")
-                    .Content("ActionItem_4 content")))
-            .Build();
-        
-        // Act
-        var client = _services.GetRequiredService<ApiClient.Activities>();
-        var response = await client.Publish(activities);
-
-        // Log Results
         var logger = _services.GetRequiredService<ILogger<Activities_Publish_Should>>();
-        logger.LogInformation("Publication Results: {@PublicationResults}", JsonSerializer.Serialize(response));
 
-        // Assert - #2 should have an error code, #4 should have thrown an exception
-        Assert.True(response.First().SuccessfullyPublished);
-        Assert.False(response.Skip(1).First().SuccessfullyPublished);
-        Assert.False(response.Skip(2).First().SuccessfullyPublished);
-        Assert.False(response.Last().SuccessfullyPublished);
+        using (logger.BeginScope(new Dictionary<string, object>
+        {
+            { "Method", "BienOblige.Api.Test.Activities_Publish_Should.ProperlyReturnTheResults" }
+        }))
+        {
+            // Arrange
+            var activities = new ActivitiesCollectionBuilder()
+                .CorrelationId(Guid.NewGuid())
+                .ActivityType(Api.Enumerations.ActivityType.Create)
+                .Actor(new ActorBuilder()
+                    .Id(Guid.NewGuid())
+                    .ActorType(Api.Enumerations.ActorType.Application)
+                    .Name($"{this.GetType().Name}.{nameof(ProperlyReturnTheResults)}"))
+                .ActionItems(new ActionItemCollectionBuilder()
+                    .Add(new ActionItemBuilder()
+                        .Id(Guid.NewGuid())
+                        .Name("ActionItem_1")
+                        .Content("ActionItem_1 content"))
+                    .Add(new ActionItemBuilder()
+                        .Id(Guid.NewGuid())
+                        .AddAdditionalProperty("shouldFail", true)
+                        .Name("ActionItem_2")
+                        .Content("ActionItem_2 content"))
+                    .Add(new ActionItemBuilder()
+                        .Name("ActionItem_3")
+                        .AddAdditionalProperty("shouldFail", true)
+                        .Content("ActionItem_3 content"))
+                    .Add(new ActionItemBuilder()
+                        .Name("ActionItem_4")
+                        .Content("ActionItem_4 content")))
+                .Build();
+
+            logger.LogInformation("Activities: {Activities}", JsonSerializer.Serialize(activities));
+
+            // Act
+            var client = _services.GetRequiredService<ApiClient.Activities>();
+            var response = await client.Publish(activities);
+
+            // Log Results
+            logger.LogInformation("Publication Results: {@PublicationResults}", JsonSerializer.Serialize(response));
+
+            // Assert - #2 should have an error code, #3 should have thrown an exception
+            Assert.True(response.First().SuccessfullyPublished);
+            Assert.False(response.Skip(1).First().SuccessfullyPublished);
+            Assert.False(response.Skip(2).First().SuccessfullyPublished);
+            Assert.True(response.Last().SuccessfullyPublished);
+        }   
     }
 
     [Fact]

@@ -2,6 +2,7 @@
 using BienOblige.Api.Enumerations;
 using BienOblige.Api.Extensions;
 using BienOblige.Api.Interfaces;
+using BienOblige.Api.ValueObjects;
 
 namespace BienOblige.Api.Builders;
 
@@ -96,6 +97,12 @@ public class ActionItemBuilder
     public ActionItemBuilder Id(Uri value)
     {
         _id = value;
+        return this;
+    }
+
+    public ActionItemBuilder Id(NetworkIdentity value)
+    {
+        _id = value.Value;
         return this;
     }
 

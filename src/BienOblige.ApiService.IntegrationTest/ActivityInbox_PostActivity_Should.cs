@@ -2,7 +2,7 @@ using Aspire.Hosting;
 using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.Api.Builders;
 using BienOblige.Api.Entities;
-using BienOblige.Api.Messages;
+using BienOblige.ApiClient;
 using BienOblige.ApiService.IntegrationTest.Builders;
 using BienOblige.ApiService.IntegrationTest.Extensions;
 using BienOblige.ApiService.IntegrationTest.Fixtures;
@@ -14,14 +14,14 @@ using Xunit.Abstractions;
 namespace BienOblige.ApiService.IntegrationTest;
 
 [Collection("DistributedApplication")]
-public class ActivityInbox_Post_Should
+public class ActivityInbox_PostActivity_Should
 {
     private readonly DistributedApplicationFixture _appFixture;
 
     public DistributedApplication App => _appFixture.App;
 
-    public ActivityInbox_Post_Should(ITestOutputHelper output, DistributedApplicationFixture appFixture)
-    { 
+    public ActivityInbox_PostActivity_Should(ITestOutputHelper output, DistributedApplicationFixture appFixture)
+    {
         _appFixture = appFixture;
         _appFixture.Configure(output);
     }
@@ -29,7 +29,7 @@ public class ActivityInbox_Post_Should
     [Fact]
     public async Task RespondWithAnAcceptedResult()
     {
-        var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_Post_Should>(Guid.NewGuid(), Guid.NewGuid(), "Service");
+        var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_PostActivity_Should>(Guid.NewGuid(), Guid.NewGuid(), "Group");
 
         var activityType = Api.Enumerations.ActivityType.Create;
         var actionItem = new ActionItemBuilder()
@@ -45,7 +45,7 @@ public class ActivityInbox_Post_Should
             .Name("Acme Bird Feed")
             .Build();
 
-        var message = new Activity()
+        var activity = new Activity()
         {
             Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
@@ -54,7 +54,7 @@ public class ActivityInbox_Post_Should
             ActionItem = actionItem
         };
 
-        var content = JsonContent.Create(message);
+        var content = JsonContent.Create(activity);
 
         var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
 
@@ -68,7 +68,7 @@ public class ActivityInbox_Post_Should
     public async Task RespondWithTheSpecifiedCorrelationId()
     {
         var correlationGuid = Guid.NewGuid();
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(correlationGuid, Guid.NewGuid(), "Person");
+        var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_PostActivity_Should>(Guid.NewGuid(), Guid.NewGuid(), "Group");
 
         var activityType = Api.Enumerations.ActivityType.Create;
         var correlationId = NetworkIdentity.From(correlationGuid).Value;
@@ -84,7 +84,7 @@ public class ActivityInbox_Post_Should
             .Name("Acme Bird Feed Company")
             .Build();
 
-        var message = new Activity()
+        var activity = new Activity()
         {
             Id = NetworkIdentity.New().Value,
             CorrelationId = correlationId,
@@ -92,63 +92,65 @@ public class ActivityInbox_Post_Should
             Actor = updatingActor,
             ActionItem = actionItem
         };
-        var content = JsonContent.Create(message);
+        var content = JsonContent.Create(activity);
 
-        logger.LogInformation("HTTP Request Payload: {@Request}", JsonSerializer.Serialize(message));
+        logger.LogInformation("HTTP Request Payload: {@Request}", JsonSerializer.Serialize(activity));
 
         var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
         var body = await response.Content.ReadAsStringAsync();
-        var publicationResponse = JsonSerializer.Deserialize<ActivityPublicationResponse>(body);
+        var publicationResult = JsonSerializer.Deserialize<IEnumerable<PublicationResult>>(body);
 
         logger.LogInformation("HTTP Response: {@Response}", response);
 
-        Assert.Equal(correlationId.ToString(), publicationResponse?.CorrelationId);
+        Assert.Equal(correlationId.ToString(), publicationResult?.Single().Activity?.CorrelationId?.ToString());
     }
 
     [Fact]
     public async Task RespondWithTheSpecifiedActionItemId()
     {
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Organization");
+        var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_PostActivity_Should>(Guid.NewGuid(), Guid.NewGuid(), "Group");
 
-        var activityType = Api.Enumerations.ActivityType.Create;
-        var actionItem = new ActionItemBuilder()
-            .UseRandomValues()
-            .Id(Guid.NewGuid())
-            .Build(activityType)
-            .Single();
-
-        var correlationId = NetworkIdentity.New().Value;
-        var updatingActor = new ActorBuilder()
-            .ActorType(Api.Enumerations.ActorType.Organization)
-            .Id(Guid.NewGuid())
-            .Name("Acme Bird Feed")
-            .Build();
-
-        var message = new Activity()
+        using (logger.BeginScope(new Dictionary<string, object>
         {
-            Id = NetworkIdentity.New().Value,
-            CorrelationId = correlationId,
-            ActivityType = activityType.ToString(),
-            Actor = updatingActor,
-            ActionItem = actionItem
-        };
-        var content = JsonContent.Create(message);
+            { "Method", "BienOblige.ApiService.IntegrationTest.ActivityInbox_Post_Should.RespondWithTheSpecifiedActionItemId" }
+        }))
+        {
+            var activityType = Api.Enumerations.ActivityType.Create;
+            var correlationId = NetworkIdentity.New().Value;
 
-        var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
+            var message = new ActivityBuilder()
+                .CorrelationId(correlationId)
+                .ActivityType(activityType)
+                .Actor(new ActorBuilder()
+                    .ActorType(Api.Enumerations.ActorType.Organization)
+                    .Id(Guid.NewGuid())
+                    .Name("Acme Bird Feed"))
+                .ActionItem(new ActionItemBuilder()
+                    .UseRandomValues())
+                .Build();
+            var expectedId = message.ActionItem.Id;
 
-        var body = await response.Content.ReadAsStringAsync();
-        logger.LogInformation("HTTP Response: {@Response}", response);
+            var content = JsonContent.Create(message);
 
-        var actual = JsonSerializer.Deserialize<ActivityPublicationResponse>(body);
-        var actualId = actual!.ActionItemId;
-        
-        Assert.Equal(actionItem.Id?.ToString(), actualId);
+            // Act
+            var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // Log the response
+            logger.LogInformation("HTTP Response: {@Response}", response);
+            var actual = JsonSerializer.Deserialize<IEnumerable<PublicationResult>>(body);
+            logger.LogTrace("Publication Results: {@Actual}", actual);
+
+            // Assert
+            var actualId = actual!.Single().Activity?.ActionItem.Id;
+            Assert.Equal(expected: expectedId, actual: actualId);
+        }
     }
 
     [Fact]
     public async Task ProduceAMessageOnTheActionItemStream()
     {
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(Guid.NewGuid(), Guid.NewGuid(), "Group");
+        var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_PostActivity_Should>(Guid.NewGuid(), Guid.NewGuid(), "Group");
 
         var correlationId = NetworkIdentity.New().Value;
 
@@ -198,7 +200,7 @@ public class ActivityInbox_Post_Should
 
         var content = JsonContent.Create(actionItems);
 
-        var (logger, config, httpClient) = this.App.GetRequiredServices<Controllers.ActivityController>(correlationId, Guid.NewGuid(), "Application");
+        var (logger, config, httpClient) = this.App.GetRequiredServices<ActivityInbox_PostActivity_Should>(correlationId, Guid.NewGuid(), "Application");
 
         logger.LogInformation("Request Content: {@Content}", content);
         var response = await httpClient.PostAsync(Api.Constants.Path.ActivityInbox, content);

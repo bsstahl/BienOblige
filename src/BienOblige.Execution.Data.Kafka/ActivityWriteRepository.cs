@@ -22,13 +22,16 @@ namespace BienOblige.Execution.Data.Kafka
         public async Task<NetworkIdentity> Publish(Activity activity)
         {
             ArgumentNullException.ThrowIfNull(activity);
+
             var publishActivity = Messages.Activity.From(activity);
 
-            // Use the Target Id as the key for maintaining order
-            // If there is no Target, use the Activity Id
+            // Use the Object Id as the key for maintaining order
+            // If there is no Object, use the ActionItem Id
             var message = new Message<string, string>()
             {
-                Key = activity.ActionItem?.Id?.Value?.ToString() ?? activity.Id.ToString(),
+                Key = activity.ActionItem.Target?.Id.Value?.ToString() 
+                    ?? activity.ActionItem?.Id?.Value?.ToString() 
+                    ?? throw new InvalidOperationException("Missing ActionItem Id"),
                 Value = JsonSerializer.Serialize(publishActivity)
             };
 
@@ -36,7 +39,7 @@ namespace BienOblige.Execution.Data.Kafka
             
             // TODO: Add error handling
             
-            return activity.Id;
+            return activity.ActionItem.Id;
         }
     }
 }
