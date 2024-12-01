@@ -13,6 +13,7 @@ public class ActivitiesCollectionBuilder
     private DateTimeOffset? _published;
 
     private ActionItemCollectionBuilder _actionItemCollectionBuilder = new();
+    private Dictionary<string, object>? _additionalProperties;
 
     private readonly Uri _instanceBaseUri;
 
@@ -49,6 +50,7 @@ public class ActivitiesCollectionBuilder
         // Create an Activity for each ActionItem
         return actionItemBuilders.Select(x => new ActivityBuilder()
             .AddContext(_context)
+            .AddAdditionalProperties(_additionalProperties ?? [])
             .CorrelationId(_correlationId)
             .ActivityType(_activityType)
             .Actor(_actorBuilder)
@@ -111,9 +113,16 @@ public class ActivitiesCollectionBuilder
         return this;
     }
 
-    //public ActivitiesCollectionBuilder ActionItems(IEnumerable<ActionItem> value)
-    //{
-    //    _actionItems.AddRange(value);
-    //    return this;
-    //}
+    public ActivitiesCollectionBuilder AddAdditionalProperty(string key, object value)
+    {
+        _additionalProperties ??= new();
+        _additionalProperties.Add(key, value);
+        return this;
+    }
+
+    public ActivitiesCollectionBuilder ClearAdditionalProperties()
+    {
+        _additionalProperties = null;
+        return this;
+    }
 }

@@ -31,11 +31,11 @@ internal class MockHttpClient : HttpClient
                 ?? throw new ArgumentNullException(nameof(Activity));
 
 
-    public MockHttpClient(MockHttpMessageHandler httpMessageHandler) 
+    public MockHttpClient(MockHttpMessageHandler httpMessageHandler, Uri? baseAddress = null) 
         : base(httpMessageHandler.Object)
     {
         _mockHttpMessageHandler = httpMessageHandler;
-        base.BaseAddress = new Uri("http://bienoblige.com/api/v1");
+        base.BaseAddress = baseAddress ?? new Uri("http://bienoblige.com/api/v1");
     }
 
 }

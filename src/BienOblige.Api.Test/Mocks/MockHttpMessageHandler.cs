@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Entities;
+using BienOblige.Api.Test.Extensions;
 using BienOblige.ApiClient;
 using Moq;
 using Moq.Protected;
@@ -17,27 +18,35 @@ public class MockHttpMessageHandler : Mock<HttpMessageHandler>
 
     public MockHttpMessageHandler()
     {
-        this.Protected()
+        var builder = this.Protected()
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>())
             .Callback<HttpRequestMessage, CancellationToken>((request, token) =>
             {
+                string requestContent = request.Content.GetStringContent();
                 try
                 {
-                    // If the request is for a singular activity, it will be wrapped in an array
-                    var requestContentTask = request.Content?.ReadAsStringAsync() ?? Task.FromResult("[]");
-                    requestContentTask.Wait();
-                    var requestContent = requestContentTask.Result;
-
+                    // If the request is for a singular activity, it needs to be wrapped in an array
+                    // as would be done by the middleware if the API was actually called
                     var activity = JsonSerializer.Deserialize<Activity>(requestContent);
-                    _requestContent.Add(new StringContent($"[{requestContent}]"));
+                    requestContent = $"[{requestContent}]";
+                    request.Content = new StringContent(requestContent);
+                    _requestContent.Add(request.Content);
                 }
                 catch (Exception)
                 {
-                    _requestContent.Add(request.Content);
+                    // Request is already for a collection of Activities
+                    _requestContent.Add(request.Content!);
                 }
+
+                // If any of the Activities have a property "shouldThrow" set to true, throw an exception
+                var act = JsonSerializer.Deserialize<IEnumerable<Activity>>(requestContent);
+                if (act!.Any(a => a.AdditionalProperties.TryGetValue("shouldThrow", out var shouldThrowValue)
+                    && (bool.TryParse(shouldThrowValue.ToString(), out bool shouldThrow))
+                    && shouldThrow))
+                        throw new HttpRequestException("A test http error has occurred");
             })
             .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
             {
@@ -58,7 +67,6 @@ public class MockHttpMessageHandler : Mock<HttpMessageHandler>
                     Content = activityContent
                 };
             });
-
     }
 
     private static HttpStatusCode GetOverallStatus(IEnumerable<PublicationResult> publicationResults)

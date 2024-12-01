@@ -25,7 +25,7 @@ public class UseCases
         _config = new ConfigurationBuilder()
             .Build();
         _services = new ServiceCollection()
-            .UseTestServices<Activities_Publish_Should>(_config, _output)
+            .UseTestServices<Activities_PublishSinglular_Should>(_config, _output)
             .BuildServiceProvider();
     }
 
@@ -58,7 +58,7 @@ public class UseCases
         var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient 
             ?? throw new InvalidOperationException("No Mock HttpClient found");
 
-        var logger = _services.GetRequiredService<ILogger<Activities_Publish_Should>>();
+        var logger = _services.GetRequiredService<ILogger<Activities_PublishSinglular_Should>>();
         logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
 
         // Assert
@@ -102,7 +102,7 @@ public class UseCases
         var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient 
             ?? throw new InvalidOperationException("No Mock HttpClient found");
         
-        var logger = _services.GetRequiredService<ILogger<Activities_Publish_Should>>();
+        var logger = _services.GetRequiredService<ILogger<Activities_PublishSinglular_Should>>();
         logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
 
         // Assert

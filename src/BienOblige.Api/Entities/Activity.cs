@@ -28,6 +28,6 @@ public class Activity
     public DateTimeOffset? Published { get; set; }
 
     [JsonExtensionData]
-    public Dictionary<string, object> ExtensionData { get; set; } = new();
+    public Dictionary<string, object> AdditionalProperties { get; set; } = new();
 
 }

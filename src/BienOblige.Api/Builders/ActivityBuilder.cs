@@ -14,6 +14,7 @@ public class ActivityBuilder
     private DateTimeOffset? _published;
 
     private ActionItemBuilder? _actionItemBuilder;
+    private Dictionary<string, object>? _additionalProperties;
 
     private readonly Uri _instanceBaseUri;
 
@@ -48,7 +49,8 @@ public class ActivityBuilder
             ActivityType = _activityType.Value.ToString(),
             Actor = _actorBuilder.Build(),
             ActionItem = _actionItemBuilder.Build(_activityType.Value).Single(),
-            Published = _published
+            Published = _published,
+            AdditionalProperties = _additionalProperties ?? new()
         };
 
         return activity;
@@ -129,6 +131,32 @@ public class ActivityBuilder
         _actionItemBuilder = new ActionItemBuilder()
             .Id(actionItemId)
             .Location(locationBuilder);
+        return this;
+    }
+
+    public ActivityBuilder AddAdditionalProperties(IDictionary<string, object> additionalProperties)
+    {
+        foreach (var kvp in additionalProperties)
+            this.AddAdditionalProperty(kvp);
+        return this;
+    }
+
+    public ActivityBuilder AddAdditionalProperty(string key, object value)
+    {
+        var kvp = new KeyValuePair<string, object>(key, value);
+        return this.AddAdditionalProperty(kvp);
+    }
+
+    public ActivityBuilder AddAdditionalProperty(KeyValuePair<string, object> kvp)
+    {
+        _additionalProperties ??= new();
+        _additionalProperties.Add(kvp.Key, kvp.Value);
+        return this;
+    }
+
+    public ActivityBuilder ClearAdditionalProperties()
+    {
+        _additionalProperties = null;
         return this;
     }
 }

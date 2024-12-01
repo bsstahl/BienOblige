@@ -1,9 +1,9 @@
 ﻿using BienOblige.Api.Entities;
 using BienOblige.Api.Extensions;
+using BienOblige.ApiClient.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace BienOblige.ApiClient;
 
@@ -33,11 +33,8 @@ public class Activities
             IEnumerable<PublicationResult> results;
             try
             {
-                // TODO: Add retry logic
-                _logger.LogInformation("Posting request to {Path}", Api.Constants.Path.ActivityInbox);
-                var response = await _httpClient.PostAsync(Api.Constants.Path.ActivityInbox, payload);
-                _logger.LogInformation("Response received: {Response}", JsonSerializer.Serialize(response));
-                results = await GetResponseDetails(response, activities);
+                var result = await _httpClient.GetHttpResponse(_logger, payload);
+                results = await GetResponseDetails(result, activities);
             }
             catch (Exception ex)
             {
@@ -65,9 +62,8 @@ public class Activities
             IEnumerable<PublicationResult> results;
             try
             {
-                _logger.LogInformation("Posting request to {Path}", Api.Constants.Path.ActivityInbox);
-                var response = await _httpClient.PostAsync(Api.Constants.Path.ActivityInbox, payload);
-                results = await GetResponseDetails(response, [activity]);
+                var result = await _httpClient.GetHttpResponse(_logger, payload);
+                results = await GetResponseDetails(result, [activity]);
             }
             catch (Exception ex)
             {
@@ -111,7 +107,6 @@ public class Activities
             }
 
             return results;
-
-        }    }
-
+        }    
+    }
 }
