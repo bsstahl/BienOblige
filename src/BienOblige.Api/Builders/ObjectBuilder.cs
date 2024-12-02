@@ -217,8 +217,6 @@ public class ObjectBuilder
             throw new ArgumentNullException(nameof(content), "Content must be provided if media type is provided.");
         else
             throw new ArgumentNullException(nameof(mediaType), "Media type must be provided if content is provided.");
-
-
     }
 
     public ObjectBuilder Duration(TimeSpan? value)

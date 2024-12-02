@@ -1,8 +1,12 @@
 # Use Case: Annual Preventive Maintenance (PM) Procedure for MetroTransit Bus Type X
 
-**Objective**: To ensure the timely and efficient completion of the annual preventive maintenance for a specific bus type, enhancing operational reliability and safety and ensuring compliance with all regulations and company policies.
+This use case demonstrates the use of Bien Oblige to create and manage tasks with a complex hierarchy and dependency structure.
 
-For a description of the MetroTransit system and actors, see the [MetroTransit Use Case Overview](./README.md).
+## MetroTransit Business Objective
+
+To ensure the timely and efficient completion of the annual preventive maintenance for a specific bus type, enhancing operational reliability and safety and ensuring compliance with all regulations and company policies.
+
+For a description of the MetroTransit maintenance system and actors, see the [MetroTransit Use Case Overview](./README.md).
 
 The monthly PM procedure for MetroTransit buses involves a series of tasks that must be completed in a specific order to ensure the bus is safe and operational. The tasks are broken down into phases, each with its own set of responsibilities and requirements. The completion of these tasks is critical to maintaining the safety and reliability of the bus fleet. In certain cases, the work can be performed by either the mechanics or the lot attendants, while other tasks can only be performed by a mechanic and still other only by a supervisor.
 

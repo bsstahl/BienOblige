@@ -25,7 +25,10 @@ graph LR
 
     BusSync --> |Processes Data| BienOblige{{Bien Oblige}}
 
-    BienOblige --> |Notifies| LotAttendants((Lot Attendants))
+#!mermaid
+
+graph LR
+    Supervisor((SuperVisor)) --> |Creates Task| BienOblige{{Bien Oblige}}
 
 #!markdown
 
@@ -44,6 +47,23 @@ classDiagram
         +status : String = "https://bienoblige.com/ns/status#Incomplete"
         
     }
+
+#!markdown
+
+### Dependent Tasks
+
+#!mermaid
+
+erDiagram
+    Staging {
+        id ActionItem2
+    }
+
+    NightlyInspection {
+        id ActionItem1
+    }
+
+    NightlyInspection }o--|| Staging : "depends_on"
 
 #!markdown
 

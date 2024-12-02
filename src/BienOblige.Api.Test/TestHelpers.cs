@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Entities;
+using BienOblige.Api.ValueObjects;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -8,6 +9,8 @@ namespace BienOblige.Api.Test;
 [ExcludeFromCodeCoverage]
 public static class TestHelpers
 {
+    public static MimeType DefaultMediaType = MimeType.From("text/plain");
+
     public static (string City, string State)[] CityPairs = [
         ("Phoenix", "AZ"),
         ("Los Angeles", "CA"),

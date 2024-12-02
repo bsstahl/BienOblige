@@ -1,12 +1,10 @@
 ﻿using BienOblige.Api.Builders;
-using BienOblige.Api.Entities;
-using BienOblige.Api.Targets;
 using BienOblige.Api.Test.Extensions;
+using BienOblige.Api.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace BienOblige.Api.Test;
@@ -43,7 +41,7 @@ public class UseCases
             .ActionItem(new ActionItemBuilder()
                 .Id(Guid.NewGuid())
                 .Name("Weekly Digital Torque Wrench Calbration")
-                .Content("Calibrate the digital torque wrench to a tolerance of 2 in-lbs")
+                .Content("Calibrate the digital torque wrench to a tolerance of 2 in-lbs", TestHelpers.DefaultMediaType)
                 .Target(new ObjectBuilder()
                     .Id(Guid.NewGuid(), "Tool")
                     .AddObjectType("Object")
@@ -70,28 +68,44 @@ public class UseCases
     [Fact]
     public async Task NightlyTasks()
     {
+        const string baseUrl = "https://metrotransit.com";
+
         string vin = "WV3AH4709YH034586";
+        string busName = "Bus X-25";
+        var busId = NetworkIdentity.From(baseUrl, "bus", vin);
+        var departureTime = TimeSpan.FromMinutes(375).GetTimeTomorrowMST();
+        var stagingTime = departureTime.AddHours(-1); // Allow at least an hour for staging
+        var inspectionTaskId = NetworkIdentity.From(baseUrl, "ActionItem", Guid.NewGuid().ToString());
+
+        var bus = new ObjectBuilder()
+            .Id(busId)
+            .AddObjectType("schema:Car")
+            .AddObjectType("Object")
+            .Name(busName)
+            .Content($"2023 MetroTransit Type X Bus with VIN *{vin}*", "text/markdown")
+            .AddAdditionalProperty("schema:vehicleIdentificationNumber", vin);
 
         // Arrange
-        var activity = new ActivityBuilder()
+        var activity = new ActivitiesCollectionBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())
                 .ActorType(Api.Enumerations.ActorType.Application)
                 .Name($"{this.GetType().Name}.{nameof(NightlyTasks)}"))
-            .ActionItem(new ActionItemBuilder()
-                .Id(Guid.NewGuid()) // TODO: Add content
-                .Name("Stage Bus for Next Activity")
-                .Content("Stage bus 1234 in lane C2 for departure at 06:15 MST")
-                .EndTime(TimeSpan.FromMinutes(375).GetTimeTomorrowMST()) // 06:15 AM Tomorrow
-                .Target(new ObjectBuilder()
-                    .Id(Guid.NewGuid(), "Bus")
-                    .AddObjectType("schema:Car")
-                    .AddObjectType("Object")
-                    .Name("Bus 1234")
-                    .Content($"2023 MetroTransit Type X Bus with VIN *{vin}*", "text/markdown")
-                    .AddAdditionalProperty("schema:vehicleIdentificationNumber", vin)))
+            .ActionItems(new ActionItemCollectionBuilder()
+                .Add(new ActionItemBuilder()
+                    .Id(inspectionTaskId)
+                    .Name("Nightly Inspection")
+                    .Content($"Inspect bus {busName} following the Nightly Inspection procedures BKM", MimeType.From("text/plain"))
+                    .EndTime(stagingTime) // 05:15 AM Tomorrow
+                    .Target(bus))
+                .Add(new ActionItemBuilder()
+                    .Name("Stage Bus for Next Activity")
+                    .Content($"If inspection passed, Stage bus *{busName}* in lane C2 for departure at 06:15 MST. If it failed, stage in the maintenance bay and create a maintenance order.", MimeType.From("text/markdown"))
+                    .EndTime(departureTime) // 06:15 AM Tomorrow
+                    .AddPrerequisite(inspectionTaskId)
+                    .Target(bus)))
             .Build();
 
         // Act
@@ -108,8 +122,13 @@ public class UseCases
         // Assert
         var actual = httpClient.ActivityRequests;
         Assert.NotNull(actual);
-        Assert.Single(actual);
-        Assert.Equal(vin, actual?.Single()?.ActionItem?.Target?.AdditionalProperties["schema:vehicleIdentificationNumber"].ToString());
+        Assert.Equal(2, actual.Count());
+
+        var inspectionTask = actual.Single(a => a.ActionItem.Id!.Equals(inspectionTaskId.Value.ToString()));
+        var dependentTask = actual.Single(a => !a.ActionItem.Id!.Equals(inspectionTaskId.Value.ToString()));
+
+        // Assert that the dependent task has the inspection task's Id in its prerequisite collection
+        Assert.Equal(dependentTask.ActionItem.Prerequisites!.Single(), inspectionTask.ActionItem.Id);
     }
 
 }

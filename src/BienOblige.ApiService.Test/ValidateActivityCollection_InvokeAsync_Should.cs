@@ -1,10 +1,10 @@
 ﻿using BienOblige.Api.Builders;
-using BienOblige.ApiClient;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using TestHelperExtensions;
@@ -12,6 +12,7 @@ using Xunit.Abstractions;
 
 namespace BienOblige.ApiService.Test;
 
+[ExcludeFromCodeCoverage]
 public class ValidateActivityCollection_InvokeAsync_Should
 {
     IServiceProvider _services;
@@ -40,9 +41,9 @@ public class ValidateActivityCollection_InvokeAsync_Should
         {
             var target = _services.GetRequiredService<Middleware.ValidateActivityCollection>();
 
-            var mockContext = new Mock<Microsoft.AspNetCore.Http.HttpContext>();
-            var mockRequest = new Mock<Microsoft.AspNetCore.Http.HttpRequest>();
-            var mockResponse = new Mock<Microsoft.AspNetCore.Http.HttpResponse>();
+            var mockContext = new Mock<HttpContext>();
+            var mockRequest = new Mock<HttpRequest>();
+            var mockResponse = new Mock<HttpResponse>();
 
             var context = mockContext.Object;
             var request = mockRequest.Object;
@@ -65,7 +66,7 @@ public class ValidateActivityCollection_InvokeAsync_Should
                 .ActionItem(new ActionItemBuilder()
                     .Id(Guid.NewGuid())
                     .Name("Title of this ActionItem")
-                    .Content("This is the content of the ActionItem describing the task to be completed."))
+                    .Content("This is the content of the ActionItem describing the task to be completed.", "text/plain"))
                 .Build();
 
             request.Body = JsonSerializer.Serialize(activity).ToStream();
@@ -92,7 +93,8 @@ public class ValidateActivityCollection_InvokeAsync_Should
             };
 
             var actual = JsonSerializer.Deserialize<IEnumerable<Api.Entities.Activity>>(actualRequestBody);
-            Assert.Equal("urn:uid:af680c89-9562-43b0-a84a-9f16ca1e7cf9", actual?.Single()?.CorrelationId?.ToString());
+            var actualCorrelationId = actual?.Single()?.CorrelationId?.ToString();
+            Assert.Equal("urn:uid:af680c89-9562-43b0-a84a-9f16ca1e7cf9", actualCorrelationId);
         }
     }
 }

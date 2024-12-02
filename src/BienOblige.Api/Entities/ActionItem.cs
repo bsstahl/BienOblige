@@ -29,6 +29,10 @@ public class ActionItem
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Content { get; set; }
 
+    [JsonPropertyName("mediaType")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? MediaType { get; set; }
+
 
     [JsonPropertyName("attributedTo")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -65,6 +69,10 @@ public class ActionItem
     [JsonPropertyName("bienoblige:completionMethods")]
     [JsonConverter(typeof(EnumListConverter<CompletionMethod>))]
     public List<CompletionMethod> CompletionMethods { get; set; } = new List<CompletionMethod>();
+
+    [JsonPropertyName("bienoblige:prerequisites")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<string>? Prerequisites { get; set; }
 
     [JsonPropertyName("location")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -22,7 +22,7 @@ public class Activity_Serialization_Should
                 .Add(new Api.Builders.ActionItemBuilder()
                     .Id(Guid.NewGuid())
                     .Name(string.Empty.GetRandom())
-                    .Content(string.Empty.GetRandom())))
+                    .Content(string.Empty.GetRandom(), "text/plain")))
             .Build().Single();
 
         var serialized = JsonSerializer.Serialize(content);

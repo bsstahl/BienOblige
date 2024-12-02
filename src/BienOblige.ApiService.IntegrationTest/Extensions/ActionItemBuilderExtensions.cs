@@ -14,7 +14,7 @@ public static class ActionItemBuilderExtensions
         return builder
             .Id(idValue)
             .Name($"Title of ActionItem {idValue}")
-            .Content($"Content of ActionItem {idValue}");
+            .Content($"Content of ActionItem {idValue}", "text/plain");
     }
 
 }

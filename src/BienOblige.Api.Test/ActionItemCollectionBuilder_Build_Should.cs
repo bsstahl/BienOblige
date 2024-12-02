@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Builders;
+using BienOblige.Api.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BienOblige.Api.Test;
@@ -19,11 +20,11 @@ public class ActionItemCollectionBuilder_Build_Should
             .ActionItems(new ActionItemCollectionBuilder()
                 .Add(new ActionItemBuilder()
                     .Name("Parent Action Item")
-                    .Content("This is the content of the parent item")
+                    .Content("This is the content of the parent item", TestHelpers.DefaultMediaType)
                     .Children(new ActionItemCollectionBuilder()
                         .Add(new ActionItemBuilder()
                             .Name("Child Action Item")
-                            .Content("This is the content of the child item")))))
+                            .Content("This is the content of the child item", TestHelpers.DefaultMediaType)))))
             .Build();
 
         // The child item's ParentId should be the parent item's Id

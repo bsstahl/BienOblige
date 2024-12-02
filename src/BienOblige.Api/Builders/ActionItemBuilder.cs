@@ -13,13 +13,16 @@ public class ActionItemBuilder
     private Uri? _id;
     private string? _name;
     private string? _content;
+    private MimeType? _mediaType;
     private Actor? _generator;
     private ObjectBuilder? _target;
     private ObjectBuilder? _location;
     private DateTimeOffset? _endTime;
     private Uri? _parent;
     private DateTimeOffset? _published;
+
     private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
+    private List<NetworkIdentity>? _prerequisites;
 
     private Dictionary<string, object> _additionalProperties = new();
 
@@ -71,6 +74,7 @@ public class ActionItemBuilder
             Context = _context,
             Name = _name,
             Content = _content,
+            MediaType = _mediaType?.ToString(),
             Generator = _generator,
             Target = _target?.Build(),
             Parent = _parent?.ToString(),
@@ -78,6 +82,7 @@ public class ActionItemBuilder
             EndTime = _endTime,
             Location = _location?.Build(),
             Published = _published,
+            Prerequisites = _prerequisites?.Select(p => p.Value.ToString()).ToList(),
             AdditionalProperties = _additionalProperties
         });
 
@@ -112,12 +117,27 @@ public class ActionItemBuilder
         return this;
     }
 
-    public ActionItemBuilder Content(string value)
+
+    public ActionItemBuilder Content(string? content, string? mediaType)
     {
-        _content = value;
-        return this;
+        return this.Content(content, string.IsNullOrWhiteSpace(mediaType) ? null : MimeType.From(mediaType));
     }
 
+    public ActionItemBuilder Content(string? content, MimeType? mediaType)
+    {
+        if (!string.IsNullOrWhiteSpace(content) && (mediaType is not null))
+        {
+            _content = content;
+            _mediaType = mediaType;
+            return this;
+        }
+        else if (string.IsNullOrEmpty(content) && (mediaType is null))
+            return this; // Do nothing here -- this means the values were never set in the parent and that is ok
+        else if (string.IsNullOrEmpty(content))
+            throw new ArgumentNullException(nameof(content), "Content must be provided if media type is provided.");
+        else
+            throw new ArgumentNullException(nameof(mediaType), "Media type must be provided if content is provided.");
+    }
     public ActionItemBuilder EndTime(DateTimeOffset value)
     {
         _endTime = value;
@@ -181,6 +201,19 @@ public class ActionItemBuilder
             _published = value;
         else
             _published ??= value;
+        return this;
+    }
+
+    public ActionItemBuilder AddPrerequisite(NetworkIdentity actionItemId)
+    {
+        _prerequisites ??= new List<NetworkIdentity>();
+        _prerequisites.Add(actionItemId);
+        return this;
+    }
+
+    public ActionItemBuilder ClearPrerequisites()
+    {
+        _prerequisites = null;
         return this;
     }
 

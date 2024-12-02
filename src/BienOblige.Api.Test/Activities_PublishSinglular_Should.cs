@@ -52,7 +52,7 @@ public class Activities_PublishSinglular_Should
             .ActionItem(new ActionItemBuilder()
                 .Id(Guid.NewGuid())
                 .Name("Stage Bus for Next Activity")
-                .Content("Stage bus 1234 in lane C2 for departure at 06:15 MST")
+                .Content("Stage bus 1234 in lane C2 for departure at 06:15 MST", "text/plain")
                 .EndTime(TimeSpan.FromMinutes(375).GetTimeTomorrowMST()) // 06:15 AM Tomorrow
                 .Target(bus))
             .Build();
@@ -92,7 +92,7 @@ public class Activities_PublishSinglular_Should
             .ActionItem(new ActionItemBuilder()
                 .Id(Guid.NewGuid())
                 .Name("Action item name")
-                .Content("ActionItemContent"))
+                .Content("ActionItemContent", "text/plain"))
             .Build();
 
         var logger = _services.GetRequiredService<ILogger<ApiClient.Activities>>();
@@ -137,7 +137,7 @@ public class Activities_PublishSinglular_Should
             .ActionItem(new ActionItemBuilder()
                 .Id(Guid.NewGuid()) // TODO: Add content
                 .Name("Stage Bus for Next Activity")
-                .Content("Stage bus 1234 in lane C2 for departure at 06:15 MST")
+                .Content("Stage bus 1234 in lane C2 for departure at 06:15 MST", "text/plain")
                 .EndTime(TimeSpan.FromMinutes(375).GetTimeTomorrowMST()) // 06:15 AM Tomorrow
                 .Target(new ObjectBuilder()
                     .Id(Guid.NewGuid(), "Bus")
