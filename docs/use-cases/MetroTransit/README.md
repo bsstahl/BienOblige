@@ -1,4 +1,4 @@
-# Detailed Use Cases
+# Use Case Study
 
 ## MetroTransit
 
@@ -64,5 +64,6 @@ graph LR
 
 ## Use Case Analyses
 
-* [Bus Nightly Procedures](./bus-nightly-procedures.md)
-* [Bus Annual PM Procedure](./bus-annual-pm-procedure.md)
+* [Tool Calibration - Demonstrates the creation of a simple task](./maintenance-tool-calibration.md)
+* [Bus Nightly Procedures - Demonstrates creation of tasks with prerequisites](./bus-nightly-procedures.md)
+* [Bus Annual PM Procedure - Demonstrates creation of complex task hierarchies](./bus-annual-pm-procedure.md)

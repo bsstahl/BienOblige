@@ -38,6 +38,10 @@ public class ActionItem
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public NetworkObject? AttributedTo { get; set; }
 
+    [JsonPropertyName("audience")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NetworkObject? Audience { get; set; }
+
     [JsonPropertyName("endTime")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTimeOffset? EndTime { get; set; }

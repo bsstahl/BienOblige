@@ -21,6 +21,10 @@ public class ActionItemBuilder
     private Uri? _parent;
     private DateTimeOffset? _published;
 
+    private ObjectBuilder? _attributedTo;
+    private ObjectBuilder? _audience;
+
+
     private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
     private List<NetworkIdentity>? _prerequisites;
 
@@ -77,6 +81,8 @@ public class ActionItemBuilder
             MediaType = _mediaType?.ToString(),
             Generator = _generator,
             Target = _target?.Build(),
+            AttributedTo = _attributedTo?.Build(),
+            Audience = _audience?.Build(),
             Parent = _parent?.ToString(),
             CompletionMethods = _completionMethods,
             EndTime = _endTime,
@@ -201,6 +207,33 @@ public class ActionItemBuilder
             _published = value;
         else
             _published ??= value;
+        return this;
+    }
+
+    public ActionItemBuilder AttributedTo(NetworkObject value)
+    {
+        return this.AttributedTo(value.AsObjectBuilder());
+    }
+
+    public ActionItemBuilder AttributedTo(ObjectBuilder value)
+    {
+        _attributedTo = value;
+        return this;
+    }
+
+    public ActionItemBuilder Audience(ActorBuilder value)
+    {
+        return this.Audience(value.Build().AsObjectBuilder());
+    }
+
+    public ActionItemBuilder Audience(NetworkObject value)
+    {
+        return this.Audience(value.AsObjectBuilder());
+    }
+
+    public ActionItemBuilder Audience(ObjectBuilder value)
+    {
+        _audience = value;
         return this;
     }
 

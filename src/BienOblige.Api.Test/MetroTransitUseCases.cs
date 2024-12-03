@@ -11,13 +11,17 @@ namespace BienOblige.Api.Test;
 
 [ExcludeFromCodeCoverage]
 [Collection("APIClient")]
-public class UseCases
+public class MetroTransitUseCases
 {
+    const string baseUrl = "https://metrotransit.com";
+
+    private NetworkIdentity complianceStudioServiceId = NetworkIdentity.From(baseUrl, "service", "compliance-studio");
+
     private readonly ITestOutputHelper _output;
     private readonly IConfiguration _config;
     private readonly IServiceProvider _services;
 
-    public UseCases(ITestOutputHelper output)
+    public MetroTransitUseCases(ITestOutputHelper output)
     {
         _output = output;
         _config = new ConfigurationBuilder()
@@ -33,17 +37,21 @@ public class UseCases
         // Arrange
         var activity = new ActivityBuilder()
             .CorrelationId(Guid.NewGuid())
-            .ActivityType(Api.Enumerations.ActivityType.Create)
+            .ActivityType(Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
-                .Id(Guid.NewGuid())
-                .ActorType(Api.Enumerations.ActorType.Application)
-                .Name($"{this.GetType().Name}.{nameof(WeeklyDigitalTorqueWrenchCalibration)}"))
+                .Id(complianceStudioServiceId)
+                .ActorType(Enumerations.ActorType.Service)
+                .Name("Compliance Studio"))
             .ActionItem(new ActionItemBuilder()
                 .Id(Guid.NewGuid())
                 .Name("Weekly Digital Torque Wrench Calbration")
-                .Content("Calibrate the digital torque wrench to a tolerance of 2 in-lbs", TestHelpers.DefaultMediaType)
+                .Content("Calibrate the digital torque wrench to a tolerance of 0.5 in-lbs", "text/plain")
+                .Audience(new ActorBuilder()
+                    .Id(NetworkIdentity.From(baseUrl, "user", "JaneWrencher"))
+                    .ActorType(Enumerations.ActorType.Person)
+                    .Name("Jane Wrencher"))
                 .Target(new ObjectBuilder()
-                    .Id(Guid.NewGuid(), "Tool")
+                    .Id(NetworkIdentity.From(baseUrl, "Tool", "digi-torque-124"))
                     .AddObjectType("Object")
                     .Name("Digital Torque Wrench #124")))
             .Build();
@@ -68,8 +76,6 @@ public class UseCases
     [Fact]
     public async Task NightlyTasks()
     {
-        const string baseUrl = "https://metrotransit.com";
-
         string vin = "WV3AH4709YH034586";
         string busName = "Bus X-25";
         var busId = NetworkIdentity.From(baseUrl, "bus", vin);

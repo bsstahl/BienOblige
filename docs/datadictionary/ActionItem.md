@@ -5,7 +5,8 @@
 The fields of an **ActionItem** are defined as follows:
 
 * Standard AS2 *Object* fields
-  * *attributedTo* (optional) - The **Executor** of the ActionItem. If the action item was not performed (ie marked complete as a result of a parent being marked complete), this field will hold a reference to the **ActionItem** that triggered the action.
+  * *attributedTo* (optional) - The entity that created the need for this work. This will usually be empty, however it can identify another *ActionItem* that led to the creation of this one. For example, if an inspection task fails, it might trigger the creation of a maintenance task. The maintenance task may have the inspection task in this field.
+  * *audience* - (optional) The **Executor** of the ActionItem. This may be an individual or a group. If not supplied, the work is not yet associated with a particular user or community. This value may be assigned later using the **invite** *Activity*.
   * *content* - (optional) A detailed description of the work to be performed.
   * *context* (optional) - ??? TODO: Evaluate this field usage.
   * *endTime* (optional) - The date and time by which the work needs to be completed
@@ -40,10 +41,10 @@ The fields of an **ActionItem** are defined as follows:
 The standard fields of an AS2 `object` are defined per the [W3C Activity Streams 2.0 Vocabulary](https://w3c.github.io/activitystreams/vocabulary/). The use of these fields within the context of an **ActionItem** is as follows:
 
 * **attachment** - Currently unused, reserved for future document attachments to an **ActionItem**
-* **attributedTo** - The **Executor** of the **ActionItem**
-* audience - Unused
+* **attributedTo** - The object that caused the **ActionItem** to be created.
+* **audience** - The **Executor** of the **ActionItem**
 * **content** - A detailed description of the work to be performed.
-* **context** - ???
+* **context** - The schema definitions in which objects in the messages are defined.
 * **name** - The Title of the **ActionItem**
 * **endTime** - The date and time by which the work needs to be completed (aka "due date" or "need by date")
 * **generator** - The creator of the **ActionItem**, an AS2 *Actor* object

@@ -1,5 +1,6 @@
 ﻿using BienOblige.Api.Entities;
 using BienOblige.Api.Enumerations;
+using BienOblige.Api.ValueObjects;
 
 namespace BienOblige.Api.Builders;
 
@@ -48,6 +49,11 @@ public class ActorBuilder
             _context.AddRange(context);
         }
         return this;
+    }
+
+    public ActorBuilder Id(NetworkIdentity value)
+    {
+        return this.Id(value.Value.ToString());
     }
 
     public ActorBuilder Id(Guid value)
