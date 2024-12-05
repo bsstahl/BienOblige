@@ -4,40 +4,50 @@
 
 **Bien Oblige** is an [GNU Affero GPL](/LICENSE) licensed task management system designed to optimize task tracking and execution across multiple applications, helping teams navigate their tasks with greater insight and visibility.
 
-## Status: Exploratory Phase
+## Status: MVP Implementation Phase
 
-This project is currently in the exploratory phase. In this stage, we are actively considering various possibilities for both requirements and implementation methods. Our goal is to thoroughly investigate potential approaches and gather insights that will inform future development decisions.
+This project is currently in the MVP implementation phase. In this stage, we are actively developing the product and preparing for the initial release in Q1 2025.
 
-### Objectives
-
-* Requirement Analysis: We are identifying and evaluating different requirements that align with our project goals.
-* Implementation Exploration: Various implementation methods are being considered and assessed for feasibility and effectiveness.
+### Vision
 
 Our [Internal Press Release](docs/press/Internal%20Press%20Release.md) provides a high-level overview of the project's vision and objectives.
 
-### Next Steps
+### Phase Objectives
 
-1. Gather feedback from interested parties.
-2. Conduct feasibility studies on proposed methods.
-3. Develop a roadmap based on findings.
+* Core Feature Development
+  * Implement the essential features that fulfill the primary use cases identified during the planning phase.
+  * Ensure these features align with user needs and deliver immediate value to early adopters upon MVP release.
+* Architecture and Infrastructure Setup
+  * Establish the foundational architecture and infrastructure to support the MVP features.
+  * Ensure the system is scalable and maintainable for future development phases.
+  * Identify sample implementations that may be used as reference points for future development.
+* API Development and Integration
+  * Develop and test APIs for core functionalities, ensuring they meet performance and security standards.
+  * Create a Client API tool for .NET developers to interact with the system. This tool will be the primary means of interacting with the system for the MVP, and thus should be engineered for ease of use and future expansion.
+* Testing and Quality Assurance
+  * Establish a testing framework to ensure all components of the MVP are rigorously tested.
+  * Identify sample implementations that may be used as reference points for future development.
+* Documentation and Support
+  * Create comprehensive user and technical documentation to aid users and developers in understanding and using the MVP.
+  * Leverage support channels on GitHub and Mastodon to gather feedback and address issues quickly.
 
 ### Contribution
 
-At this stage, contributions are welcome in the form of feedback, suggestions, and insights related to requirements and possible implementation strategies. You can contact our primary via [Mastodon](https://fosstodon.org/@bsstahl).
+In this phase, contributions are still welcome in the form of feedback, suggestions, and insights related to requirements and possible implementation strategies.
 
-Please note that since the project is still in its early stages, significant changes might occur as we refine our understanding and approach.
+Additionally, we are open to collaboration opportunities with those interested in contributing to the project in the areas of documentation as well as the creation of Target Objects that represent the different types of entities that tasks can be performed on. See [Car](./src/BienOblige.Api/Targets/Car.cs) and [Residence](./src/BienOblige.Api/Targets/Residence.cs) as examples.
 
-## Features
+You can contact our primary via [Mastodon](https://fosstodon.org/@bsstahl).
 
-* **Task Creation and Assignment**: Easily create tasks and assign them to executors, groups or locations.
-* **Status Tracking**: Monitor the progress of tasks by status, location, executor, group, etc.
-* **Location-Based Management**: Organize tasks by location to streamline operations and resource allocation.
-* **Updates and Revisions**: Apply updates to tasks to track changes and maintain an accurate history of activities.
+Please note that since the project is still in the MVP stage, some changes might occur as we refine our understanding and approach.
 
 ## Key Concepts
 
-* **ActionItem**: A unit of work assigned to an Executor, tracked through its lifecycle.
-* **Executor**: The individual responsible for performing the *ActionItems*.
+Please see our [Ubiquitous Language](docs/ul.md) document for a detailed overview of the key concepts and entities in the **Bien Oblige** system.
+
+## Features
+
+Please see our [Features](./docs/features.md) document for a detailed overview of the key features and functionalities of the **Bien Oblige** system.
 
 ## Our Name
 

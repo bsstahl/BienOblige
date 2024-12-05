@@ -20,9 +20,6 @@ public class ActionItem : NetworkObject
     [JsonPropertyName("bienoblige:parent")]
     public NetworkIdentity? Parent { get; set; }
 
-    [JsonPropertyName("bienoblige:origin")]
-    public NetworkObject? Origin { get; set; }
-
     [JsonPropertyName("bienoblige:priority")]
     public NetworkObject? Priority { get; set; }
 

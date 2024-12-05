@@ -7,28 +7,25 @@
 The entities involved in *ActionItem* management are:
 
 * **ActionItem** - a unit of work that will be performed by an *executor*.
-  * Events describe modifications to the item including the process of performing the item
-    * i.e. Created, Assigned, Completed, Cancelled, etc
   * Represented by an extension to the AS2 "Object" type called "bienoblige:ActionItem"
   * See the [ActionItem Data Dictionary](./datadictionary/ActionItem.md) for field descriptions
-  * See the sample messages: [Minimal Create Message](./messages/actionitem_create_minimal.json) and [Full Create Message](./messages/actionitem_create.json) for implementation examples
-* **Executor** - a person that is responsible for performing activities.
-  * Represented by AS2 objects of type "Person"
+  * Modifications to *ActionItems*, are described by *Activities*
+    * i.e. Created, Assigned, Completed, Cancelled, etc
+  * See the [use-case samples](./use-cases.md) for implementation examples
+* **Executor** - a person or group that is responsible for performing activities.
+  * Represented by AS2 objects of type "Actor"
 * **Exception** - an additional status on an *ActionItem* that indicates a significant problem that likely needs user attention. The following exceptions are known, but there may be many others down the road.
-  * Invalid Request - A request was made to place this *ActionItem* in an invalid state. Also occurs when an attempt to create a new *ActionItem* with the same Id as the existing one is made. The exception would be placed on the existing *ActionItem* and no additional *ActionItem* would be created.
+  * Invalid Request - A request was made to place this *ActionItem* in an invalid state. Also occurs when an attempt to create a new *ActionItem* with the same Id as the existing one is made. In such a case, the exception would be placed on the existing *ActionItem* and no additional *ActionItem* would be created.
   * Timeframe Exceeded - The *ActionItem* was not completed within a certain time frame of the due date and the *ActionItem* was not marked as complete or with a completion method that includes closing when *Expired*.
   * Asset Unavailable - The *ActionItem* requires an asset that is not available. This could be because the asset is not at the location where the work is to be performed, or the asset is broken or otherwise not available for the work.
 * **Location** - a place where ActionItems are performed
   * Represented by AS2 objects of type "Place".
-  * Standard
+  * Identifiers of standard locations
     * https://bienoblige.com/ns/location#office
     * https://bienoblige.com/ns/location#home
-  * Custom
+  * Sample identifiers of custom locations
     * https://example.com/ns/location#12345
-* **ActionItem Type** - an optional collection of category Ids representing common characteristics of the *ActionItems* they are associated with.
-  * These categories are defined by the consuming applications and are identified by URI
-  * The URI may be used as a filter/sort criteria when listing *ActionItems*
-* **CompletionMethods** - an array indicating the methods by which the *ActionItem* is to be completed. Currently, any combinations of the statuses below are allowed. This may not always be the case when additional methods are added.
+* **CompletionMethods** - an array indicating the methods by which the *ActionItem* is to be completed. Currently, any combinations of the statuses below are allowed. This may not always be the case when additional methods are added. That is, there may be circumstances in the future where certain methods are not compatible with each other, such as if they are directly in conflict or otherwise mutually exclusive.
   * "bienoblige:completionMethod#Manual" - the default method where the *ActionItem* is considered complete when specifically identified as such by a client system, usually as a result of user interaction.
   * "bienoblige:completionMethod#AllChildrenCompleted" - the *ActionItem* is considered complete when all of its child *ActionItems* are complete. There must be at least 1 child *ActionItem*. If there are no children, the *ActionItem* will not be completed by this method. This method is used for work that is broken down into smaller tasks that must all be completed to consider the work done.
   * "bienoblige:completionMethod#AnyChildCompleted" - the *ActionItem* is considered complete when any of its child *ActionItems* are complete. There must be at least 1 child *ActionItem*. If there are no children, the *ActionItem* will not be completed by this method. This method is used to assign the work to multiple people or groups such that when either does the task, the work is considered done.

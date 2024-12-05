@@ -8,7 +8,7 @@ In today's digital landscape, organizations often face challenges in managing ta
 
 ## Limitations of Current Solutions
 
-Many existing applications maintain their own tasks in isolation, lacking integration with other systems. This makes it difficult to see the big picture of everything that needs to be done to deliver value.
+Many existing applications maintain their own tasks in isolation, and utilize different structures for the data. This lack of integration makes it difficult to see the big picture of everything that needs to be done to deliver value, and to identify bottlenecks and other pain-points in the process.
 
 ## Introducing BienOblige
 
