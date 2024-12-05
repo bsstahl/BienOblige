@@ -88,3 +88,79 @@ The following code demonstrates the creation of the nightly tasks for a MetroTra
         var client = _services.GetRequiredService<ApiClient.Activities>();
         var response = await client.Publish(activity);
 ```
+
+This code results in the following *Json* document being posted to the **Bien Oblige** instance's *inbox*:
+
+```json
+[
+    {
+        "@context": [
+            "https://www.w3.org/ns/activitystreams",
+            { "bienoblige": "https://bienoblige.com/ns" },
+            { "schema": "https://schema.org" }
+        ],
+        "@type": "Create",
+        "actor": {
+            "@type": "Application",
+            "id": "urn:uid:63313e49-7ff7-4e3b-b5de-60070073593b",
+            "name": "MetroTransitUseCases.NightlyTasks"
+        },
+        "bienoblige:correlationId": "urn:uid:f05fd70c-deee-4653-b3a1-00f4e0895bb6",
+        "id": "https://bienoblige.com/activity/d931c4ec-6ee2-4b00-b66d-408b691f57f3",
+        "object": {
+            "@type": ["bienoblige:ActionItem","Object"],
+            "bienoblige:completionMethods": ["Manual"],
+            "bienoblige:target": {
+                "@type": ["schema:Car","Object"],
+                "content": "2023 MetroTransit Type X Bus with VIN *WV3AH4709YH034586*",
+                "id": "https://metrotransit.com/bus/WV3AH4709YH034586",
+                "mediaType": "text/markdown",
+                "name": "Bus X-25",
+                "schema:vehicleIdentificationNumber": "WV3AH4709YH034586"
+            },
+            "content": "Inspect bus Bus X-25 following the Nightly Inspection procedures BKM",
+            "endTime": "2024-12-04T05:15:00-07:00",
+            "id": "https://metrotransit.com/actionitem/ac332627-3c1e-46b1-a600-59a60e7d01e4",
+            "mediaType": "text/plain",
+            "name": "Nightly Inspection",
+            "published": "2024-12-03T17:06:48.8654568+00:00"
+        },
+        "published": "2024-12-03T17:06:48.8654568+00:00"
+    },
+    {
+        "@context": [
+            "https://www.w3.org/ns/activitystreams",
+            { "bienoblige": "https://bienoblige.com/ns" },
+            { "schema": "https://schema.org" }
+        ],
+        "@type": "Create",
+        "actor": {
+            "@type": "Application",
+            "id": "urn:uid:63313e49-7ff7-4e3b-b5de-60070073593b",
+            "name": "MetroTransitUseCases.NightlyTasks"
+        },
+        "bienoblige:correlationId": "urn:uid:f05fd70c-deee-4653-b3a1-00f4e0895bb6",
+        "id": "https://bienoblige.com/activity/780d67a0-a636-413e-8f9c-7f64607014fa",
+        "object": {
+            "@type": ["bienoblige:ActionItem","Object"],
+            "bienoblige:completionMethods": ["Manual"],
+            "bienoblige:prerequisites": ["https://metrotransit.com/actionitem/ac332627-3c1e-46b1-a600-59a60e7d01e4"],
+            "bienoblige:target": {
+                "@type": ["schema:Car","Object"],
+                "content": "2023 MetroTransit Type X Bus with VIN *WV3AH4709YH034586*",
+                "id": "https://metrotransit.com/bus/WV3AH4709YH034586",
+                "mediaType": "text/markdown",
+                "name": "Bus X-25",
+                "schema:vehicleIdentificationNumber": "WV3AH4709YH034586"
+            },
+            "content": "If inspection passed, Stage bus *Bus X-25* in lane C2 for departure at 06:15 MST. If it failed, stage in the maintenance bay and create a maintenance order.",
+            "endTime": "2024-12-04T06:15:00-07:00",
+            "id": "https://bienoblige.com/actionitem/d80f8f65-d4b8-4ba9-9544-63ecd0a81c88",
+            "mediaType": "text/markdown",
+            "name": "Stage Bus for Next Activity",
+            "published": "2024-12-03T17:06:48.8654568+00:00"
+        },
+        "published": "2024-12-03T17:06:48.8654568+00:00"
+    }
+]
+```
