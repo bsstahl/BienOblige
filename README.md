@@ -4,13 +4,13 @@
 
 **Bien Oblige** is an [GNU Affero GPL](/LICENSE) licensed task management system designed to optimize task tracking and execution across multiple applications, helping teams navigate their tasks with greater insight and visibility.
 
-## Status: MVP Implementation Phase
-
-This project is currently in the MVP implementation phase. In this stage, we are actively developing the product and preparing for the initial release in Q1 2025.
-
 ### Vision
 
 Our [Internal Press Release](docs/press/Internal%20Press%20Release.md) provides a high-level overview of the project's vision and objectives.
+
+## Status: MVP Implementation Phase
+
+This project is currently in the MVP implementation phase. In this stage, we are actively developing the product and preparing for the initial release in Q1 2025.
 
 ### Phase Objectives
 
