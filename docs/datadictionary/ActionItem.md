@@ -1,8 +1,14 @@
 # ActionItem Data Dictionary
 
-An **ActionItem** is a task or unit of work that needs to be performed. It is created by an **Actor** and may be assigned to an **Executor** that represents an individual or group. The **ActionItem** contains all the details of the work to be performed, including the location, due date, and any prerequisites or exceptions that may apply. The **ActionItem** is a custom entity that extends the [Activity Streams 2.0](https://www.w3.org/TR/activitystreams-core/) *Object*.
-
 ## ActionItem View
+
+An **ActionItem** is a task or unit of work that needs to be performed. It is created by an **Actor** and may be assigned to an **Executor** that represents an individual or group. The **ActionItem** contains all the details of the work to be performed, including the location, due date, and any prerequisites or exceptions that may apply.
+
+### References
+
+An **ActionItem** is a custom entity that extends the [Activity Streams 2.0](https://www.w3.org/TR/activitystreams-core/) *Object*.
+
+### Implementation
 
 The fields of an **ActionItem** are defined as follows:
 

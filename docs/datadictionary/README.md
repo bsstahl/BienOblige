@@ -14,5 +14,6 @@ It is generally considered best-practice to extend the entities rather than simp
 
 * [ActionItem](ActionItem.md)
 * [Activity](Activity.md)
+  * [Add Activity](Activity-Add.md)
   * [Create Activity](Activity-Create.md)
   
