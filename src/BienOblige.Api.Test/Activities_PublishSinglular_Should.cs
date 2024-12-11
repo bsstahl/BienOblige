@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Builders;
+using BienOblige.Api.Extensions;
 using BienOblige.Api.Targets;
 using BienOblige.Api.Test.Extensions;
 using BienOblige.Api.Test.Mocks;
@@ -42,9 +43,8 @@ public class Activities_PublishSinglular_Should
         };
 
         // Arrange
-        var activity = new ActivityBuilder()
+        var activity = new CreateActionItemActivityBuilder()
             .CorrelationId(Guid.NewGuid())
-            .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())
                 .ActorType(Api.Enumerations.ActorType.Application)
@@ -81,9 +81,8 @@ public class Activities_PublishSinglular_Should
     public async Task ReportTheErrorIfAnHttpErrorOccurs()
     {
         // Arrange
-        var activity = new ActivityBuilder()
+        var activity = new CreateActionItemActivityBuilder()
             .CorrelationId(Guid.NewGuid())
-            .ActivityType(Api.Enumerations.ActivityType.Create)
             .AddAdditionalProperty("shouldThrow", true)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())
@@ -127,9 +126,8 @@ public class Activities_PublishSinglular_Should
         string vin = "WV3AH4709YH034586";
 
         // Arrange
-        var activity = new ActivityBuilder()
+        var activity = new CreateActionItemActivityBuilder()
             .CorrelationId(Guid.NewGuid())
-            .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())
                 .ActorType(Api.Enumerations.ActorType.Application)
@@ -162,29 +160,38 @@ public class Activities_PublishSinglular_Should
         // Assert
         Assert.True(response.SuccessfullyPublished);
 
-        var actual = httpClient.ActivityRequests;
-        Assert.NotNull(actual);
-        Assert.Single(actual);
-        Assert.Equal(vin, actual?.Single()?.ActionItem?.Target?.AdditionalProperties["schema:vehicleIdentificationNumber"].ToString());
+        var actualActivities = httpClient.ActivityRequests;
+        var actualActionItem = actualActivities?.Single()?.Object?.AsActionItem()
+            ?? throw new ArgumentNullException("ActionItem");
+        var actualVin = actualActionItem.Target?.AdditionalProperties["schema:vehicleIdentificationNumber"];
+
+        Assert.NotNull(actualActivities);
+        Assert.Single(actualActivities);
+        Assert.Equal(vin, actualVin?.ToString());
     }
 
     [Fact]
     public async Task PublishAValidLocationAssignmentMessage()
     {
-        var actionItemId = NetworkIdentity.From("https://example.com", "ActionItem", "fd1cf331-c12d-4840-a197-ea2b08ddd240");
-        var locationId = NetworkIdentity.From("https://example.com", "Location", "94f6cf65-568f-49b7-a501-95e5e9371c6a");
+        const string baseUri = "https://example.com";
+
+        var actionItemId = NetworkIdentity.From(baseUri, "ActionItem", "fd1cf331-c12d-4840-a197-ea2b08ddd240");
+        var locationId = NetworkIdentity.From(baseUri, "Location", "94f6cf65-568f-49b7-a501-95e5e9371c6a");
 
         // Arrange
-        var activity = new ActivityBuilder()
+        var activity = new AddLocationActivityBuilder()
             .CorrelationId(Guid.NewGuid())
-            .ActivityType(Api.Enumerations.ActivityType.Update)
             .Actor(new ActorBuilder()
-                .Id(Guid.NewGuid())
-                .ActorType(Api.Enumerations.ActorType.Application)
+                .Id(NetworkIdentity.From(baseUri, "Application", Guid.NewGuid().ToString()))
+                .ActorType(Enumerations.ActorType.Application)
                 .Name($"{this.GetType().Name}.{nameof(PublishAValidLocationAssignmentMessage)}"))
-            .AssignToLocation(actionItemId, new LocationBuilder()
+            .Location(new LocationBuilder()
                 .Id(locationId)
                 .Name("The company's Phoenix AZ location"))
+            .Target(new ObjectIdentifierBuilder()
+                .Id(actionItemId)
+                .AddObjectType("bienoblige:ActionItem")
+                .AddObjectType("Object"))
             .Build();
 
         // Act
@@ -204,6 +211,11 @@ public class Activities_PublishSinglular_Should
         var actual = httpClient.ActivityRequests;
         Assert.NotNull(actual);
         Assert.Single(actual);
-        Assert.Equal(locationId.ToString(), actual.Single().ActionItem.Location?.ObjectId.ToString());
+
+        var actualLocation = actual.Single().Object;
+        Assert.Equal(locationId.ToString(), actualLocation.Id.ToString());
+
+        var actualTarget = actual.Single().Target;
+        Assert.Equal(actionItemId.ToString(), actualTarget.Id.ToString());
     }
 }

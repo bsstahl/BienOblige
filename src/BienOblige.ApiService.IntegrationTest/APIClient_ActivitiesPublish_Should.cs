@@ -1,5 +1,6 @@
 ﻿using Aspire.Hosting;
 using BienOblige.Api.Builders;
+using BienOblige.Api.Extensions;
 using BienOblige.ApiService.IntegrationTest.Builders;
 using BienOblige.ApiService.IntegrationTest.Extensions;
 using BienOblige.ApiService.IntegrationTest.Fixtures;
@@ -26,7 +27,7 @@ public class APIClient_ActivitiesPublish_Should
     public async Task RespondWithSuccessResults()
     {
         // TODO: Add content
-        var content = new ActivitiesCollectionBuilder()
+        var content = new CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
@@ -59,7 +60,7 @@ public class APIClient_ActivitiesPublish_Should
             aiCollectionBuilder.Add(new ActionItemBuilder()
                 .UseRandomValues());
 
-        var content = new ActivitiesCollectionBuilder()
+        var content = new CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
@@ -98,7 +99,7 @@ public class APIClient_ActivitiesPublish_Should
                     .Add(new ActionItemBuilder().UseRandomValues())
                 ));
 
-        var content = new ActivitiesCollectionBuilder()
+        var content = new CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
@@ -122,11 +123,16 @@ public class APIClient_ActivitiesPublish_Should
             var response = await client.Publish(content);
             logger.LogInformation("Response: {@Response}", response);
 
-            // The child item's ParentId should be the parent item's Id
-            var actualChild = response.Single(r => r.Activity.ActionItem.Parent is not null).Activity.ActionItem;
-            var actualParent = response.Single(r => r.Activity.ActionItem.Parent is null).Activity.ActionItem;
-            Assert.Equal(actualChild.Parent, actualParent.Id);
 
-        }    }
+            // The child item's ParentId should be the parent item's Id
+            var actualParentActivity = content.Single(r => (r.Object.AsActionItem()).Parent is null);
+            var actualParent = actualParentActivity.Object.AsActionItem();
+
+            var actualChildActivity = content.Single(r => r.Object.AsActionItem().Parent is not null);
+            var actualChild = actualChildActivity.Object.AsActionItem();
+
+            Assert.Equal(actualChild.Parent, actualParent.Id.ToString());
+        }    
+    }
 
 }

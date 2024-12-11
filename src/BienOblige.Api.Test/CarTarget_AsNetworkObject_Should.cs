@@ -30,7 +30,7 @@ public class CarTarget_AsNetworkObject_Should
         var actual = car.AsNetworkObject();
 
         _logger.LogTrace("NetworkObject: {@Object}", actual);
-        Assert.Equal(car.Id, actual.ObjectId);
+        Assert.Equal(car.Id, actual.Id);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class CarTarget_AsNetworkObject_Should
         var actual = entity.AsNetworkObject();
         var json = JsonSerializer.Serialize(actual);
         var deserialized = JsonSerializer.Deserialize<NetworkObject>(json);
-        Assert.Equal(entity.Id, deserialized?.ObjectId);
+        Assert.Equal(entity.Id, deserialized?.Id);
     }
 
 

@@ -30,7 +30,7 @@ public class ResidenceTarget_AsNetworkObject_Should
         var actual = residence.AsNetworkObject();
 
         _logger.LogTrace("NetworkObject: {@Object}", actual);
-        Assert.Equal(residence.Id, actual.ObjectId);
+        Assert.Equal(residence.Id, actual.Id);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class ResidenceTarget_AsNetworkObject_Should
         var actual = entity.AsNetworkObject();
         var json = JsonSerializer.Serialize(actual);
         var deserialized = JsonSerializer.Deserialize<NetworkObject>(json);
-        Assert.Equal(entity.Id, deserialized?.ObjectId);
+        Assert.Equal(entity.Id, deserialized?.Id);
     }
 
 

@@ -44,9 +44,9 @@ public class ObjectBuilder
             ? throw new InvalidOperationException("An object type must be specified.")
             : new NetworkObject
             {
-                ObjectId = _id,
+                Id = _id,
                 ObjectType = _objectTypes,
-                Attachments = _attachmentBuilders.Build(),
+                Attachment = _attachmentBuilders.Build(),
                 AttributedTo = _attributedToBuilder?.Build(),
                 Audience = _audienceBuilder?.Build(),
                 Bcc = _bccBuilders.Build(),
@@ -68,7 +68,7 @@ public class ObjectBuilder
                 Replies = _repliesBuilders.Build(),
                 StartTime = _startTime,
                 Summary = _summary,
-                Tags = _tagBuilders.Build(),
+                Tag = _tagBuilders.Build(),
                 To = _toBuilder?.Build(),
                 LastUpdatedAt = _updated,
                 Url = _urls,

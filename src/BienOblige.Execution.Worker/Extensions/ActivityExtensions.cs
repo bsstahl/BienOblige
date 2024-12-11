@@ -37,7 +37,8 @@ internal static class ActivityExtensions
             ["MethodName"] = nameof(ProcessCreate)
         });
 
-        var actionItemId = activityManager.Content.ActionItem.Id;
+        var actionItem = activityManager.Content.Object.AsActionItem();
+        var actionItemId = actionItem.Id;
         if (await readRepo.Exists(actionItemId))
         {
             // TODO: Add an exception to the existing ActionItem
@@ -46,7 +47,7 @@ internal static class ActivityExtensions
         }
         else
         {
-            var item = await writeRepo.Update(activityManager.Content.ActionItem, activityManager.Content.Actor, activityManager.Content.Id.Value.ToString());
+            var item = await writeRepo.Update(actionItem, activityManager.Content.Actor, activityManager.Content.Id.Value.ToString());
             logger.LogInformation("Created ActionItem {Id} with correlation {CorrelationId}", item.Value.ToString(), activityManager.Content.Id.Value);
         }
     }

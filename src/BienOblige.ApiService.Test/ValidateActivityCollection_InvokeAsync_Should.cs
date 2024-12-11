@@ -56,8 +56,7 @@ public class ValidateActivityCollection_InvokeAsync_Should
             mockRequest.SetupGet(req => req.HttpContext).Returns(context);
             mockResponse.SetupGet(res => res.HttpContext).Returns(context);
 
-            var activity = new ActivityBuilder()
-                .ActivityType(Api.Enumerations.ActivityType.Create)
+            var activity = new CreateActionItemActivityBuilder()
                 .Actor(new ActorBuilder()
                     .ActorType(Api.Enumerations.ActorType.Application)
                     .Id(Guid.NewGuid())

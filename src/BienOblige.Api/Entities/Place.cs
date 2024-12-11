@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace BienOblige.Api.Entities;
 
-public class Location
+public class Place
 {
     [JsonPropertyName("@context")]
     [JsonConverter(typeof(ContextConverter))]
@@ -14,7 +14,7 @@ public class Location
     public required string Id { get; set; }
 
     [JsonPropertyName("@type")]
-    public string ObjectType { get; set; } = "Location";
+    public string ObjectType { get; set; } = "Place";
 
     [JsonPropertyName("name")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]

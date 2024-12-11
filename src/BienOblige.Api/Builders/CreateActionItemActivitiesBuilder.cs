@@ -3,7 +3,7 @@ using BienOblige.Api.Enumerations;
 
 namespace BienOblige.Api.Builders;
 
-public class ActivitiesCollectionBuilder
+public class CreateActionItemActivitiesBuilder
 {
     private List<KeyValuePair<string?, string>>? _context;
 
@@ -18,11 +18,11 @@ public class ActivitiesCollectionBuilder
     private readonly Uri _instanceBaseUri;
 
 
-    public ActivitiesCollectionBuilder()
+    public CreateActionItemActivitiesBuilder()
         : this(new Uri(Constants.Path.DefaultBaseUri))
     { }
 
-    public ActivitiesCollectionBuilder(Uri instanceBaseUri)
+    public CreateActionItemActivitiesBuilder(Uri instanceBaseUri)
     {
         _instanceBaseUri = instanceBaseUri;
     }
@@ -48,11 +48,10 @@ public class ActivitiesCollectionBuilder
         var actionItemBuilders = _actionItemCollectionBuilder.GetAllBuilders();
 
         // Create an Activity for each ActionItem
-        return actionItemBuilders.Select(x => new ActivityBuilder()
+        return actionItemBuilders.Select(x => new CreateActionItemActivityBuilder()
             .AddContext(_context)
             .AddAdditionalProperties(_additionalProperties ?? [])
             .CorrelationId(_correlationId)
-            .ActivityType(_activityType)
             .Actor(_actorBuilder)
             .ActionItem(x)
             .Published(_published)
@@ -60,67 +59,67 @@ public class ActivitiesCollectionBuilder
         .ToList();
     }
 
-    public ActivitiesCollectionBuilder ClearContext()
+    public CreateActionItemActivitiesBuilder ClearContext()
     {
         _context = null;
         return this;
     }
 
-    public ActivitiesCollectionBuilder AddContext(string key, string value)
+    public CreateActionItemActivitiesBuilder AddContext(string key, string value)
     {
         _context ??= new();
         _context.Add(new KeyValuePair<string?, string>(key, value));
         return this;
     }
 
-    public ActivitiesCollectionBuilder CorrelationId(Guid value)
+    public CreateActionItemActivitiesBuilder CorrelationId(Guid value)
     {
         return this.CorrelationId($"urn:uid:{value.ToString()}");
     }
 
-    public ActivitiesCollectionBuilder CorrelationId(string value)
+    public CreateActionItemActivitiesBuilder CorrelationId(string value)
     {
         return this.CorrelationId(new Uri(value));
     }
 
-    public ActivitiesCollectionBuilder CorrelationId(Uri value)
+    public CreateActionItemActivitiesBuilder CorrelationId(Uri value)
     {
         _correlationId = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder ActivityType(ActivityType value)
+    public CreateActionItemActivitiesBuilder ActivityType(ActivityType value)
     {
         _activityType = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder Actor(ActorBuilder value)
+    public CreateActionItemActivitiesBuilder Actor(ActorBuilder value)
     {
         _actorBuilder = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder Published(DateTimeOffset value)
+    public CreateActionItemActivitiesBuilder Published(DateTimeOffset value)
     {
         _published = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder ActionItems(ActionItemCollectionBuilder value)
+    public CreateActionItemActivitiesBuilder ActionItems(ActionItemCollectionBuilder value)
     {
         _actionItemCollectionBuilder = value;
         return this;
     }
 
-    public ActivitiesCollectionBuilder AddAdditionalProperty(string key, object value)
+    public CreateActionItemActivitiesBuilder AddAdditionalProperty(string key, object value)
     {
         _additionalProperties ??= new();
         _additionalProperties.Add(key, value);
         return this;
     }
 
-    public ActivitiesCollectionBuilder ClearAdditionalProperties()
+    public CreateActionItemActivitiesBuilder ClearAdditionalProperties()
     {
         _additionalProperties = null;
         return this;

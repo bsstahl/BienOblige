@@ -1,5 +1,6 @@
 ﻿using BienOblige.Api.Builders;
-using BienOblige.Api.ValueObjects;
+using BienOblige.Api.Entities;
+using BienOblige.Api.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BienOblige.Api.Test;
@@ -10,7 +11,7 @@ public class ActionItemCollectionBuilder_Build_Should
     [Fact]
     public void ResultInAParentChildRelationshipBetweenActionItems()
     {
-        var content = new ActivitiesCollectionBuilder()
+        var content = new CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
@@ -27,11 +28,13 @@ public class ActionItemCollectionBuilder_Build_Should
                             .Content("This is the content of the child item", TestHelpers.DefaultMediaType)))))
             .Build();
 
-        // The child item's ParentId should be the parent item's Id
-        var actualParent = content.Single(r => r.ActionItem.Parent is null).ActionItem;
-        var actualChild = content.Single(r => r.ActionItem.Parent is not null).ActionItem;
+        var actualParentActivity = content.Single(r => r.Object.AsActionItem().Parent is null);
+        var actualParent = actualParentActivity.Object.AsActionItem();
 
-        Assert.Equal(2, content.Count());
-        Assert.Equal(actualChild.Parent, actualParent.Id);
+        var actualChildActivity = content.Single(r => r.Object.AsActionItem().Parent is not null);
+        var actualChild = actualChildActivity.Object.AsActionItem();
+
+        // The child item's ParentId should be the parent item's Id
+        Assert.Equal(actualChild.Parent, actualParent.Id.ToString());
     }
 }

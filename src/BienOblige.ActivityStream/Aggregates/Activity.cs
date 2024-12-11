@@ -7,7 +7,7 @@ public class Activity : NetworkObject
 {
     public required ActivityType ActivityType { get; set; }
     public required Actor Actor { get; set; }
-    public required ActionItem ActionItem { get; set; }
+    public required NetworkObject Object { get; set; }
     public required NetworkIdentity CorrelationId { get; set; }
 
     public Activity()

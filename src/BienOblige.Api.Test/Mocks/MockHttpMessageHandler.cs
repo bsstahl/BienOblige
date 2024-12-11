@@ -82,7 +82,7 @@ public class MockHttpMessageHandler : Mock<HttpMessageHandler>
     {
         ArgumentNullException.ThrowIfNull(activity, nameof(activity));
 
-        var actionItem = activity?.ActionItem ?? throw new ArgumentException("Invalid ActionItem");
+        var actionItem = activity?.Object ?? throw new ArgumentException("Invalid ActionItem");
         var shouldFail = (actionItem?.AdditionalProperties.TryGetValue("shouldFail", out var shouldFailValue) ?? false)
             ? bool.TryParse(shouldFailValue.ToString(), out var shouldFailParsed) ? shouldFailParsed : false
             : false;

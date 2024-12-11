@@ -22,7 +22,10 @@ public class Activity
     public required Actor Actor { get; set; }
 
     [JsonPropertyName("object")]
-    public required ActionItem ActionItem { get; set; }
+    public required NetworkObject Object { get; set; }
+
+    [JsonPropertyName("target")]
+    public NetworkObject? Target { get; set; }
 
     [JsonPropertyName("published")]
     public DateTimeOffset? Published { get; set; }

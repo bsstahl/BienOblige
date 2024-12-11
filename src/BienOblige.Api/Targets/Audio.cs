@@ -72,7 +72,7 @@ public class Audio: IActionItemTarget
     /// Any relevant tags or genres associated with the audio file or track
     /// </summary>
     [JsonPropertyName("tag")]
-    public List<NetworkObject> Tags { get; set; } = new();
+    public List<NetworkObject> Tag { get; set; } = new();
 
     /// <summary>
     /// Converts the entity object to a generic NetworkObject format
@@ -92,7 +92,7 @@ public class Audio: IActionItemTarget
             .Summary(this.Description)
             .Duration(this.Duration)
             .AttributedTo(this.Creator?.AsObjectBuilder())
-            .AddTags(this.Tags.AsObjectBuilders())
+            .AddTags(this.Tag.AsObjectBuilders())
             .Build();
     }
 }

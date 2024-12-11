@@ -1,10 +1,11 @@
 ﻿using BienOblige.Api.Builders;
 using BienOblige.Api.Extensions;
+using BienOblige.Api.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace BienOblige.Api.Entities;
 
-public class NetworkObject
+public class NetworkObject : INetworkObject
 {
     private List<KeyValuePair<string?, string>>? _context;
 
@@ -32,7 +33,7 @@ public class NetworkObject
     }
 
     [JsonPropertyName("id")]
-    public required Uri ObjectId { get; set; }
+    public required Uri Id { get; set; }
 
     [JsonPropertyName("@type")]
     public List<string> ObjectType { get; set; } = new();
@@ -53,7 +54,7 @@ public class NetworkObject
 
     [JsonPropertyName("attachment")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Attachments
+    public List<NetworkObject>? Attachment
     {
         get => _attachments.Any() ? _attachments : null;
         set => _attachments.AddRange(value ?? []);
@@ -146,7 +147,7 @@ public class NetworkObject
 
     [JsonPropertyName("tag")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Tags
+    public List<NetworkObject>? Tag
     {
         get => _tag.Any() ? _tag : null;
         set => _tag.AddRange(value ?? []);
@@ -176,11 +177,11 @@ public class NetworkObject
     public ObjectBuilder AsObjectBuilder()
     {
         return new ObjectBuilder()
-            .Id(this.ObjectId)
+            .Id(this.Id)
             .AddObjectTypes(this.ObjectType)
             .Name(this.Name)
             .Content(this.Content, this.MediaType)
-            .AddAttachments(this.Attachments.AsObjectBuilders())
+            .AddAttachments(this.Attachment.AsObjectBuilders())
             .AttributedTo(this.AttributedTo?.AsObjectBuilder())
             .Audience(this.Audience?.AsObjectBuilder())
             .AddBccs(this.Bcc.AsObjectBuilders())
@@ -198,10 +199,15 @@ public class NetworkObject
             .AddReplies(this.Replies.AsObjectBuilders())
             .StartTime(this.StartTime)
             .Summary(this.Summary)
-            .AddTags(this.Tags.AsObjectBuilders())
+            .AddTags(this.Tag.AsObjectBuilders())
             .To(this.To?.AsObjectBuilder())
             .LastUpdatedAt(this.LastUpdatedAt)
             .AddUrls(this.Url)
             .AddAdditionalProperties(this.AdditionalProperties);
+    }
+
+    public NetworkObject AsNetworkObject()
+    {
+        return this;
     }
 }

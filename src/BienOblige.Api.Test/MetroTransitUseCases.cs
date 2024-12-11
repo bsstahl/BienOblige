@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Builders;
+using BienOblige.Api.Extensions;
 using BienOblige.Api.Test.Extensions;
 using BienOblige.Api.ValueObjects;
 using Microsoft.Extensions.Configuration;
@@ -35,9 +36,8 @@ public class MetroTransitUseCases
     public async Task WeeklyDigitalTorqueWrenchCalibration()
     {
         // Arrange
-        var activity = new ActivityBuilder()
+        var activity = new CreateActionItemActivityBuilder()
             .CorrelationId(Guid.NewGuid())
-            .ActivityType(Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(complianceStudioServiceId)
                 .ActorType(Enumerations.ActorType.Service)
@@ -92,9 +92,9 @@ public class MetroTransitUseCases
             .AddAdditionalProperty("schema:vehicleIdentificationNumber", vin);
 
         // Arrange
-        var activity = new ActivitiesCollectionBuilder()
+        var activity = new CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
-            .ActivityType(Api.Enumerations.ActivityType.Create)
+            .ActivityType(Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .Id(Guid.NewGuid())
                 .ActorType(Api.Enumerations.ActorType.Application)
@@ -130,11 +130,14 @@ public class MetroTransitUseCases
         Assert.NotNull(actual);
         Assert.Equal(2, actual.Count());
 
-        var inspectionTask = actual.Single(a => a.ActionItem.Id!.Equals(inspectionTaskId.Value.ToString()));
-        var dependentTask = actual.Single(a => !a.ActionItem.Id!.Equals(inspectionTaskId.Value.ToString()));
+        var inspectionTask = actual.Single(a => a.Object.Id!.Equals(inspectionTaskId.Value.ToString()));
+        var dependentTask = actual.Single(a => !a.Object.Id!.Equals(inspectionTaskId.Value.ToString()));
+
+        var inspectionActionItem = inspectionTask.Object.AsActionItem();
+        var dependentActionItem = dependentTask.Object.AsActionItem();
 
         // Assert that the dependent task has the inspection task's Id in its prerequisite collection
-        Assert.Equal(dependentTask.ActionItem.Prerequisites!.Single(), inspectionTask.ActionItem.Id);
+        Assert.Equal(dependentActionItem.Prerequisites!.Single(), inspectionActionItem.Id.ToString());
     }
 
 }

@@ -1,53 +1,23 @@
-﻿using BienOblige.Api.Converters;
-using BienOblige.Api.Enumerations;
-using BienOblige.Api.Interfaces;
-using System.Net.Mail;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace BienOblige.Api.Entities;
+namespace BienOblige.Execution.Data.Kafka.Messages;
 
-public class ActionItem : INetworkObject
+public class NetworkObject
 {
-    public static string[] DefaultObjectTypeName = new string[] { "bienoblige:ActionItem", "Object" };
-
     private readonly List<NetworkObject> _attachments = new();
     private readonly List<NetworkObject> _bcc = new();
     private readonly List<NetworkObject> _inReplyTo = new();
     private readonly List<NetworkObject> _replies = new();
     private readonly List<NetworkObject> _tag = new();
     private readonly List<NetworkObject> _location = new();
-    private readonly List<Uri> _url = new();
+    private readonly List<string> _url = new();
 
-    [JsonPropertyName("bienoblige:target")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public NetworkObject? Target { get; set; }
-
-    [JsonPropertyName("bienoblige:parent")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Parent { get; set; }
-
-    [JsonPropertyName("bienoblige:completionMethods")]
-    [JsonConverter(typeof(EnumListConverter<CompletionMethod>))]
-    public List<CompletionMethod> CompletionMethods { get; set; } = new List<CompletionMethod>();
-
-    [JsonPropertyName("bienoblige:prerequisites")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string>? Prerequisites { get; set; }
-
-    #region NetworkObject Properties
-
-    [JsonPropertyName("@context")]
-    [JsonConverter(typeof(ContextConverter))]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<KeyValuePair<string?, string>>? Context { get; set; }
-
-    [JsonPropertyName("id")]
-    public required Uri Id { get; set; }
 
     [JsonPropertyName("@type")]
-    public List<string> ObjectType { get; set; } = DefaultObjectTypeName.ToList();
+    public string[] ObjectType { get; private set; } = new[] { "Object" };
 
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
 
     [JsonPropertyName("name")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -56,6 +26,15 @@ public class ActionItem : INetworkObject
     [JsonPropertyName("content")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Content { get; set; }
+
+    [JsonPropertyName("target")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Target? Target { get; set; }
+
+
+
+    // ***************************
+
 
     [JsonPropertyName("mediaType")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -95,13 +74,16 @@ public class ActionItem : INetworkObject
     public NetworkObject? Cc { get; set; }
 
     [JsonPropertyName("duration")]
-    [JsonConverter(typeof(Iso8601TimespanConverter))]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public TimeSpan? Duration { get; set; }
+    public string? Duration { get; set; }
 
     [JsonPropertyName("endTime")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public DateTimeOffset? EndTime { get; set; }
+    public string? EndTime { get; set; }
+
+    [JsonPropertyName("generator")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NetworkObject? Generator { get; set; }
 
     [JsonPropertyName("icon")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -119,13 +101,13 @@ public class ActionItem : INetworkObject
         set => _inReplyTo.AddRange(value ?? []);
     }
 
-    [JsonPropertyName("updated")]
+    [JsonPropertyName("location")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public DateTimeOffset? LastUpdatedAt { get; set; }
-
-    [JsonPropertyName("summary")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Summary { get; set; }
+    public List<NetworkObject>? Location
+    {
+        get => _location.Any() ? _location : null;
+        set => _location.AddRange(value ?? []);
+    }
 
     [JsonPropertyName("preview")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -133,7 +115,7 @@ public class ActionItem : INetworkObject
 
     [JsonPropertyName("published")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public DateTimeOffset? Published { get; set; }
+    public string? Published { get; set; }
 
     [JsonPropertyName("replies")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -145,26 +127,31 @@ public class ActionItem : INetworkObject
 
     [JsonPropertyName("startTime")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public DateTimeOffset? StartTime { get; set; }
+    public string? StartTime { get; set; }
 
-    [JsonPropertyName("generator")]
+    [JsonPropertyName("summary")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public NetworkObject? Generator { get; set; }
-
-    [JsonPropertyName("location")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<NetworkObject>? Location { get; set; }
+    public string? Summary { get; set; }
 
     [JsonPropertyName("tag")]
-    public List<NetworkObject>? Tag { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<NetworkObject>? Tag
+    {
+        get => _tag.Any() ? _tag : null;
+        set => _tag.AddRange(value ?? []);
+    }
 
     [JsonPropertyName("to")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public NetworkObject? To { get; set; }
 
+    [JsonPropertyName("updated")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? LastUpdatedAt { get; set; }
+
     [JsonPropertyName("url")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<Uri>? Url
+    public List<string>? Url
     {
         get => _url.Any() ? _url : null;
         set => _url.AddRange(value ?? []);
@@ -173,12 +160,26 @@ public class ActionItem : INetworkObject
     [JsonExtensionData]
     public Dictionary<string, object> AdditionalProperties { get; set; } = new();
 
-    #endregion
-
-    public NetworkObject AsNetworkObject()
+    public ActivityStream.Aggregates.NetworkObject AsAggregate()
     {
-        var json = JsonSerializer.Serialize(this);
-        return JsonSerializer.Deserialize<NetworkObject>(json)
-            ?? throw new InvalidOperationException("Unable to convert into a NetworkObject");
+        return new ActivityStream.Aggregates.NetworkObject()
+        {
+            Id = ActivityStream.ValueObjects.NetworkIdentity.From(this.Id),
+            Name = string.IsNullOrWhiteSpace(this.Name) ? null : ActivityStream.ValueObjects.Name.From(this.Name),
+            Content = ActivityStream.ValueObjects.Content.From(this.Content),
+            ObjectTypeName = this.ObjectType.Select(t => ActivityStream.ValueObjects.TypeName.From(t))
+        };
+    }
+
+    public static NetworkObject From(ActivityStream.Aggregates.NetworkObject item)
+    {
+        return new NetworkObject()
+        {
+            Id = item.Id.Value.ToString(),
+            Name = item.Name?.Value ?? string.Empty,
+            Content = item.Content?.Value ?? string.Empty,
+            ObjectType = item.ObjectTypeName.Select(t => t.Value).ToArray()
+        };
     }
 }
+

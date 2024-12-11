@@ -57,7 +57,7 @@ public class Client_PublishActivityCommand_Should
             CorrelationId = NetworkIdentity.New(),
             ActivityType = ActivityType.Update,
             Actor = updatingActor,
-            ActionItem = null!,
+            Object = null!,
             Published = DateTimeOffset.UtcNow,
             ObjectTypeName = Activity.GetObjectTypeName()
         };
@@ -80,7 +80,7 @@ public class Client_PublishActivityCommand_Should
             CorrelationId = NetworkIdentity.New(),
             ActivityType = ActivityType.Update,
             Actor = null!,
-            ActionItem = item, 
+            Object = item, 
             Published = DateTimeOffset.UtcNow,
             ObjectTypeName = Activity.GetObjectTypeName()
         };
@@ -114,7 +114,7 @@ public class Client_PublishActivityCommand_Should
             CorrelationId = correlationId, 
             ActivityType = activityType,
             Actor = updatingActor, 
-            ActionItem = item, 
+            Object = item, 
             Published = DateTimeOffset.UtcNow,
             ObjectTypeName = Activity.GetObjectTypeName()
         };

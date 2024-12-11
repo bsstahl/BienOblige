@@ -42,7 +42,7 @@ public class ActivityInbox_PostActivityCollection_Should
             .Id(Guid.NewGuid())
             .Name("Acme Bird Feed");
 
-        var activity = new ActivitiesCollectionBuilder()
+        var activity = new CreateActionItemActivitiesBuilder()
             .CorrelationId(correlationId)
             .ActivityType(activityType)
             .Actor(updatingActor)
@@ -76,7 +76,7 @@ public class ActivityInbox_PostActivityCollection_Should
             .Id(Guid.NewGuid())
             .Name("Acme Bird Feed");
 
-        var activity = new ActivitiesCollectionBuilder()
+        var activity = new CreateActionItemActivitiesBuilder()
             .CorrelationId(correlationId)
             .ActivityType(activityType)
             .Actor(updatingActor)
@@ -109,7 +109,7 @@ public class ActivityInbox_PostActivityCollection_Should
             var activityType = Api.Enumerations.ActivityType.Create;
             var correlationId = NetworkIdentity.New().Value;
 
-            var message = new ActivitiesCollectionBuilder()
+            var message = new CreateActionItemActivitiesBuilder()
                 .CorrelationId(correlationId)
                 .ActivityType(activityType)
                 .Actor(new ActorBuilder()
@@ -119,7 +119,7 @@ public class ActivityInbox_PostActivityCollection_Should
                 .ActionItems(new ActionItemCollectionBuilder()
                     .Add(new ActionItemBuilder().UseRandomValues()))
                 .Build();
-            var expectedId = message.Single().ActionItem.Id;
+            var expectedId = message.Single().Object.Id;
 
             var content = JsonContent.Create(message);
 
@@ -133,7 +133,7 @@ public class ActivityInbox_PostActivityCollection_Should
             logger.LogTrace("Publication Results: {@Actual}", actual);
 
             // Assert
-            var actualId = actual!.Single().Activity?.ActionItem.Id;
+            var actualId = actual!.Single().Activity?.Object.Id;
             Assert.Equal(expected: expectedId, actual: actualId);
         }
     }

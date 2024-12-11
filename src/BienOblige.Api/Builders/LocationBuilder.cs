@@ -13,12 +13,11 @@ public class LocationBuilder
 
     // TODO: Add additional fields
 
-    public Location Build()
+    public Place Build()
     {
         ArgumentNullException.ThrowIfNull(_id, nameof(_id));
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(_name, nameof(_name));
 
-        return new Location()
+        return new Place()
         {
             Id = _id.ToString(),
             Name = _name,

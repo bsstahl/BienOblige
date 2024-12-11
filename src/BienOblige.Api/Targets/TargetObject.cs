@@ -8,9 +8,4 @@ namespace BienOblige.Api.Targets;
 /// available that will serve the purpose, it should be used instead.
 /// </summary>
 public class TargetObject : NetworkObject, IActionItemTarget
-{
-    public NetworkObject AsNetworkObject()
-    {
-        return this;
-    }
-}
+{ }

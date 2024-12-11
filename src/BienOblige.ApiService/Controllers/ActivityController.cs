@@ -42,7 +42,7 @@ namespace BienOblige.ApiService.Controllers
                 try
                 {
                     var resultId = await _executionClient.PublishActivityCommand(activity.AsAggregate());
-                    activity.ActionItem.Id = resultId.Value.ToString();
+                    activity.Object.Id = resultId.Value;
                     results.Add(new PublicationResult(activity));
                 }
                 catch (Exception ex)

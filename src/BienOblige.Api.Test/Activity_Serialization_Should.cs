@@ -11,7 +11,7 @@ public class Activity_Serialization_Should
     public void RoundTripWithTheSameValues()
     {
         // TODO: Add content
-        var content = new Api.Builders.ActivitiesCollectionBuilder()
+        var content = new Api.Builders.CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new Api.Builders.ActorBuilder()

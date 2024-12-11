@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Builders;
+using BienOblige.Api.Extensions;
 using BienOblige.Api.Test.Extensions;
 using BienOblige.Api.ValueObjects;
 using Microsoft.Extensions.Configuration;
@@ -44,7 +45,7 @@ public class Activities_PublishCollection_Should
             .AddAdditionalProperty("schema:vehicleIdentificationNumber", vin);
 
         // Arrange
-        var activity = new ActivitiesCollectionBuilder()
+        var activity = new CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
@@ -83,17 +84,19 @@ public class Activities_PublishCollection_Should
         var actual = httpClient.ActivityRequests;
         Assert.NotNull(actual);
         
-        var vins = actual.Select(a => a.ActionItem?.Target?.AdditionalProperties["schema:vehicleIdentificationNumber"].ToString());
-        Assert.Equal(2, vins.Count());
-        Assert.Single(vins.Distinct());
-        Assert.Equal(vin, vins.Distinct().Single());
+        var actualActionItems = actual.Select(a => a.Object.AsActionItem());
+        var actualVins = actualActionItems.Select(a => a.Target?.AdditionalProperties["schema:vehicleIdentificationNumber"].ToString());
+
+        Assert.Equal(2, actualVins.Count());
+        Assert.Single(actualVins.Distinct());
+        Assert.Equal(vin, actualVins.Distinct().Single());
     }
 
     [Fact]
     public async Task ProduceTheExpectedNumberOfActivities()
     {
         // Arrange
-        var activities = new ActivitiesCollectionBuilder()
+        var activities = new CreateActionItemActivitiesBuilder()
             .CorrelationId(Guid.NewGuid())
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
@@ -162,7 +165,7 @@ public class Activities_PublishCollection_Should
         }))
         {
             // Arrange
-            var activities = new ActivitiesCollectionBuilder()
+            var activities = new CreateActionItemActivitiesBuilder()
                 .CorrelationId(Guid.NewGuid())
                 .ActivityType(Api.Enumerations.ActivityType.Create)
                 .Actor(new ActorBuilder()
@@ -216,7 +219,7 @@ public class Activities_PublishCollection_Should
         }))
         {
             // Arrange
-            var activities = new ActivitiesCollectionBuilder()
+            var activities = new CreateActionItemActivitiesBuilder()
                 .CorrelationId(Guid.NewGuid())
                 .ActivityType(Api.Enumerations.ActivityType.Create)
                 .AddAdditionalProperty("shouldThrow", true)

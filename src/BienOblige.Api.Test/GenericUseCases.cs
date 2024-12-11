@@ -35,8 +35,7 @@ public class GenericUseCases
     public async Task SimplestPossibleActionItem()
     {
         // Arrange
-        var activity = new ActivityBuilder()
-            .ActivityType(Enumerations.ActivityType.Create)
+        var activity = new CreateActionItemActivityBuilder()
             .Actor(new ActorBuilder()
                 .Id("https://example.com/services/example-service-1")
                 .ActorType(Enumerations.ActorType.Service))

@@ -1,4 +1,5 @@
-﻿using BienOblige.ActivityStream.Enumerations;
+﻿using BienOblige.ActivityStream.Aggregates;
+using BienOblige.ActivityStream.Enumerations;
 using ValueOf;
 
 namespace BienOblige.ActivityStream.ValueObjects;

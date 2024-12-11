@@ -45,4 +45,5 @@ public static class TestHelpers
     {
         logger.LogTrace("NetworkObject: {@NetworkObject}", JsonSerializer.Serialize(value));
     }
+
 }

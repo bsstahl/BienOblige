@@ -15,7 +15,7 @@ public static class ActivityExtensions
             CorrelationId = ActivityStream.ValueObjects.NetworkIdentity.From(activity.CorrelationId),
             ActivityType = Enum.Parse<ActivityStream.Enumerations.ActivityType>(activity.ActivityType.ToString()),
             Actor = activity.Actor.AsAggregate(),
-            ActionItem = activity.ActionItem.AsAggregate(),
+            Object = activity.Object.AsAggregate(),
             Published = activity.Published ?? DateTimeOffset.UtcNow,
             ObjectTypeName = ActivityStream.Aggregates.Activity.GetObjectTypeName()
         };

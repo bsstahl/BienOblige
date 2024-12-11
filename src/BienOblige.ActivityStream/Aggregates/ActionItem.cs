@@ -1,4 +1,5 @@
 ﻿using BienOblige.ActivityStream.Collections;
+using BienOblige.ActivityStream.Constants;
 using BienOblige.ActivityStream.ValueObjects;
 using System.Text.Json.Serialization;
 
@@ -6,10 +7,7 @@ namespace BienOblige.ActivityStream.Aggregates;
 
 public class ActionItem : NetworkObject
 {
-    private static string[] DefaultObjectTypeName = new string[] { "bienoblige:ActionItem", "Object" };
-
-
-    // TODO: Convert the NetworkObjects to more specific types as appropriate
+    private static string[] DefaultObjectTypeName = new string[] { ObjectTypes.ActionItem, ObjectTypes.Object };
 
     [JsonPropertyName("bienoblige:exceptions")]
     public ExceptionCollection Exceptions { get; set; } = new();
@@ -34,6 +32,7 @@ public class ActionItem : NetworkObject
 
     [JsonPropertyName("bienoblige:updatedBy")]
     public Actor? LastUpdatedBy { get; set; }
+
 
     public ActionItem(): base()
     {

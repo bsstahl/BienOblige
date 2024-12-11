@@ -2,6 +2,7 @@
 
 public enum ActivityType
 {
+    Add,
     Create,
     Update,
     Invite

@@ -28,7 +28,7 @@ public class AudioTarget_AsNetworkObject_Should
     {
         var entity = GetRandomAudio();
         var actual = entity.AsNetworkObject();
-        Assert.Equal(entity.Id, actual.ObjectId);
+        Assert.Equal(entity.Id, actual.Id);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class AudioTarget_AsNetworkObject_Should
         var entity = GetRandomAudio();
         var actual = entity.AsNetworkObject();
 
-        Assert.Equal(entity.Creator?.ObjectId, actual.AttributedTo?.ObjectId);
+        Assert.Equal(entity.Creator?.Id, actual.AttributedTo?.Id);
         Assert.Equal(entity.Creator?.Name, actual.AttributedTo?.Name);
         Assert.Equal(entity.Creator?.ObjectType, actual.AttributedTo?.ObjectType);
         Assert.Equal(entity.Creator?.Summary, actual.AttributedTo?.Summary);
@@ -128,7 +128,7 @@ public class AudioTarget_AsNetworkObject_Should
     {
         var entity = GetRandomAudio();
         var actual = entity.AsNetworkObject();
-        Assert.Equal(entity.Tags.Select(t => t.ObjectId), actual.Tags.Select(t => t.ObjectId));
+        Assert.Equal(entity.Tag.Select(t => t.Id), actual.Tag.Select(t => t.Id));
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public class AudioTarget_AsNetworkObject_Should
         var actual = entity.AsNetworkObject();
         var json = JsonSerializer.Serialize(actual);
         var deserialized = JsonSerializer.Deserialize<NetworkObject>(json);
-        Assert.Equal(entity.Id, deserialized?.ObjectId);
+        Assert.Equal(entity.Id, deserialized?.Id);
     }
 
     [Fact]
@@ -147,7 +147,7 @@ public class AudioTarget_AsNetworkObject_Should
         var entity = GetRandomAudio();
         var json = JsonSerializer.Serialize(entity);
         var deserialized = JsonSerializer.Deserialize<NetworkObject>(json);
-        Assert.Equal(entity.Id, deserialized?.ObjectId);
+        Assert.Equal(entity.Id, deserialized?.Id);
     }
 
     private Targets.Audio GetRandomAudio()
@@ -155,11 +155,11 @@ public class AudioTarget_AsNetworkObject_Should
         int idNumber = 9999.GetRandom(10);
 
         var tagCount = 8.GetRandom(1);
-        var tags = new List<NetworkObject>();
+        var tag = new List<NetworkObject>();
         for (int i = 0; i < tagCount; i++)
-            tags.Add(new NetworkObject()
+            tag.Add(new NetworkObject()
             {
-                ObjectId = new Uri($"https://example.com/file/{idNumber}/{string.Empty.GetRandom()}"),
+                Id = new Uri($"https://example.com/file/{idNumber}/{string.Empty.GetRandom()}"),
                 ObjectType = [TestHelpers.TagObjectTypes.GetRandom()]
             });
 
@@ -181,12 +181,12 @@ public class AudioTarget_AsNetworkObject_Should
             Duration = TimeSpan.FromSeconds(9999.GetRandom(55)),
             Creator = new NetworkObject()
             {
-                ObjectId = new Uri($"https://example.com/artist/{idNumber}"),
+                Id = new Uri($"https://example.com/artist/{idNumber}"),
                 ObjectType = ["Person"],
                 Name = $"Artist {idNumber}",
                 Summary = $"A brief summary of the career of Artist {idNumber}"
             },
-            Tags = tags
+            Tag = tag
         };
 
         _logger.LogInformation(JsonSerializer.Serialize(result));

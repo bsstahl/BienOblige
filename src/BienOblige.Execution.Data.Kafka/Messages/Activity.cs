@@ -22,7 +22,7 @@ public class Activity
     public required Actor Actor { get; set; }
 
     [JsonPropertyName("object")]
-    public required ActionItem ActionItem { get; set; }
+    public required NetworkObject Object { get; set; }
 
     [JsonPropertyName("published")]
     public DateTimeOffset? Published { get; set; }
@@ -39,7 +39,7 @@ public class Activity
             CorrelationId = ActivityStream.ValueObjects.NetworkIdentity.From(this.CorrelationId),
             ActivityType = this.Type.AsActivityType(),
             Actor = this.Actor.AsAggregate(),
-            ActionItem = this.ActionItem.AsAggregate(),
+            Object = this.Object.AsAggregate(),
             Published = this.Published ?? DateTimeOffset.UtcNow,
             ObjectTypeName = ActivityStream.Aggregates.Activity.GetObjectTypeName()
         };
@@ -47,19 +47,18 @@ public class Activity
 
     public static Activity From(ActivityStream.Aggregates.Activity activity)
     {
-        var id = activity.Id.Value.ToString();
+        var id = activity.Id;
         var activityType = activity.ActivityType.ToString();
         var actor = Actor.From(activity.Actor);
-        var actionItem = ActionItem.From(activity.ActionItem);
         var correlationId = activity.CorrelationId.Value.ToString();
 
         return new Activity()
         {
-            Id = id,
+            Id = id.Value.ToString(),
             CorrelationId = correlationId,
             Type = activityType,
             Actor = actor,
-            ActionItem = actionItem,
+            Object = NetworkObject.From(activity.Object),
             Published = activity.Published ?? DateTimeOffset.UtcNow,
             Context = Context.From(activity.Context),
         };

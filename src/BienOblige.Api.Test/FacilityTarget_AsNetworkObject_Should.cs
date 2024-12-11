@@ -30,7 +30,7 @@ public class FacilityTarget_AsNetworkObject_Should
         var actual = facility.AsNetworkObject();
 
         _logger.LogTrace("NetworkObject: {@Object}", actual);
-        Assert.Equal(facility.Id, actual.ObjectId);
+        Assert.Equal(facility.Id, actual.Id);
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class FacilityTarget_AsNetworkObject_Should
         var actual = entity.AsNetworkObject();
         var json = JsonSerializer.Serialize(actual);
         var deserialized = JsonSerializer.Deserialize<NetworkObject>(json);
-        Assert.Equal(entity.Id, deserialized?.ObjectId);
+        Assert.Equal(entity.Id, deserialized?.Id);
     }
 
     private static Targets.Facility GetRandomFacility(ILogger logger)

@@ -51,7 +51,7 @@ public class ActivityInbox_PostActivity_Should
             CorrelationId = correlationId,
             ActivityType = activityType.ToString(),
             Actor = updatingActor,
-            ActionItem = actionItem
+            Object = actionItem.AsNetworkObject()
         };
 
         var content = JsonContent.Create(activity);
@@ -90,7 +90,7 @@ public class ActivityInbox_PostActivity_Should
             CorrelationId = correlationId,
             ActivityType = activityType.ToString(),
             Actor = updatingActor,
-            ActionItem = actionItem
+            Object = actionItem.AsNetworkObject()
         };
         var content = JsonContent.Create(activity);
 
@@ -115,12 +115,10 @@ public class ActivityInbox_PostActivity_Should
             { "Method", "BienOblige.ApiService.IntegrationTest.ActivityInbox_Post_Should.RespondWithTheSpecifiedActionItemId" }
         }))
         {
-            var activityType = Api.Enumerations.ActivityType.Create;
             var correlationId = NetworkIdentity.New().Value;
 
-            var message = new ActivityBuilder()
+            var message = new CreateActionItemActivityBuilder()
                 .CorrelationId(correlationId)
-                .ActivityType(activityType)
                 .Actor(new ActorBuilder()
                     .ActorType(Api.Enumerations.ActorType.Organization)
                     .Id(Guid.NewGuid())
@@ -128,7 +126,7 @@ public class ActivityInbox_PostActivity_Should
                 .ActionItem(new ActionItemBuilder()
                     .UseRandomValues())
                 .Build();
-            var expectedId = message.ActionItem.Id;
+            var expectedId = message.Object.Id;
 
             var content = JsonContent.Create(message);
 
@@ -142,7 +140,7 @@ public class ActivityInbox_PostActivity_Should
             logger.LogTrace("Publication Results: {@Actual}", actual);
 
             // Assert
-            var actualId = actual!.Single().Activity?.ActionItem.Id;
+            var actualId = actual!.Single().Activity?.Object.Id;
             Assert.Equal(expected: expectedId, actual: actualId);
         }
     }
@@ -154,9 +152,8 @@ public class ActivityInbox_PostActivity_Should
 
         var correlationId = NetworkIdentity.New().Value;
 
-        var message = new ActivityBuilder()
+        var message = new CreateActionItemActivityBuilder()
             .CorrelationId(correlationId)
-            .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()
                 .ActorType(Api.Enumerations.ActorType.Organization)
                 .Id(Guid.NewGuid())
@@ -188,7 +185,7 @@ public class ActivityInbox_PostActivity_Should
                 .UseRandomValues()
                 .Id(Guid.NewGuid()));
 
-        var activities = new ActivitiesCollectionBuilder()
+        var activities = new CreateActionItemActivitiesBuilder()
             .CorrelationId(correlationId)
             .ActivityType(Api.Enumerations.ActivityType.Create)
             .Actor(new ActorBuilder()

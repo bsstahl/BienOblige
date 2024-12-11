@@ -15,14 +15,14 @@ public class ActionItemBuilder
     private string? _content;
     private MimeType? _mediaType;
     private Actor? _generator;
-    private ObjectBuilder? _target;
-    private ObjectBuilder? _location;
+    private ObjectBuilder? _targetBuilder;
+    private ObjectBuilder? _locationBuilder;
     private DateTimeOffset? _endTime;
     private Uri? _parent;
     private DateTimeOffset? _published;
 
-    private ObjectBuilder? _attributedTo;
-    private ObjectBuilder? _audience;
+    private ObjectBuilder? _attributedToBuilder;
+    private ObjectBuilder? _audienceBuilder;
 
 
     private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
@@ -68,29 +68,42 @@ public class ActionItemBuilder
             ArgumentNullException.ThrowIfNullOrWhiteSpace(_name, nameof(_name));
             ArgumentNullException.ThrowIfNullOrWhiteSpace(_content, nameof(_content));
         }
+        else if (parentActivityType.Equals(ActivityType.Add))
+        {
+            ArgumentNullException.ThrowIfNull(_locationBuilder, nameof(_locationBuilder));
+        }
 
         var results = (_children?.Build(parentActivityType) ?? Enumerable.Empty<ActionItem>()).ToList();
 
         // TODO: Implement remaining properties
-        results.Add(new ActionItem()
+        var prerequisites = _prerequisites?.Select(p => p.ToString()).ToList();
+
+        var actionItem = new ActionItem()
         {
-            Id = _id.ToString(),
+            Id = _id,
             Context = _context,
             Name = _name,
             Content = _content,
             MediaType = _mediaType?.ToString(),
-            Generator = _generator,
-            Target = _target?.Build(),
-            AttributedTo = _attributedTo?.Build(),
-            Audience = _audience?.Build(),
+            Generator = _generator?.AsNetworkObject(),
+            Target = _targetBuilder?.Build(),
+            AttributedTo = _attributedToBuilder?.Build(),
+            Audience = _audienceBuilder?.Build(),
             Parent = _parent?.ToString(),
             CompletionMethods = _completionMethods,
             EndTime = _endTime,
-            Location = _location?.Build(),
             Published = _published,
-            Prerequisites = _prerequisites?.Select(p => p.Value.ToString()).ToList(),
-            AdditionalProperties = _additionalProperties
-        });
+            AdditionalProperties = _additionalProperties,
+            Prerequisites = prerequisites
+        };
+
+        if (_locationBuilder is not null)
+        {
+            actionItem.Location ??= new();
+            actionItem.Location.Add(_locationBuilder.Build());
+        }
+
+        results.Add(actionItem);
 
         return results;
     }
@@ -117,7 +130,7 @@ public class ActionItemBuilder
         return this;
     }
 
-    public ActionItemBuilder Name(string value)
+    public ActionItemBuilder Name(string? value)
     {
         _name = value;
         return this;
@@ -186,7 +199,7 @@ public class ActionItemBuilder
 
     public ActionItemBuilder Target(ObjectBuilder value)
     {
-        _target = value;
+        _targetBuilder = value;
         return this;
     }
 
@@ -197,7 +210,7 @@ public class ActionItemBuilder
 
     public ActionItemBuilder Location(ObjectBuilder value)
     {
-        _location = value;
+        _locationBuilder = value;
         return this;
     }
 
@@ -217,7 +230,7 @@ public class ActionItemBuilder
 
     public ActionItemBuilder AttributedTo(ObjectBuilder value)
     {
-        _attributedTo = value;
+        _attributedToBuilder = value;
         return this;
     }
 
@@ -233,7 +246,7 @@ public class ActionItemBuilder
 
     public ActionItemBuilder Audience(ObjectBuilder value)
     {
-        _audience = value;
+        _audienceBuilder = value;
         return this;
     }
 

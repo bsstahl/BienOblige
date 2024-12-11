@@ -25,13 +25,17 @@ namespace BienOblige.Execution.Data.Kafka
 
             var publishActivity = Messages.Activity.From(activity);
 
-            // Use the Object Id as the key for maintaining order
+            // Use the ActionItem Object's Id as the key for maintaining order
             // If there is no Object, use the ActionItem Id
+            // If there is no ActionItem, use the Activity Id
+            var actionItem = activity.Object as ActionItem;
+            var messageKey = actionItem?.Target?.Id.Value?.ToString()
+                ?? actionItem?.Id.Value.ToString()
+                ?? activity.Id.Value.ToString();
+
             var message = new Message<string, string>()
             {
-                Key = activity.ActionItem.Target?.Id.Value?.ToString() 
-                    ?? activity.ActionItem?.Id?.Value?.ToString() 
-                    ?? throw new InvalidOperationException("Missing ActionItem Id"),
+                Key = messageKey,
                 Value = JsonSerializer.Serialize(publishActivity)
             };
 
@@ -39,7 +43,7 @@ namespace BienOblige.Execution.Data.Kafka
             
             // TODO: Add error handling
             
-            return activity.ActionItem.Id;
+            return activity.Object.Id;
         }
     }
 }

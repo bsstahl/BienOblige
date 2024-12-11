@@ -30,7 +30,7 @@ public class ArticleTarget_AsNetworkObject_Should
         var actual = article.AsNetworkObject();
 
         actual.Log(_logger);
-        Assert.Equal(article.Id, actual.ObjectId);
+        Assert.Equal(article.Id, actual.Id);
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class ArticleTarget_AsNetworkObject_Should
         var deserialized = JsonSerializer.Deserialize<NetworkObject>(json);
         
         _logger.LogTrace("Deserialized: {@Deserialized}", deserialized);
-        Assert.Equal(entity.Id, deserialized?.ObjectId);
+        Assert.Equal(entity.Id, deserialized?.Id);
     }
 
     private static Targets.Article GetRandomArticle()
