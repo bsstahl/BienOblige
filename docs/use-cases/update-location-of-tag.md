@@ -4,15 +4,15 @@
 * For updating the Location of a single existing ActionItem, see [Update Location of ActionItem](./update-location-of-actionitem.md).
 * For assigning a Location to a new ActionItem, see [Create ActionItem](./create-actionitem.md).
 
-## Adding the Location
+## Updating the Location
 
-To add the location, we need to describe an *Activity* of type *Add*, that specifies the *Tag* to search for, and the location we wish to assign to *ActionItems* tagged with that identifier.
+To update the location, we need to describe an *Activity* of type *Update*, that specifies the *Tag* to search for, and the location we wish to assign to *ActionItems* tagged with that identifier.
 
-Every *Activity* requires an *Actor* that is performing the task and an *Object*, in this case, the *Object* is the *Place* identifying the location where the work is to be performed. *Add Activities* also require a Target, in this case, the identity of a *Tag* that decorates the *ActionItems* we want assigned to be worked on at the specified location.
+Every *Activity* requires an *Actor* that is performing the task and an *Object*, in this case, the *Object* is the *Place* identifying the location where the work is to be performed. *Update Activities* also require a Target, in this case, the identity of a *Tag* that decorates the *ActionItems* we want assigned to be worked on at the specified location.
 
 **Note**: This action only results in a change when the ActionItem has not yet been started. If an *ActionItem* is already in progress, completed, or cancelled, the ActionItem will not be modified using this method.
 
-The following c# code snippet demonstrates the addition of a location to a collection of *ActionItems* that are all tagged for "White Glove Service" using the *id* `https://example.com/specialcare/WhiteGlove`:
+The following c# code snippet demonstrates the update of a location to a collection of *ActionItems* that are all tagged for "White Glove Service" using the *id* `https://example.com/specialcare/WhiteGlove`:
 
 ```csharp
 var activity = new UpdateLocationActivityBuilder()
@@ -34,7 +34,7 @@ var client = _services.GetRequiredService<ApiClient.Activities>();
 var response = await client.Publish(activity);
 ```
 
-We use the builder pattern with the *AddLocationActivityBuilder* to create a single *Activity* that describes the addition of the *Place* object representing the location, to the *ActionItem*. The *Actor* in this case is a service that is doing the location assignment, identified by the URI `https://example.com/services/example-service-1`. The *Location* and *ActionItem* are both specified only by their *@type* and *Id* properties. The *Activity* is then published using the *ApiClient*.
+We use the builder pattern with the *UpdateLocationActivityBuilder* to create a single *Activity* that describes the addition of the *Place* object representing the location, to the *ActionItem*. The *Actor* in this case is a service that is doing the location assignment, identified by the URI `https://example.com/services/example-service-1`. The *Location* and *ActionItem* are both specified only by their *@type* and *Id* properties. The *Activity* is then published using the *ApiClient*.
 
 Note that **the *@type* field in the *Target* is critical** here. This is what let's the system know that it is looking for a specific *ActionItem* to add the location to. If the *Target @Type* is not specified correctly, the system may not be able to determine what to do with the *Location* object.
 

@@ -172,7 +172,7 @@ public class Activities_PublishSinglular_Should
     }
 
     [Fact]
-    public async Task PublishAValidLocationAssignmentByActionItemMessage()
+    public async Task UpdateTheLocationOfAnExistingActionItem()
     {
         const string baseUri = "https://example.com";
 
@@ -185,7 +185,7 @@ public class Activities_PublishSinglular_Should
             .Actor(new ActorBuilder()
                 .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
                 .ActorType(Enumerations.ActorType.Application)
-                .Name($"{this.GetType().Name}.{nameof(PublishAValidLocationAssignmentByActionItemMessage)}"))
+                .Name($"{this.GetType().Name}.{nameof(UpdateTheLocationOfAnExistingActionItem)}"))
             .Location(new LocationBuilder()
                 .Id(locationId)
                 .Name("The company's Phoenix AZ location"))
@@ -217,11 +217,11 @@ public class Activities_PublishSinglular_Should
         Assert.Equal(locationId.ToString(), actualLocation.Id.ToString());
 
         var actualTarget = actual.Single().Target;
-        Assert.Equal(actionItemId.ToString(), actualTarget.Id.ToString());
+        Assert.Equal(actionItemId.ToString(), actualTarget?.Id.ToString());
     }
 
     [Fact]
-    public async Task PublishAValidLocationAssignmentByTagMessage()
+    public async Task UpdateTheLocationOfAllTaggedActionItems()
     {
         const string baseUri = "https://example.com";
 
@@ -234,14 +234,13 @@ public class Activities_PublishSinglular_Should
             .Actor(new ActorBuilder()
                 .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
                 .ActorType(Enumerations.ActorType.Application)
-                .Name($"{this.GetType().Name}.{nameof(PublishAValidLocationAssignmentByTagMessage)}"))
+                .Name($"{this.GetType().Name}.{nameof(UpdateTheLocationOfAllTaggedActionItems)}"))
             .Location(new LocationBuilder()
                 .Id(locationId)
                 .Name("The company's Phoenix AZ location"))
             .Target(new ObjectIdentifierBuilder()
                 .Id(tagId)
-                .AddObjectType("example:SpecialCare")
-                .AddObjectType("Object"))
+                .AddObjectType("tag"))
             .Build();
 
         // Act
@@ -267,6 +266,102 @@ public class Activities_PublishSinglular_Should
         Assert.Equal(locationId.ToString(), actualLocation.Id.ToString());
 
         var actualTarget = actual.Single().Target;
-        Assert.Equal(tagId.ToString(), actualTarget.Id.ToString());
+        Assert.Equal(tagId.ToString(), actualTarget?.Id.ToString());
+    }
+
+    [Fact]
+    public async Task UpdateTheStatusOfAnExistingActionItemToIncomplete()
+    {
+        const string baseUri = "https://example.com";
+
+        var status = Status.Incomplete;
+        var actionItemId = NetworkIdentity.From(baseUri, "ActionItem", Guid.NewGuid().ToString());
+
+        // Arrange
+        var activity = new UpdateStatusActivityBuilder()
+            .CorrelationId(Guid.NewGuid())
+            .Actor(new ActorBuilder()
+                .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
+                .ActorType(Enumerations.ActorType.Application)
+                .Name($"{this.GetType().Name}.{nameof(UpdateTheStatusOfAnExistingActionItemToIncomplete)}"))
+            .Status(status)
+            .Target(new ObjectIdentifierBuilder()
+                .Id(actionItemId)
+                .AddObjectType("bienoblige:ActionItem")
+                .AddObjectType("Object"))
+            .Build();
+
+        // Act
+        var client = _services.GetRequiredService<ApiClient.Activities>();
+        var response = await client.Publish(activity);
+
+        // Log Activity
+        var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient
+            ?? throw new InvalidOperationException("No Mock HttpClient found");
+
+        var logger = _services.GetRequiredService<ILogger<Activities_PublishSinglular_Should>>();
+        logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
+
+        // Assert
+        Assert.True(response.SuccessfullyPublished);
+
+        var actual = httpClient.ActivityRequests;
+        Assert.NotNull(actual);
+        Assert.Single(actual);
+        Assert.Equal(ActivityType.Update.ToString(), actual.Single().ActivityType);
+
+        var actualStatus = actual.Single().Object;
+        Assert.Contains($"#{Status.Incomplete}", actualStatus.Id.ToString());
+
+        var actualTarget = actual.Single().Target;
+        Assert.Equal(actionItemId.ToString(), actualTarget?.Id.ToString());
+    }
+
+    [Fact]
+    public async Task UpdateTheStatusOfAllTaggedActionItemsToIncomplete()
+    {
+        const string baseUri = "https://example.com";
+
+        var status = Status.Incomplete;
+        var tagId = NetworkIdentity.From(baseUri, "SpecialCare", "WhiteGlove");
+
+        // Arrange
+        var activity = new UpdateStatusActivityBuilder()
+            .CorrelationId(Guid.NewGuid())
+            .Actor(new ActorBuilder()
+                .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
+                .ActorType(Enumerations.ActorType.Application)
+                .Name($"{this.GetType().Name}.{nameof(UpdateTheStatusOfAllTaggedActionItemsToIncomplete)}"))
+            .Status(status)
+            .Target(new ObjectIdentifierBuilder()
+                .Id(tagId)
+                .Name("White Glove Service")
+                .AddObjectType("tag"))
+            .Build();
+
+        // Act
+        var client = _services.GetRequiredService<ApiClient.Activities>();
+        var response = await client.Publish(activity);
+
+        // Log Activity
+        var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient
+            ?? throw new InvalidOperationException("No Mock HttpClient found");
+
+        var logger = _services.GetRequiredService<ILogger<Activities_PublishSinglular_Should>>();
+        logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
+
+        // Assert
+        Assert.True(response.SuccessfullyPublished);
+
+        var actual = httpClient.ActivityRequests;
+        Assert.NotNull(actual);
+        Assert.Single(actual);
+        Assert.Equal(ActivityType.Update.ToString(), actual.Single().ActivityType);
+
+        var actualStatus = actual.Single().Object;
+        Assert.Contains($"#{Status.Incomplete}", actualStatus.Id.ToString());
+
+        var actualTarget = actual.Single().Target;
+        Assert.Equal(tagId.ToString(), actualTarget?.Id.ToString());
     }
 }

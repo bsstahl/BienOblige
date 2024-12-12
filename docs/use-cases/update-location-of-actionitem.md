@@ -10,10 +10,6 @@ To add the location, we need to describe an *Activity* of type *Add*, that speci
 
 Every *Activity* requires an *Actor* that is performing the task and an *Object*, in this case, the *Object* is the *Place* identifying the location where the work is to be performed. *Add Activities* also require a Target, in this case, the identity of an *ActionItem* that the location is being added to.
 
-Note: This action only results in a change when the ActionItem has not yet been started. If an ActionItem is already in progress, completed, or cancelled, the ActionItem will not be modified using this method.
-
-The following c# code snippet demonstrates the addition of a location to a single *ActionItem*:
-
 ```csharp
 var activity = new UpdateLocationActivityBuilder()
     .CorrelationId(Guid.NewGuid())
