@@ -1,6 +1,5 @@
 ﻿using BienOblige.Api.Builders;
 using BienOblige.Api.Test.Extensions;
-using BienOblige.Api.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -13,10 +12,6 @@ namespace BienOblige.Api.Test;
 [Collection("APIClient")]
 public class GenericUseCases
 {
-    const string baseUrl = "https://metrotransit.com";
-
-    private NetworkIdentity complianceStudioServiceId = NetworkIdentity.From(baseUrl, "service", "compliance-studio");
-
     private readonly ITestOutputHelper _output;
     private readonly IConfiguration _config;
     private readonly IServiceProvider _services;

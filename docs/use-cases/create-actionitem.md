@@ -9,8 +9,7 @@ To create a simple action item, we need to describe an *Activity* of type *Creat
 The following c# code snippet demonstrates the creation of a simple *ActionItem*:
 
 ```csharp
-var activity = new ActivityBuilder()
-    .ActivityType(Enumerations.ActivityType.Create)
+var activity = new CreateActionItemActivityBuilder()
     .Actor(new ActorBuilder()
         .Id("https://example.com/services/example-service-1")
         .ActorType(Enumerations.ActorType.Service))
@@ -19,12 +18,11 @@ var activity = new ActivityBuilder()
         .Content("This is the content of the simplest possible Action Item", "text/plain"))
     .Build();
 
-// Act
 var client = _services.GetRequiredService<ApiClient.Activities>();
 var response = await client.Publish(activity);
 ```
 
-We use the builder pattern with the *ActivityBuilder* to create a single *Activity* that describes the creation of the *ActionItem*. The *Actor* in this case is a service that is creating the *ActionItem*, identified by the URI `https://example.com/services/example-service-1`. The *ActionItem* has values for the *name* and *content* fields, which is the minimum information required for creation. Ids and other default information, such as Object types, publication date, and the default *completionMethod*, will be filled-in by the system. The *Activity* is then published using the *ApiClient*.
+We use the builder pattern with the *CreateActionItemActivityBuilder* to create a single *Activity* that describes the creation of the *ActionItem*. The *Actor* in this case is a service that is creating the *ActionItem*, identified by the URI `https://example.com/services/example-service-1`. The *ActionItem* has values for the *name* and *content* fields, which is the minimum information required for creation. Ids and other default information, such as Object types, publication date, and the default *completionMethod*, will be filled-in by the system. The *Activity* is then published using the *ApiClient*.
 
 This code results in the following *Json* document being published by the *ApiClient* to the **Bien Oblige** API:
 
@@ -56,4 +54,4 @@ This code results in the following *Json* document being published by the *ApiCl
 }
 ```
 
-This example shows the creation of a single *Activity* representing the creation of a single *ActionItem*. For more complex scenarios, such as creating multiple related tasks, or even a hierarchy of such tasks, we would use a similar pattern with the *ActivitiesCollectionBuilder* to describe the entire set of tasks to be created. For an example of this, see the [MetroTransit Bus Nightly Procedures case study](./MetroTransit/bus-nightly-procedures.md).
+This example shows the creation of a single *Activity* representing the creation of a single *ActionItem*. For more complex scenarios, such as creating multiple related tasks, or even a hierarchy of such tasks, we would use a similar pattern with the *CreateActionItemActivitiesBuilder* to describe the entire set of tasks to be created. For an example of this, see the [MetroTransit Bus Nightly Procedures case study](./MetroTransit/bus-nightly-procedures.md).

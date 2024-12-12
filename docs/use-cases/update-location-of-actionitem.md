@@ -1,7 +1,7 @@
-# Adding a Location to an Existing Action Item
+# Updating the Location of an Existing Action Item
 
 * For business-specific scenarios, see our [MetroTransit Use-Case Studies](./MetroTransit/README.md).
-* For adding a Location to a collection of ActionItems, see [Add Location to Tag](./add-location-to-tag.md).
+* For updating the Location of a collection of existing ActionItems, see [Update Location of Tag](./update-location-of-tag.md).
 * For assigning a Location to a new ActionItem, see [Create ActionItem](./create-actionitem.md).
 
 ## Adding the Location
@@ -10,12 +10,12 @@ To add the location, we need to describe an *Activity* of type *Add*, that speci
 
 Every *Activity* requires an *Actor* that is performing the task and an *Object*, in this case, the *Object* is the *Place* identifying the location where the work is to be performed. *Add Activities* also require a Target, in this case, the identity of an *ActionItem* that the location is being added to.
 
-TODO: What should happen if this ActionItem is not in a "to be done" like state. If the ActionItem is already in progress, completed, or cancelled, should the location still be updated or should the behavior be most consistent with the add location by tag functionality?
+Note: This action only results in a change when the ActionItem has not yet been started. If an ActionItem is already in progress, completed, or cancelled, the ActionItem will not be modified using this method.
 
 The following c# code snippet demonstrates the addition of a location to a single *ActionItem*:
 
 ```csharp
-var activity = new AddLocationActivityBuilder()
+var activity = new UpdateLocationActivityBuilder()
     .CorrelationId(Guid.NewGuid())
     .Actor(new ActorBuilder()
         .Id("https://example.com/services/example-service-1")
@@ -25,8 +25,7 @@ var activity = new AddLocationActivityBuilder()
         .Name("The company's Phoenix AZ location"))
     .Target(new ObjectIdentifierBuilder()
         .Id(NetworkIdentity.From(baseUri, "ActionItem", "fd1cf331-c12d-4840-a197-ea2b08ddd240"))
-        .AddObjectType("bienoblige:ActionItem")
-        .AddObjectType("Object"))
+        .AddObjectType("bienoblige:ActionItem"))
     .Build();
 
 var client = _services.GetRequiredService<ApiClient.Activities>();
@@ -46,7 +45,7 @@ This code results in the following *Json* document being published by the *ApiCl
         { "bienoblige": "https://bienoblige.com/ns" },
         { "schema": "https://schema.org" }
     ],
-    "@type": "Add",
+    "@type": "Update",
     "actor": {
         "@type": "Application",
         "id": "https://example.com/application/3aad2511-fe7f-45f8-bdb8-4abe2ba8873f",

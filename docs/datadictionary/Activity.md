@@ -7,7 +7,7 @@ The [W3C Activity Streams 2.0 Vocabulary](https://w3c.github.io/activitystreams/
 | Activity Type | Description |
 | ------ | ------ |
 | Accept | Reserved to indicate acceptance or acknowledgment of an **ActionItem** assignment |
-| [Add](Activity-Add.md) | Used to add a *location*, and potentially other elements in the future, to an **ActionItem** |
+| [Add](Activity-Add.md) | Reserved for adding a *location*, and potentially other elements, to an **ActionItem** |
 | [Announce](Activity-Announce.md) | Publishes a notification to listeners containing the state of the **ActionItem** |
 | Arrive | Unused |
 | Block | Unused |
@@ -32,7 +32,7 @@ The [W3C Activity Streams 2.0 Vocabulary](https://w3c.github.io/activitystreams/
 | TentativeAccept | Unused |
 | Travel | Unused |
 | Undo   | Reserved for future use |
-| [Update](Activity-Update.md) | Used to modify an existing **ActionItem** -- only used when a more task-specific **Activity** is not available |
+| [Update](Activity-Update.md) | Used to replace the contents of an **ActionItem** node(s) with the specified contents, removing the previous contents  |
 | View   | Reserved for possible future use as a "soft-lock" to suggest the possibility that the task is already being worked on |
 
 ### Custom Bien Oblige Activity Types

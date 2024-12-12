@@ -17,6 +17,7 @@
   * *ActionItems* can be created in a *Draft* status to indicate that they are not yet ready for work to be started.
 * *ActionItems* can be assigned to individuals or groups
 * *ActionItems* can be assigned to be performed at a location.
+  * Locations can be modified as needed to adjust to the current location of the entity being acted on
 * *ActionItems* can be defined with a array of *completionMethod* identifiers that indicate how the *ActionItem* is to be considered complete.
   * The default *completionMethod* is *Manual* which requires the *ActionItem* to be marked as complete by an *Actor*.
   * Parent *ActionItems* can be closed automatically when **all** child *ActionItems* are closed.

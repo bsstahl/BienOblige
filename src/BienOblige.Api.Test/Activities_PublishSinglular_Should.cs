@@ -1,4 +1,5 @@
 ﻿using BienOblige.Api.Builders;
+using BienOblige.Api.Enumerations;
 using BienOblige.Api.Extensions;
 using BienOblige.Api.Targets;
 using BienOblige.Api.Test.Extensions;
@@ -179,7 +180,7 @@ public class Activities_PublishSinglular_Should
         var locationId = NetworkIdentity.From(baseUri, "Location", "94f6cf65-568f-49b7-a501-95e5e9371c6a");
 
         // Arrange
-        var activity = new AddLocationActivityBuilder()
+        var activity = new UpdateLocationActivityBuilder()
             .CorrelationId(Guid.NewGuid())
             .Actor(new ActorBuilder()
                 .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
@@ -190,8 +191,7 @@ public class Activities_PublishSinglular_Should
                 .Name("The company's Phoenix AZ location"))
             .Target(new ObjectIdentifierBuilder()
                 .Id(actionItemId)
-                .AddObjectType("bienoblige:ActionItem")
-                .AddObjectType("Object"))
+                .AddObjectType("bienoblige:ActionItem"))
             .Build();
 
         // Act
@@ -211,6 +211,7 @@ public class Activities_PublishSinglular_Should
         var actual = httpClient.ActivityRequests;
         Assert.NotNull(actual);
         Assert.Single(actual);
+        Assert.Equal(ActivityType.Update.ToString(), activity.ActivityType);
 
         var actualLocation = actual.Single().Object;
         Assert.Equal(locationId.ToString(), actualLocation.Id.ToString());
@@ -228,7 +229,7 @@ public class Activities_PublishSinglular_Should
         var tagId = NetworkIdentity.From(baseUri, "SpecialCare", "WhiteGlove");
 
         // Arrange
-        var activity = new AddLocationActivityBuilder()
+        var activity = new UpdateLocationActivityBuilder()
             .CorrelationId(Guid.NewGuid())
             .Actor(new ActorBuilder()
                 .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
@@ -260,6 +261,7 @@ public class Activities_PublishSinglular_Should
         var actual = httpClient.ActivityRequests;
         Assert.NotNull(actual);
         Assert.Single(actual);
+        Assert.Equal(ActivityType.Update.ToString(), actual.Single().ActivityType);
 
         var actualLocation = actual.Single().Object;
         Assert.Equal(locationId.ToString(), actualLocation.Id.ToString());

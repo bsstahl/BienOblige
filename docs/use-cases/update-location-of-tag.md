@@ -1,7 +1,7 @@
-# Adding a Location to a Collection of Existing Action Items
+# Updating the Location of a Collection of Existing Action Items
 
 * For business-specific scenarios, see our [MetroTransit Use-Case Studies](./MetroTransit/README.md).
-* For adding a Location to a single ActionItem, see [Add Location to ActionItem](./add-location-to-actionitem.md).
+* For updating the Location of a single existing ActionItem, see [Update Location of ActionItem](./update-location-of-actionitem.md).
 * For assigning a Location to a new ActionItem, see [Create ActionItem](./create-actionitem.md).
 
 ## Adding the Location
@@ -10,12 +10,12 @@ To add the location, we need to describe an *Activity* of type *Add*, that speci
 
 Every *Activity* requires an *Actor* that is performing the task and an *Object*, in this case, the *Object* is the *Place* identifying the location where the work is to be performed. *Add Activities* also require a Target, in this case, the identity of a *Tag* that decorates the *ActionItems* we want assigned to be worked on at the specified location.
 
-Note: This action only results in a change when the ActionItem is still in a "to be done" like state. If an *ActionItem* is already in progress, completed, or cancelled, the ActionItem will not be modified.
+**Note**: This action only results in a change when the ActionItem has not yet been started. If an *ActionItem* is already in progress, completed, or cancelled, the ActionItem will not be modified using this method.
 
-The following c# code snippet demonstrates the addition of a location to a collection of *ActionItems*:
+The following c# code snippet demonstrates the addition of a location to a collection of *ActionItems* that are all tagged for "White Glove Service" using the *id* `https://example.com/specialcare/WhiteGlove`:
 
 ```csharp
-var activity = new AddLocationActivityBuilder()
+var activity = new UpdateLocationActivityBuilder()
     .CorrelationId(Guid.NewGuid())
     .Actor(new ActorBuilder()
         .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
@@ -49,7 +49,7 @@ This code results in the following *Json* document being published by the *ApiCl
         { "bienoblige": "https://bienoblige.com/ns" },
         { "schema": "https://schema.org" }
     ],
-    "@type": "Add",
+    "@type": "Update",
     "actor": {
         "@type": "Application",
         "id": "https://example.com/service/8384f24d-8990-4ac2-8126-0a29c1fc1b36",
