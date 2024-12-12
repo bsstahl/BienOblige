@@ -171,7 +171,7 @@ public class Activities_PublishSinglular_Should
     }
 
     [Fact]
-    public async Task PublishAValidLocationAssignmentMessage()
+    public async Task PublishAValidLocationAssignmentByActionItemMessage()
     {
         const string baseUri = "https://example.com";
 
@@ -182,9 +182,9 @@ public class Activities_PublishSinglular_Should
         var activity = new AddLocationActivityBuilder()
             .CorrelationId(Guid.NewGuid())
             .Actor(new ActorBuilder()
-                .Id(NetworkIdentity.From(baseUri, "Application", Guid.NewGuid().ToString()))
+                .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
                 .ActorType(Enumerations.ActorType.Application)
-                .Name($"{this.GetType().Name}.{nameof(PublishAValidLocationAssignmentMessage)}"))
+                .Name($"{this.GetType().Name}.{nameof(PublishAValidLocationAssignmentByActionItemMessage)}"))
             .Location(new LocationBuilder()
                 .Id(locationId)
                 .Name("The company's Phoenix AZ location"))
@@ -217,5 +217,54 @@ public class Activities_PublishSinglular_Should
 
         var actualTarget = actual.Single().Target;
         Assert.Equal(actionItemId.ToString(), actualTarget.Id.ToString());
+    }
+
+    [Fact]
+    public async Task PublishAValidLocationAssignmentByTagMessage()
+    {
+        const string baseUri = "https://example.com";
+
+        var locationId = NetworkIdentity.From(baseUri, "Location", "SWRegionalHQ");
+        var tagId = NetworkIdentity.From(baseUri, "SpecialCare", "WhiteGlove");
+
+        // Arrange
+        var activity = new AddLocationActivityBuilder()
+            .CorrelationId(Guid.NewGuid())
+            .Actor(new ActorBuilder()
+                .Id(NetworkIdentity.From(baseUri, "Service", Guid.NewGuid().ToString()))
+                .ActorType(Enumerations.ActorType.Application)
+                .Name($"{this.GetType().Name}.{nameof(PublishAValidLocationAssignmentByTagMessage)}"))
+            .Location(new LocationBuilder()
+                .Id(locationId)
+                .Name("The company's Phoenix AZ location"))
+            .Target(new ObjectIdentifierBuilder()
+                .Id(tagId)
+                .AddObjectType("example:SpecialCare")
+                .AddObjectType("Object"))
+            .Build();
+
+        // Act
+        var client = _services.GetRequiredService<ApiClient.Activities>();
+        var response = await client.Publish(activity);
+
+        // Log Activity
+        var httpClient = _services.GetRequiredService<Mocks.MockHttpClient>() as Mocks.MockHttpClient
+            ?? throw new InvalidOperationException("No Mock HttpClient found");
+
+        var logger = _services.GetRequiredService<ILogger<Activities_PublishSinglular_Should>>();
+        logger.LogInformation("Activity Request: \r\n\r\n{@Activities}", httpClient.JsonRequestMessages);
+
+        // Assert
+        Assert.True(response.SuccessfullyPublished);
+
+        var actual = httpClient.ActivityRequests;
+        Assert.NotNull(actual);
+        Assert.Single(actual);
+
+        var actualLocation = actual.Single().Object;
+        Assert.Equal(locationId.ToString(), actualLocation.Id.ToString());
+
+        var actualTarget = actual.Single().Target;
+        Assert.Equal(tagId.ToString(), actualTarget.Id.ToString());
     }
 }

@@ -19,20 +19,20 @@ public class WriteRepository : IUpdateActionItems
         _db = mux.GetDatabase(0);
     }
 
-    public async Task<NetworkIdentity> Update(ActivityStream.Aggregates.ActionItem changes, ActivityStream.Aggregates.Actor actor, string correlationId)
+    public async Task<NetworkIdentity> Update(ActivityStream.Aggregates.NetworkObject changes, ActivityStream.Aggregates.Actor actor, string correlationId)
     {
         changes.LastUpdatedAt = DateTimeOffset.UtcNow;
-        changes.LastUpdatedBy = actor;
+        // changes.LastUpdatedBy = actor; TODO: Revisit this
 
         var key = changes.Id.Value;
-        var item = ActionItem.From(changes);
+        var item = NetworkObject.From(changes);
 
         var result = await _db.StringSetAsync(changes.Id.ToString(), item.ToString());
 
         if (!result)
         {
-            _logger.LogError("Failed to update ActionItem {@ActionItem}", changes);
-            throw new Exception("Failed to update ActionItem");
+            _logger.LogError("Failed to update {@ActionItem}", changes);
+            throw new Exception("Failed to update Object");
         }
 
         return changes.Id;

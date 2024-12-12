@@ -20,7 +20,7 @@ internal class MockActionItemReader : IGetActionItems
     public async Task<bool> Exists(NetworkIdentity id)
         => (await this.Get(id)) is not null;
 
-    public async Task<ActionItem?> Get(NetworkIdentity id)
+    public async Task<NetworkObject?> Get(NetworkIdentity id)
     {
         _logger.LogInformation("Fetching ActionItem {ActionItemId}", id);
         var result = await _actionItemsReader.Object.Get(id);

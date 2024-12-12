@@ -5,7 +5,7 @@ namespace BienOblige.Search.Application.Interfaces;
 
 public interface IFindActionItems
 {
-    Task<IEnumerable<ActionItem>> GetByTarget(NetworkIdentity targetId, string targetType);
-    Task<IEnumerable<ActionItem>> GetGraph(NetworkIdentity parentId);
-    Task<IEnumerable<ActionItem>> GetAll();
+    Task<IEnumerable<NetworkObject>> GetByTarget(NetworkIdentity targetId, string targetType);
+    Task<IEnumerable<NetworkObject>> GetGraph(NetworkIdentity parentId);
+    Task<IEnumerable<NetworkObject>> GetAll();
 }

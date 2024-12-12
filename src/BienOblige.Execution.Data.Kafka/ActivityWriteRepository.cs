@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using BienOblige.ActivityStream.ValueObjects;
 using BienOblige.ActivityStream.Aggregates;
+using BienOblige.Execution.Data.Kafka.Extensions;
 
 namespace BienOblige.Execution.Data.Kafka
 {
@@ -25,12 +26,13 @@ namespace BienOblige.Execution.Data.Kafka
 
             var publishActivity = Messages.Activity.From(activity);
 
-            // Use the ActionItem Object's Id as the key for maintaining order
-            // If there is no Object, use the ActionItem Id
-            // If there is no ActionItem, use the Activity Id
-            var actionItem = activity.Object as ActionItem;
-            var messageKey = actionItem?.Target?.Id.Value?.ToString()
-                ?? actionItem?.Id.Value.ToString()
+            // Use the Target Object's Id as the key for maintaining order
+            // If there is no Target, use the Activity's Object's Id
+            // If there is no Activity Object, use the Activity Id
+            var activityChildObject = activity.Object; // Usually an ActionItem
+            var targetObject = activityChildObject?.GetTarget();
+            var messageKey = targetObject?.Id.Value?.ToString()
+                ?? activityChildObject?.Id.Value.ToString()
                 ?? activity.Id.Value.ToString();
 
             var message = new Message<string, string>()

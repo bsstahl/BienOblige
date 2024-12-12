@@ -15,17 +15,17 @@ public class ActionItemReadRepository : IFindActionItems
         _client = client;
     }
 
-    public Task<IEnumerable<ActionItem>> GetAll()
+    public Task<IEnumerable<NetworkObject>> GetAll()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<ActionItem>> GetByTarget(NetworkIdentity targetId, string targetType)
+    public Task<IEnumerable<NetworkObject>> GetByTarget(NetworkIdentity targetId, string targetType)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<ActionItem>> GetGraph(NetworkIdentity parentId)
+    public Task<IEnumerable<NetworkObject>> GetGraph(NetworkIdentity parentId)
     {
         throw new NotImplementedException();
     }

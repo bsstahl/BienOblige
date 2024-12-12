@@ -37,7 +37,7 @@ internal static class ActivityExtensions
             ["MethodName"] = nameof(ProcessCreate)
         });
 
-        var actionItem = activityManager.Content.Object.AsActionItem();
+        var actionItem = activityManager.Content.Object;
         var actionItemId = actionItem.Id;
         if (await readRepo.Exists(actionItemId))
         {

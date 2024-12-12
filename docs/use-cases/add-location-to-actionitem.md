@@ -1,14 +1,16 @@
-# Adding a Location to an Extisting Action Item
+# Adding a Location to an Existing Action Item
 
 * For business-specific scenarios, see our [MetroTransit Use-Case Studies](./MetroTransit/README.md).
 * For adding a Location to a collection of ActionItems, see [Add Location to Tag](./add-location-to-tag.md).
-* For adding a Location to a new ActionItem, see [Create ActionItem](./create-actionitem.md).
+* For assigning a Location to a new ActionItem, see [Create ActionItem](./create-actionitem.md).
 
 ## Adding the Location
 
-To add the location, we need to describe an *Activity* of type *Add*, that specifies the *ActionItem* being created and the location we wish to assign it to.
+To add the location, we need to describe an *Activity* of type *Add*, that specifies the *ActionItem* being modified and the location we wish to assign it to.
 
-Every *Activity* requires an *Actor* that is performing the task and an *Object*, in this case, the *Place* object identifying the location where the work is to be performed. *Add Activities* also require a Target, in this case, the identity of an *ActionItem* that the location is being added to.
+Every *Activity* requires an *Actor* that is performing the task and an *Object*, in this case, the *Object* is the *Place* identifying the location where the work is to be performed. *Add Activities* also require a Target, in this case, the identity of an *ActionItem* that the location is being added to.
+
+TODO: What should happen if this ActionItem is not in a "to be done" like state. If the ActionItem is already in progress, completed, or cancelled, should the location still be updated or should the behavior be most consistent with the add location by tag functionality?
 
 The following c# code snippet demonstrates the addition of a location to a single *ActionItem*:
 

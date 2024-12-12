@@ -70,7 +70,7 @@ public class Client_PublishActivityCommand_Should
     [Fact]
     public async Task ThrowIfNoUpdatingActorIsSupplied()
     {
-        ActionItem? item = new ActionItemBuilder()
+        NetworkObject? item = new ObjectBuilder()
             .UseRandomValues()
             .Build();
 
@@ -100,7 +100,7 @@ public class Client_PublishActivityCommand_Should
             .Build();
 
         var activityType = ActivityType.Create;
-        var item = new ActionItemBuilder()
+        var item = new ObjectBuilder()
             .UseRandomValues()
             .Build();
         var correlationId = NetworkIdentity.From(Guid.NewGuid());

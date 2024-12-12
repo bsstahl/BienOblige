@@ -5,7 +5,7 @@ namespace BienOblige.Execution.Data.Kafka.Test.Extensions;
 [ExcludeFromCodeCoverage]
 internal static class ActionItemBuilderExtensions
 {
-    internal static ActionItemBuilder UseRandomValues(this ActionItemBuilder builder)
+    internal static ObjectBuilder UseRandomValues(this ObjectBuilder builder)
     {
         var idValue = Guid.NewGuid().ToString();
         return builder

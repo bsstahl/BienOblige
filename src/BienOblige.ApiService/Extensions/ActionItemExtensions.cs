@@ -4,16 +4,16 @@ namespace BienOblige.ApiService.Extensions;
 
 public static class ActionItemExtensions
 {
-    internal static IEnumerable<ActivityStream.Aggregates.ActionItem> AsAggregates(this IEnumerable<ActionItem> actionItems)
+    internal static IEnumerable<ActivityStream.Aggregates.NetworkObject> AsAggregates(this IEnumerable<NetworkObject> actionItems)
     {
         return actionItems.Select(actionItem => actionItem.AsAggregate());
     }
 
-    public static ActivityStream.Aggregates.ActionItem AsAggregate(this ActionItem actionItem)
+    public static ActivityStream.Aggregates.NetworkObject AsAggregate(this ActionItem actionItem)
     {
         ArgumentNullException.ThrowIfNull(actionItem.Id, nameof(actionItem.Id));
 
-        return new ActivityStream.Builders.ActionItemBuilder()
+        return new ActivityStream.Builders.ObjectBuilder()
             .Id(ActivityStream.ValueObjects.NetworkIdentity.From(actionItem.Id))
             .Name(actionItem.Name)
             .Content(ActivityStream.ValueObjects.Content.From(actionItem.Content))

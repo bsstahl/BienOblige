@@ -52,7 +52,7 @@ public class ActionItemConnector : BackgroundService
             var message = new Message<string, string>()
             {
                 Key = key,
-                Value = ActionItem.From(value).ToString()
+                Value = NetworkObject.From(value)?.ToString() ?? string.Empty
             };
 
             // TODO: Pass along the Correlation Id so we can trace the message through the system

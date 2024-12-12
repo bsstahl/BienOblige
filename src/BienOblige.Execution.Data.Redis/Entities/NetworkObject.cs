@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BienOblige.Execution.Data.Kafka.Messages;
+namespace BienOblige.Execution.Data.Redis.Entities;
 
 public class NetworkObject
 {
@@ -177,5 +177,5 @@ public class NetworkObject
             ObjectType = item.ObjectTypeName.Select(t => t.Value).ToArray()
         };
     }
-}
 
+}

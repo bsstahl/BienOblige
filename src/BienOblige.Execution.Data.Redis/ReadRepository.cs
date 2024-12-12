@@ -3,6 +3,7 @@ using BienOblige.Execution.Application.Interfaces;
 using BienOblige.Execution.Data.Redis.Entities;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using System.Text.Json;
 
 namespace BienOblige.Execution.Data.Redis
 {
@@ -24,11 +25,11 @@ namespace BienOblige.Execution.Data.Redis
             return (await _db.StringGetAsync(id.ToString())).HasValue;
         }
 
-        public async Task<ActivityStream.Aggregates.ActionItem?> Get(NetworkIdentity id)
+        public async Task<ActivityStream.Aggregates.NetworkObject?> Get(NetworkIdentity id)
         {
             var result = await _db.StringGetAsync(id.ToString());
             return result.HasValue 
-                ? ActionItem.Deserialize(result!).AsAggregate()
+                ? JsonSerializer.Deserialize<NetworkObject>(result!)?.AsAggregate()
                 : null;
         }
     }

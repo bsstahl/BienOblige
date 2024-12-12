@@ -18,7 +18,7 @@ internal class MockActivityCreator(ILogger<MockActivityCreator> logger, IService
         return await _activitiesCreator.Object.Publish(activity);
     }
 
-    internal void SetupCreateActivities(ActivityType activityType, ActionItem actionItem, Actor updatingActor, NetworkIdentity correlationId)
+    internal void SetupCreateActivities(ActivityType activityType, NetworkObject actionItem, Actor updatingActor, NetworkIdentity correlationId)
     {
         _activitiesCreator
             .Setup(x => x.Publish(It.IsAny<Activity>()))

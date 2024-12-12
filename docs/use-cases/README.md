@@ -6,6 +6,7 @@ For a list of system level use cases, see the [Use Cases](../use-cases.md) docum
 
 * [Creating Action Items](./create-actionitem.md)
 * [Adding a Location to an Existing Action Item](./add-location-to-actionitem.md)
+* [Adding a Location to a Collection of Action Items](./add-location-to-tag.md)
 
 ## Business-Specific Use-Case Studies
 

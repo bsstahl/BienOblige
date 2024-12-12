@@ -17,10 +17,10 @@ public class ActionItemWriteRepository : IUpdateActionItems
         _client.CreateIndexIfNotExist(Constants.Indexes.ActionItemState);
     }
 
-    public async Task<NetworkIdentity> Update(ActionItem changes, Actor actor, string correlationId)
+    public async Task<NetworkIdentity> Update(NetworkObject changes, Actor actor, string correlationId)
     {
         var token = new CancellationTokenSource().Token;
-        var result = await _client.IndexAsync<ActionItem>(changes, Constants.Indexes.ActionItemState, changes.Id.Value.ToString(), token);
+        var result = await _client.IndexAsync<NetworkObject>(changes, Constants.Indexes.ActionItemState, changes.Id.Value.ToString(), token);
         return changes.Id;
     }
 

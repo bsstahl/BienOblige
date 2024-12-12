@@ -16,9 +16,9 @@ namespace BienOblige.Search.Application
             _searchClient = searchClient;
         }
 
-        public async Task<ActionItem?> Get(NetworkIdentity id)
+        public async Task<NetworkObject?> Get(NetworkIdentity id)
         {
-            var result = await _searchClient.GetAsync<ActionItem>(id.Value.ToString());
+            var result = await _searchClient.GetAsync<NetworkObject>(id.Value.ToString());
             if (!result.IsSuccess())
                 _logger.LogWarning("Unable to find ActionItem with ID {ActionItemId}", id);
             return result.Source;
