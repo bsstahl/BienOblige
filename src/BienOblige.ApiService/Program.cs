@@ -1,4 +1,5 @@
 // using BienOblige.ApiService.Extensions;
+using BienOblige.ApiService.Configuration;
 using BienOblige.ApiService.Extensions;
 using BienOblige.Execution.Application.Extensions;
 using BienOblige.Execution.Data.Kafka.Extensions;
@@ -13,6 +14,10 @@ builder.AddElasticsearchClient(BienOblige.Constants.ServiceNames.SearchService);
 // Add Application services to the container.
 builder.Services.UseExecutionClient();
 builder.Services.UseKafkaActivityWriteRepository();
+
+// Configure Bearer Token Authentication options
+builder.Services.Configure<BearerTokenAuthenticationOptions>(
+    builder.Configuration.GetSection(BearerTokenAuthenticationOptions.SectionName));
 
 // Add Generic services to the container.
 builder.Services.AddProblemDetails();
