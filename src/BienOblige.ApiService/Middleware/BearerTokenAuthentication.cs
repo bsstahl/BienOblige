@@ -1,26 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BienOblige.ApiService.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace BienOblige.ApiService.Middleware;
 
 public class BearerTokenAuthentication
 {
     const string _tokenKey = "Authorization";
+    const string _bearerPrefix = "Bearer ";
 
     private readonly RequestDelegate _next;
-    private readonly IConfiguration _config;
+    private readonly BearerTokenAuthenticationOptions _options;
     private readonly ILogger _logger;
 
-    public BearerTokenAuthentication(RequestDelegate next, ILogger<BearerTokenAuthentication> logger, IConfiguration config)
+    public BearerTokenAuthentication(RequestDelegate next, ILogger<BearerTokenAuthentication> logger, IOptions<BearerTokenAuthenticationOptions> options)
     {
         _next = next;
         _logger = logger;
-        _config = config;
+        _options = options.Value;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        if (await ValidateRequest(context))
+        if (ValidateRequest(context))
         {
             await _next.Invoke(context);
         }
@@ -37,23 +40,23 @@ public class BearerTokenAuthentication
         }
     }
 
-    private Task<bool> ValidateRequest(HttpContext context)
+    private bool ValidateRequest(HttpContext context)
     {
-        _logger.LogDebug("Config: {@Config}", _config);
-
-        bool isValid = false;
-        if (context.Request.Headers.TryGetValue(_tokenKey, out var token))
+        if (!context.Request.Headers.TryGetValue(_tokenKey, out var headerValue))
         {
-            // TODO: Compare token to known acceptable values
-            _logger.LogWarning("Bearer token authentication skipped (not implemented)");
-            isValid = false; // should be set to true only if the token is valid 
-        }
-        else
-        {
-            _logger.LogWarning($"'{_tokenKey}' header not supplied");
-            isValid = false;
+            _logger.LogWarning("'{TokenKey}' header not supplied", _tokenKey);
+            return false;
         }
 
-        return Task.FromResult(true); // TODO: Return the value of isValid
+        var rawValue = headerValue.ToString();
+        var token = rawValue.StartsWith(_bearerPrefix, StringComparison.OrdinalIgnoreCase)
+            ? rawValue[_bearerPrefix.Length..]
+            : rawValue;
+
+        var isValid = _options.ValidTokens.Any(t => StringComparer.Ordinal.Equals(t, token));
+        if (!isValid)
+            _logger.LogWarning("Provided bearer token is not in the list of valid tokens");
+
+        return isValid;
     }
 }
