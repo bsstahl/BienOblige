@@ -244,4 +244,36 @@ public class MaintenanceActionItem_Should
         Assert.False(obj.GetProperty("metrotransit:requiresCertification").GetBoolean());
         Assert.Equal("Internal", obj.GetProperty("metrotransit:regulatoryAuthority").GetString());
     }
+
+    [Fact]
+    public void PreserveDefaultContextsWhenUsingCollectionAddContext()
+    {
+        var customContexts = new List<KeyValuePair<string?, string>>
+        {
+            new("metrotransit", "https://metrotransit.com/ns"),
+            new("customns", "https://example.com/ns")
+        };
+
+        var activity = new CreateActionItemActivityBuilder(new Uri(BaseUrl))
+            .CorrelationId(Guid.NewGuid())
+            .Actor(new ActorBuilder()
+                .Id(new Uri($"{BaseUrl}/actor/1"))
+                .ActorType(ActorType.Service)
+                .Name("Test Service"))
+            .AddContext(customContexts)
+            .ActionItem(new ActionItemBuilder(new Uri(BaseUrl))
+                .Id(new Uri($"{BaseUrl}/item/1"))
+                .Name("Test Item")
+                .Content("Test Content", "text/plain"))
+            .Build();
+
+        Assert.NotNull(activity.Context);
+        // Default contexts should be preserved: AS2, BienOblige, Schema
+        Assert.Contains(activity.Context, c => c.Value == "https://www.w3.org/ns/activitystreams");
+        Assert.Contains(activity.Context, c => c.Key == "bienoblige" && c.Value == "https://bienoblige.com/ns");
+        Assert.Contains(activity.Context, c => c.Key == "schema" && c.Value == "https://schema.org");
+        // Custom contexts should be present
+        Assert.Contains(activity.Context, c => c.Key == "metrotransit" && c.Value == "https://metrotransit.com/ns");
+        Assert.Contains(activity.Context, c => c.Key == "customns" && c.Value == "https://example.com/ns");
+    }
 }

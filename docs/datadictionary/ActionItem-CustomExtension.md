@@ -70,31 +70,37 @@ namespace MetroTransit.Entities;
 /// </summary>
 public class MaintenanceActionItem : ActionItem
 {
-    public const string NamespacePrefix = "metrotransit";
-    public const string NamespaceUri = "https://metrotransit.com/ns";
-    public const string ObjectType = "metrotransit:MaintenanceActionItem";
+    public const string ExtensionPrefix = "metrotransit";
+    public const string ExtensionNamespace = "https://metrotransit.com/ns";
+    public const string MaintenanceObjectTypeName = "metrotransit:MaintenanceActionItem";
+
+    public static readonly string[] DefaultMaintenanceObjectTypes =
+    [
+        MaintenanceObjectTypeName,
+        "bienoblige:ActionItem",
+        "Object"
+    ];
 
     [JsonPropertyName("metrotransit:workOrderNumber")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? WorkOrderNumber { get; set; }
 
     [JsonPropertyName("metrotransit:estimatedCost")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public decimal? EstimatedCost { get; set; }
 
     [JsonPropertyName("metrotransit:requiresCertification")]
-    public bool RequiresCertification { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? RequiresCertification { get; set; }
 
     [JsonPropertyName("metrotransit:regulatoryAuthority")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? RegulatoryAuthority { get; set; }
 
     public MaintenanceActionItem()
     {
         // AS2 type hierarchy: most specific type first, followed by Bien Oblige ActionItem, and AS2 Object
-        Type = new[]
-        {
-            ObjectType,
-            "bienoblige:ActionItem",
-            "Object"
-        };
+        ObjectType = DefaultMaintenanceObjectTypes.ToList();
     }
 }
 ```
@@ -118,7 +124,7 @@ var maintenanceTask = new MaintenanceActionItem
     Audience = new Actor
     {
         Id = new Uri("https://metrotransit.com/user/JaneWrencher"),
-        Type = new[] { "Person" },
+        ObjectType = new() { "Person" },
         Name = "Jane Wrencher"
     },
     WorkOrderNumber = "WO-2025-0842",
@@ -128,17 +134,20 @@ var maintenanceTask = new MaintenanceActionItem
     Target = new NetworkObject
     {
         Id = new Uri("https://metrotransit.com/bus/BUS-4022"),
-        Type = new[] { "schema:Car", "Object" },
+        ObjectType = new() { "schema:Car", "Object" },
         Name = "MetroTransit Bus #4022"
     }
 };
 
 // Build the Create Activity with custom namespace context
-var activity = new CreateActionItemActivityBuilder()
+var activity = new CreateActionItemActivityBuilder(new Uri("https://metrotransit.com"))
     .Id(new Uri("https://metrotransit.com/activity/d5c3b0c1-c471-4986-84e4-eb6e635d2a5e"))
-    .Actor(new Uri("https://metrotransit.com/service/compliance-studio"), "Compliance Studio")
+    .Actor(new ActorBuilder()
+        .Id(new Uri("https://metrotransit.com/service/compliance-studio"))
+        .ActorType(ActorType.Service)
+        .Name("Compliance Studio"))
     .CorrelationId(new Uri("urn:uid:978fba99-8e26-44a6-9f34-1ab00d2acc1c"))
-    .AddContext(MaintenanceActionItem.NamespacePrefix, MaintenanceActionItem.NamespaceUri)
+    .AddContext(MaintenanceActionItem.ExtensionPrefix, MaintenanceActionItem.ExtensionNamespace)
     .ActionItem(maintenanceTask)
     .Build();
 
@@ -151,11 +160,14 @@ var response = await apiClient.Publish(activity);
 If you prefer using the fluent builder without defining a new C# class:
 
 ```csharp
-var activity = new CreateActionItemActivityBuilder()
+var activity = new CreateActionItemActivityBuilder(new Uri("https://metrotransit.com"))
     .Id(new Uri("https://metrotransit.com/activity/db9efbc6-beb5-4a04-b7be-ac5b504489f6"))
-    .Actor(new Uri("https://metrotransit.com/service/compliance-studio"), "Compliance Studio")
+    .Actor(new ActorBuilder()
+        .Id(new Uri("https://metrotransit.com/service/compliance-studio"))
+        .ActorType(ActorType.Service)
+        .Name("Compliance Studio"))
     .AddContext("metrotransit", "https://metrotransit.com/ns")
-    .ActionItem(item => item
+    .ActionItem(new ActionItemBuilder(new Uri("https://metrotransit.com"))
         .Id(new Uri("https://metrotransit.com/ActionItem/44380b44-91a7-4582-8344-2971fb89ed99"))
         .AddObjectType("metrotransit:MaintenanceActionItem")
         .Name("Wheel Alignment Verification")
@@ -179,7 +191,7 @@ using MetroTransit.Entities;
 Activity activity = ...;
 
 if (activity.Object is NetworkObject networkObj &&
-    networkObj.Type?.Contains("metrotransit:MaintenanceActionItem") == true)
+    networkObj.ObjectType?.Contains("metrotransit:MaintenanceActionItem") == true)
 {
     // Strongly-typed deserialization preserving all custom properties
     MaintenanceActionItem item = networkObj.AsActionItem<MaintenanceActionItem>();

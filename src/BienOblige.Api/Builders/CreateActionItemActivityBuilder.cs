@@ -97,7 +97,7 @@ public class CreateActionItemActivityBuilder
 
     public CreateActionItemActivityBuilder AddContext(IEnumerable<KeyValuePair<string?, string>> context)
     {
-        _context ??= new();
+        _context ??= new(Constants.Context.Default);
         foreach (var item in context)
         {
             if (!_context.Any(c => c.Key == item.Key && c.Value == item.Value))
