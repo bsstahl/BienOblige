@@ -28,6 +28,7 @@ public class ActionItemBuilder
     private List<CompletionMethod> _completionMethods = new List<CompletionMethod>([CompletionMethod.Manual]);
     private List<NetworkIdentity>? _prerequisites;
 
+    private List<string>? _objectTypes;
     private Dictionary<string, object> _additionalProperties = new();
 
     private ActionItemCollectionBuilder? _children;
@@ -82,6 +83,7 @@ public class ActionItemBuilder
         {
             Id = _id,
             Context = _context,
+            ObjectType = _objectTypes ?? ActionItem.DefaultObjectTypeName.ToList(),
             Name = _name,
             Content = _content,
             MediaType = _mediaType?.ToString(),
@@ -272,6 +274,58 @@ public class ActionItemBuilder
     public ActionItemBuilder AddAdditionalProperty(string key, object value)
     {
         _additionalProperties.Add(key, value);
+        return this;
+    }
+
+    public ActionItemBuilder AddObjectType(string value)
+    {
+        _objectTypes ??= ActionItem.DefaultObjectTypeName.ToList();
+        _objectTypes.Insert(0, value);
+        return this;
+    }
+
+    public ActionItemBuilder AddObjectTypes(IEnumerable<string> values)
+    {
+        _objectTypes ??= ActionItem.DefaultObjectTypeName.ToList();
+        _objectTypes.InsertRange(0, values);
+        return this;
+    }
+
+    public ActionItemBuilder ClearObjectTypes()
+    {
+        _objectTypes = new();
+        return this;
+    }
+
+    public ActionItemBuilder AddContext(string? key, string value)
+    {
+        _context ??= new();
+        _context.Add(new KeyValuePair<string?, string>(key, value));
+        return this;
+    }
+
+    public ActionItemBuilder AddContext(IEnumerable<KeyValuePair<string?, string>> values)
+    {
+        _context ??= new();
+        _context.AddRange(values);
+        return this;
+    }
+
+    public ActionItemBuilder ClearContext()
+    {
+        _context = null;
+        return this;
+    }
+
+    public ActionItemBuilder Generator(Actor value)
+    {
+        _generator = value;
+        return this;
+    }
+
+    public ActionItemBuilder Generator(ActorBuilder value)
+    {
+        _generator = value.Build();
         return this;
     }
 
