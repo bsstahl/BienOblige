@@ -175,9 +175,9 @@ public class ActionItem : INetworkObject
 
     #endregion
 
-    public NetworkObject AsNetworkObject()
+    public virtual NetworkObject AsNetworkObject()
     {
-        var json = JsonSerializer.Serialize(this);
+        var json = JsonSerializer.Serialize(this, this.GetType());
         return JsonSerializer.Deserialize<NetworkObject>(json)
             ?? throw new InvalidOperationException("Unable to convert into a NetworkObject");
     }

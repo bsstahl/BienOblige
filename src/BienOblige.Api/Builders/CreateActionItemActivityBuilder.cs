@@ -1,5 +1,6 @@
 ﻿using BienOblige.Api.Entities;
 using BienOblige.Api.Enumerations;
+using BienOblige.Api.Extensions;
 using BienOblige.Api.ValueObjects;
 
 namespace BienOblige.Api.Builders;
@@ -13,6 +14,7 @@ public class CreateActionItemActivityBuilder
     private ActorBuilder? _actorBuilder;
     private DateTimeOffset? _published;
 
+    private ActionItem? _actionItem;
     private ActionItemBuilder? _actionItemBuilder;
     private Dictionary<string, object>? _additionalProperties;
 
@@ -29,15 +31,28 @@ public class CreateActionItemActivityBuilder
 
     public Activity Build()
     {
-        ArgumentNullException.ThrowIfNull(_actionItemBuilder, nameof(_actionItemBuilder));
+        if (_actionItemBuilder is null && _actionItem is null)
+            throw new ArgumentNullException(nameof(_actionItemBuilder), "An ActionItem or ActionItemBuilder must be provided.");
 
         // Assign default values where needed
         _activityType = ActivityType.Create;
-        _actionItemBuilder.AssignId(_instanceBaseUri);
-        _actionItemBuilder.Published(_published, overwrite: false);
 
-        var actionItem = _actionItemBuilder.Build(_activityType.Value).Single();
-        return this.Build(actionItem);
+        if (_actionItemBuilder is not null)
+        {
+            _actionItemBuilder.AssignId(_instanceBaseUri);
+            _actionItemBuilder.Published(_published, overwrite: false);
+
+            var actionItem = _actionItemBuilder.Build(_activityType.Value).Single();
+            return this.Build(actionItem);
+        }
+
+        if (_actionItem!.Id is null)
+        {
+            _actionItem.Id = _instanceBaseUri.AsInstanceId();
+        }
+        _actionItem.Published ??= _published;
+
+        return this.Build(_actionItem);
     }
 
     private Activity Build(ActionItem actionItem)
@@ -46,7 +61,7 @@ public class CreateActionItemActivityBuilder
         ArgumentNullException.ThrowIfNull(_actorBuilder, nameof(_actorBuilder));
 
         // Assign default values where needed
-        _context ??= Constants.Context.Default;
+        _context ??= new(Constants.Context.Default);
         _correlationId ??= new Uri($"{_instanceBaseUri}/Activity/{Guid.NewGuid()}");
         _published ??= DateTimeOffset.UtcNow;
 
@@ -66,21 +81,30 @@ public class CreateActionItemActivityBuilder
 
     public CreateActionItemActivityBuilder ClearContext()
     {
-        _context = null;
+        _context = new();
         return this;
     }
 
     public CreateActionItemActivityBuilder AddContext(string key, string value)
     {
-        _context ??= new();
-        _context.Add(new KeyValuePair<string?, string>(key, value));
+        _context ??= new(Constants.Context.Default);
+        if (!_context.Any(c => c.Key == key && c.Value == value))
+        {
+            _context.Add(new KeyValuePair<string?, string>(key, value));
+        }
         return this;
     }
 
     public CreateActionItemActivityBuilder AddContext(IEnumerable<KeyValuePair<string?, string>> context)
     {
         _context ??= new();
-        _context.AddRange(context);
+        foreach (var item in context)
+        {
+            if (!_context.Any(c => c.Key == item.Key && c.Value == item.Value))
+            {
+                _context.Add(item);
+            }
+        }
         return this;
     }
 
@@ -109,6 +133,12 @@ public class CreateActionItemActivityBuilder
     public CreateActionItemActivityBuilder Published(DateTimeOffset? value)
     {
         _published = value;
+        return this;
+    }
+
+    public CreateActionItemActivityBuilder ActionItem(ActionItem value)
+    {
+        _actionItem = value;
         return this;
     }
 

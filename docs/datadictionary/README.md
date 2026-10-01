@@ -10,6 +10,8 @@ Client systems are welcome to add custom properties to the **Bien Oblige** entit
 
 It is generally considered best-practice to extend the entities rather than simply utilizing existing properties unless the existing properties are a perfect fit for the client's needs according to the specification. Extending AS2 does however require the use of the **Context** field to define the new properties contexts, and to then include the appropriate **Bien Oblige** entity types, and AS2 fallback types, as part of the object's *type* field.
 
+See [Extending the ActionItem Object](ActionItem-CustomExtension.md) for a complete sample demonstrating how to create custom ActionItem extensions in C# code with AS2-compliant JSON messages.
+
 ## Standard Bien Oblige Entities
 
 * [ActionItem](ActionItem.md)
